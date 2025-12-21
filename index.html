@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pets Therapy - App</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+
+
+
+<body>
+
+  <!-- Pantalla 1: Inicio -->
+  <div id="pantalla-inicio" class="pantalla activa">
+    <div class="container">
+      <!-- Logo -->
+      <img src="logo.png" alt="Logo Pets Therapy" class="logo1">
+
+      <!-- Botones -->
+      <button class="btn-outline" onclick="mostrarPantalla('pantalla-login')">Iniciar sesión</button>
+      <button class="btn" onclick="mostrarPantalla('pantalla-registro')">Registrarme</button>
+      <button class="btn-link" onclick="mostrarPantalla('pantalla-recuperar')">¿Olvidaste tu contraseña?</button>
+
+      <!-- Imagen decorativa -->
+      <img src="decor.png" alt="Decoración" class="decor">
+    </div>
+  </div>
+
+  <!-- Pantalla 2: Iniciar Sesión -->
+  <div id="pantalla-login" class="pantalla">
+    <div class="container">
+      <button onclick="mostrarPantalla('pantalla-inicio')" 
+      style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+      &lt; Volver
+    </button>
+      <img src="logo.png" alt="Logo Pets Therapy" class="logo">
+      <h2 class="titulo">Iniciar Sesión</h2>
+      <form id="formLogin" class= "formulario"> 
+        <input type="email" id="loginCorreo" placeholder="Correo Electrónico" required>
+        <input type="password" id= "loginContrasena"placeholder="Contraseña" required>
+<button type="submit" class="btn">Entrar</button>
+      </form>
+      <button class="btn-link" onclick="mostrarPantalla('pantalla-recuperar')">¿Olvidaste tu contraseña?</button>
+      <button class="btn-link"></button>
+      <!-- Imagen decorativa -->
+      <img src="decorate.png" alt="Decoración" class="decor">
+    </div>
+  </div>
+
+
+  <!-- Pantalla 3: Registro -->
+  <div id="pantalla-registro" class="pantalla">
+  <div class="container">
+    <button onclick="mostrarPantalla('pantalla-inicio')" 
+      style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+      &lt; Volver
+    </button>
+    <img src="logo.png" alt="Logo Pets Therapy" class="r-logo">
+    <h2 class="titulo">Registrarme</h2>
+
+    <form id="formRegistro" class="formulario">
+      <input type="text" id="nombre" placeholder="Nombre Completo" required>
+    <input type="number" id="cedula" placeholder="Cédula" required>
+    <input type="email" id="correo" placeholder="Correo Electrónico" required>
+    <input type="tel" id="telefono" placeholder="Teléfono" required>
+    <input type="password" id="contrasena" placeholder="Contraseña" required>
+    <input type="password" id="confirmar" placeholder="Confirmar Contraseña" required>
+
+      <button type="submit" class="btn-principal" onclick="mostrarBurbuja('Registro éxitoso')">Registrar</button>      
+      <!-- Imagen decorativa -->
+      <img src="decoration.png" alt="Decoración" class="decor">
+    </form>
+  </div>
+</div>
+
+
+  <!-- Pantalla 4: Recuperar contraseña -->
+  <div id="pantalla-recuperar" class="pantalla">
+    <div class="container">
+      <img src="logo.png" alt="Logo Pets Therapy" class="rc-logo">
+      <h2>Recupera tu contraseña</h2>
+      <p class="rcText">Te enviaremos un enlace <br> 
+        para restablecer tu contraseña</p>
+      <form id="formRecuperar" class="formulario">
+        <input type="email" id= "correoRecuperar" name="correoRecuperar" placeholder="Correo electrónico" required>
+      <button type="submit" class="btn-principal">Enviar enlace</button>      
+      <button class="btn-link" onclick="mostrarPantalla('pantalla-inicio')">Volver al inicio</button>
+      <!-- Imagen decorativa -->
+      <img src="olvidaste-contrasena.png" alt="Decoración" class="decor">
+    </div>
+  </div>
+
+  <!-- 🌸 Pantalla: Restablecer contraseña -->
+<div id="pantalla-reset" class="pantalla">
+  <div class="container">
+    <img src="logo.png" alt="Logo Pets Therapy" class="logo">
+    <h2>Restablecer contraseña</h2>
+    <p>Ingresa tu nueva contraseña para continuar.</p>
+
+    <form id="formReset" class="formulario">
+      <input type="password" id="nuevaContrasena" name="nuevaContrasena" placeholder="Nueva contraseña" >
+      <input type="password" id="confirmarContrasena" name="confirmarContrasena" placeholder="Confirmar contraseña" >
+      <button type="submit" class="btn-principal">Actualizar contraseña</button>
+    </form>
+
+    <button class="btn-link" onclick="mostrarPantalla('pantalla-inicio')">Volver al inicio</button>
+  </div>
+</div>
+
+  <!-- Pantalla 5: menú principal -->
+   <div id="menú-principal" class="pantalla">
+  <div class="container">
+    <!-- Logo -->
+    <img src="logo.png" alt="Logo PetsTherapy" class="mp-logo">
+
+    <!-- Título -->
+    <h1>Menú Principal</h1>
+
+    <!-- Botones -->
+         <button type="button" class="btn-principal" onclick="mostrarPantalla('pantallaPacientes')">Ver pacientes</button>
+        <button type="button" class="btn-secundario" onclick="cerrarSesion()">Cerrar sesión</button>
+    <!-- Imagen decorativa -->
+      <img src="menu-principal.png" alt="Decoración" class="decor">
+    </div>  
+  </div>
+
+ <!-- PERFIL PACIENTE -->
+  <div id="perfilPaciente" class="pantalla">
+
+<div class="container">
+
+
+    <!-- Encabezado -->
+    
+      <button onclick="mostrarPantalla('pantallaPacientes')" 
+      style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+      &lt; Volver
+    </button>
+      <!-- el logo lo centramos por separado -->
+      <img src="logo.png" alt="Logo PetsTherapy" class="pf-logo">
+
+      <!-- Título -->
+      <h2>Perfil del paciente</h2>
+
+    <!-- Foto y subir -->
+    <div class="pt-photo">
+  <img id="previewFoto" src="img/default.png" alt="Foto paciente">
+  <input id="inputFoto" type="file" accept="image/*" style="display:none">
+  <button id="btnSubirFoto" class="btn-principal">Subir foto</button>
+
+  <button type="button" class="btn-principal" id="btnQuitarFoto">
+  Quitar foto
+</button>
+</div>
+
+
+
+
+    <!-- Campos -->
+    <form class="formulario">
+    <input id="nombrePerfil" type="text" placeholder="Nombre">
+    <input id="especiePerfil" type="text" placeholder="Especie">
+    <input id="razaPerfil" type="text" placeholder="Raza">
+    <div class="input-box">
+  <label for="fechaNacimiento">Fecha de nacimiento:</label>
+  <input type="date" id="fechaAplicacionPF" name="fechaAplicacion">
+  
+</div>
+    <input id="pesoPerfil" type="text" placeholder="Peso (kg)">
+   
+
+    <!-- Acciones -->
+    
+      <button type="button" class="btn-principal" onclick="mostrarPantalla('pantallaPropietario')">Propietario</button>
+      <button type="button" class="btn-principal" onclick="mostrarPantalla('pantallaHistorialMedico')">Historial médico</button>
+<button type="button" class="btn-principal" onclick="irAVacunas()">Vacunas</button>
+      <button type="button" class="btn-principal" onclick="mostrarPantalla('pantallaDesparasitaciones')">Desparasitaciones</button>
+      <button type="button" class="btn-principal" onclick="mostrarPantalla('pantallaAntipulgas')">Antipulgas</button>
+      <button type="button" class="btn-principal" onclick="mostrarPantalla('pantallaRecordatorios')">Recordatorios</button>
+      <button type="button" id="btnGuardarPerfil" class="btn-principal">Guardar</button>
+      <button type="button" id="btnEliminarPaciente" class="btn-principal">Eliminar paciente 🗑️</button>
+
+
+
+    </form>
+  </div>
+  </div>
+
+  
+  
+
+
+
+<!-- Pantalla Propietario -->
+<div id="pantallaPropietario" class="pantalla">
+  <div class="container">
+
+    <!-- Botón Volver -->
+    <button onclick="mostrarPantalla('perfilPaciente')" 
+      style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+      &lt; Volver
+    </button>
+
+    <!-- Logo -->
+    <img src="logo.png" alt="Logo PetsTherapy" class="pr-logo">
+
+    <!-- Título -->
+    <h2>Propietario</h2>
+
+    <!-- Formulario -->
+    <form class="formulario">
+
+      <input id="propNombre" type="text" placeholder="Nombre completo">
+    <input id="propDireccion" type="text" placeholder="Dirección">
+    <input id="propBarrio" type="text" placeholder="Barrio">
+    <input id="propLocalidad" type="text" placeholder="Localidad">
+    <input id="propTelefono" type="text" placeholder="Teléfono">
+    <input id="propCorreo" type="email" placeholder="Correo electrónico">
+
+    </form>
+    
+
+    <!-- Botones -->
+<button type="button" class="btn-principal" onclick="mostrarPantalla('pacientesCargo'); mostrarPacientesCargo();">
+  Pacientes a cargo
+</button>
+    <button id="btnGuardarPropietario" type="button" class="btn-principal">Guardar</button>
+    
+  </div>
+</div>
+
+<!-- PANTALLA AÑADIR PACIENTES -->
+<div id="pantallaPacientes" class="pantalla">
+  <div class="container">
+
+    <!-- Botón Volver -->
+    <button onclick="mostrarPantalla('menú-principal')" 
+      class="btn-volver">&lt; volver</button>
+
+    <!-- Logo -->
+    <img src="logo.png" alt="Logo Pets Therapy" class="pp-logo">
+
+    <!-- Título principal -->
+    <h2>Añadir Pacientes</h2>
+
+    <!-- Sección para añadir nuevo paciente -->
+    <div class="nuevo-paciente">
+<div class="add-box" onclick="mostrarPantalla('pantallaNuevoPaciente')">+</div>
+      <p class="add-text">Añadir nuevo paciente</p>
+    </div>
+
+    <!-- Lista de pacientes -->
+    <h3 class="pt-subtitle">Pacientes</h3>
+
+    <div id="listaPacientes" class="lista-pacientes">
+      
+    </div>
+
+  </div>
+
+  <!-- Formulario oculto para agregar paciente -->
+<div id="formNuevoPaciente" class="formulario-paciente" style="display:none;">
+  <input type="text" id="nombrePaciente" placeholder="Nombre del paciente" required>
+  <input type="text" id="especiePaciente" placeholder="Especie (opcional)">
+  <input type="text" id="razaPaciente" placeholder="Raza (opcional)">
+  <input type="text" id="edadPaciente" placeholder="Edad (opcional)">
+  <button id="btnGuardarPaciente" class="btn-principal">Guardar</button>
+</div>
+
+
+</div>
+
+
+<div id="pantallaNuevoPaciente" class="pantalla">
+  <div class="container">
+
+    <button class="btn-volver" onclick="mostrarPantalla('pantallaPacientes')">
+      &lt; volver
+    </button>
+
+    <h2>Nuevo paciente</h2>
+
+    <form class="formulario" onsubmit="return false;">
+      <input id="npNombre" placeholder="Nombre del paciente" required>
+      <input id="npEspecie" placeholder="Especie">
+      <input id="npRaza" placeholder="Raza">
+      <input id="npEdad" placeholder="Edad">
+
+      <button type="button" class="btn-principal" onclick="crearNuevoPaciente()">
+        Guardar paciente
+      </button>
+    </form>
+
+  </div>
+</div>
+
+
+
+
+
+<!-- 🌸 Pantalla Pacientes a cargo -->
+<div>
+
+<section id="pacientesCargo" class="pantalla">
+  <!-- Botón Volver -->
+    <button onclick="mostrarPantalla('pantallaPropietario')" 
+      style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+      &lt; Volver
+    </button>
+
+  <img src="logo.png" alt="Logo Pets Therapy" class="pc-logo">
+
+  <h2>Pacientes a cargo</h2>
+
+  <div id="listaPacientesCargo" class="lista-pacientes"></div>
+
+  
+  <img src="garfield.png" alt="Garfield y Odie" class="garfield">
+</section>
+
+</div>
+
+<!-- 🌸 Pantalla Historial Médico -->
+ <div>
+
+  <section id="pantallaHistorialMedico" class="pantalla">
+  <!-- Botón Volver -->
+    <button onclick="mostrarPantalla('perfilPaciente')" 
+      style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+      &lt; Volver
+    </button>
+
+  <img src="logo.png" alt="Logo Pets Therapy" class="hm-logo">
+
+  <h2 class="titulo-contorno">Historial médico</h2>
+
+  <!-- Foto y subir -->
+    <div class="pt-photo">
+      <img id="previewFotoHistorial" src="img/default.png" alt="Foto historial">
+      <input id="inputFotoHistorial" type="file" accept="image/*" style="display:none">
+      <button class="pt-upload-btn" onclick="subirFoto('inputFotoHistorial', 'previewFotoHistorial')">Subir foto</button>
+    </div>
+
+  <form class="formulario" id="formHistorialMedico" >
+    <input type="text" id="nombreHistorial" placeholder="Nombre:" required>
+    <input type="text" id="especieHistorial" placeholder="Especie:" required>
+    <input type="text" id="razaHistorial" placeholder="Raza:" required>
+    <div class="input-box">
+  <label for="fechaNacimientoHistorial">Fecha de nacimiento:</label>
+  <input type="date" id="fechaNacimientoHistorial" name="fechaNacimiento">
+</div>
+    <input type="text" id="pesoHistorial" placeholder="Peso:" required>
+
+    <button type="button" class="btn-principal" onclick="mostrarPantalla('pantallaPropietario')">Propietario</button>
+    <button type="button" class="btn-principal" onclick="mostrarPantalla('pantallaConsultas')">Consultas</button>
+    <button type="button" class="btn-principal" onclick="mostrarPantalla('pantallaTratamiento')">Tratamiento</button>
+    <button type="button" class="btn-principal" onclick="mostrarPantalla('pantallaExamenes')">Exámenes</button>
+<button type="button" class="btn-principal" onclick="irAVacunas()">Vacunas</button>
+    <button type="button" class="btn-principal" onclick="mostrarPantalla('pantallaDesparasitaciones')">Desparasitaciones</button>
+    <button type="button" class="btn-principal" onclick="mostrarPantalla('pantallaAntipulgas')">Antipulgas</button>
+    <button type="button" class="btn-principal" onclick="mostrarPantalla('pantallaRecordatorios')">Recordatorios</button>
+
+    <button type="button" class="btn-principal" id="btnGuardarHistorial" >Guardar</button>
+  </form>
+</section>
+
+ </div>
+
+ 
+
+ <!-- Pantalla Vacunas -->
+<div id="pantallaVacunas" class="pantalla">
+  
+  <div class="container">
+    <!-- Botón volver -->
+    <button onclick="mostrarPantalla('pantallaHistorialMedico')" 
+      style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+      &lt; Volver
+    </button>    
+
+    <img src="logo.png" alt="Logo Pets Therapy" class="va-logo">
+
+    <h2>Vacunas</h2>
+
+    <form class="formulario">
+      <input type="text" id="nombrePacienteV" placeholder="Nombre paciente:">
+      <input type="text" id="especieVacunas" placeholder="Especie:">
+      <input type="text" id="razaV" placeholder="Raza:">
+      <input type="text" id="tipoVacunaV" placeholder="Tipo vacuna">
+      <input type="text" id="loteVacunaV" placeholder="Lote vacuna">
+
+      <div class="input-box">
+        <label for="fechaAplicacionV">Fecha de aplicación:</label>
+        <input type="date" id="fechaAplicacionV" name="fechaAplicacion">
+      </div>
+
+      <div class="input-box">
+        <label for="proximaFechaV">Próxima fecha:</label>
+        <input type="date" id="proximaFechaV" name="proximaFecha">
+      </div>
+
+      <input type="text" id="viaAdministracionV" placeholder="Vía de administración">
+      <textarea type="text" id="observacionesV" placeholder="Observaciones"></textarea>
+      <button type="button" class="btn-principal" onclick="guardarVacuna()">Guardar</button>
+    </form>
+
+    <!-- Contenedor donde se mostrarán las vacunas registradas -->
+    <h3 style="margin-top:25px;">Vacunas registradas</h3>
+    <div id="listaVacunas"></div>
+      
+  </div>
+</div>
+
+
+
+<!-- Pantalla Ver Vacuna (solo lectura) -->
+<div id="pantallaVerVacuna" class="pantalla">
+  <div class="container">
+    <!-- Botón volver -->
+    <button onclick="irAVacunas()" 
+      style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+      &lt; Volver
+    </button>
+
+    <img src="logo.png" alt="Logo Pets Therapy" class="v-logo">
+
+    <h2>Vacuna</h2>
+
+    <!-- Campos principales del paciente -->
+    <input type="text" id="nombrePacienteV_r" placeholder="Nombre paciente:" readonly>
+    <input type="text" id="especieVacunas_r" placeholder="Especie:" readonly>
+    <input type="text" id="razaV_r" placeholder="Raza:" readonly>
+
+    <!-- Formulario solo lectura de la vacuna -->
+    <form class="formulario">
+      <input type="text" id="tipoVacunaV_r" placeholder="Tipo vacuna" readonly>
+      <input type="text" id="loteVacunaV_r" placeholder="Lote vacuna" readonly>
+      <div class="input-box">
+        <label for="fechaAplicacionV_r">Fecha de aplicación:</label>
+        <input type="date" id="fechaAplicacionV_r" readonly>
+      </div>
+      <div class="input-box">
+        <label for="proximaFechaV_r">Próxima fecha:</label>
+        <input type="date" id="proximaFechaV_r" readonly>
+      </div>
+      <input type="text" id="viaAdministracionV_r" placeholder="Vía de administración" readonly>
+      <textarea type="text" id="observacionesV_r" placeholder="Observaciones" readonly></textarea>
+    </form>
+  </div>
+</div>
+
+
+
+
+
+<!-- 🌸 Pantalla Tratamiento -->
+<section id="pantallaTratamiento" class="pantalla">
+  <div class="container">
+
+    <button onclick="mostrarPantalla('pantallaHistorialMedico')" 
+      style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+      &lt; Volver
+    </button>  
+
+    <img src="logo.png" alt="Logo Pets Therapy" class="t-logo">
+    
+    <h2>Tratamiento</h2>
+
+    <form class="formulario">
+
+      <input type="text" id="nombrePacienteT" placeholder="Nombre paciente:">
+      <input type="text" id="especieT" placeholder="Especie:">
+      <input type="text" id="razaT" placeholder="Raza:">
+
+      <input type="text" id="medicamentoT" placeholder="Medicamento:">
+      <input type="text" id="dosisT" placeholder="Dosis:">
+      <input type="text" id="frecuenciaT" placeholder="Frecuencia:">
+      <input type="text" id="viaAdministracionT" placeholder="Vía de administración:">
+      <input type="text" id="duracionT" placeholder="Duración:">
+      <input type="text" id="costoT" placeholder="Costo:">
+
+      <textarea id="observacionesT" placeholder="Observaciones"></textarea>
+
+      <button type="button" class="btn-principal" onclick="guardarTratamiento()">Guardar</button>
+    </form>
+
+    <h3 style="margin-top:25px;">Tratamientos registrados</h3>
+    <div id="listaTratamientos"></div>
+
+  </div>
+</section>
+
+<!-- 🌸 Pantalla Ver Tratamiento -->
+<section id="pantallaVerTratamiento" class="pantalla">
+  <div class="container">
+
+    <button onclick="irATratamiento()" 
+      style="position: absolute; top: 15px; left: 15px; background:none; border:none; font-size:18px; color:#ff66c4;">
+      &lt; Volver
+    </button>
+
+    <img src="logo.png" alt="Logo Pets Therapy" class="tv-logo">
+
+    <h2>Tratamiento</h2>
+
+    <input type="text" id="nombrePacienteT_r" readonly>
+    <input type="text" id="especieT_r" readonly>
+    <input type="text" id="razaT_r" readonly>
+
+    <input type="text" id="medicamentoT_r" readonly>
+    <input type="text" id="dosisT_r" readonly>
+    <input type="text" id="frecuenciaT_r" readonly>
+    <input type="text" id="viaAdministracionT_r" readonly>
+    <input type="text" id="duracionT_r" readonly>
+    <input type="text" id="costoT_r" readonly>
+
+    <textarea id="observacionesT_r" readonly></textarea>
+
+  </div>
+</section>
+
+
+    
+      
+    <!-- 🩷 Burbuja de confirmación -->
+    <div id="burbujaTratamiento" class="burbuja-exito">
+      Tratamiento guardado correctamente ✅
+    </div>
+  </div>
+</section>
+
+
+
+<!-- 🌸 Pantalla Nuevo Tratamiento -->
+<section id="pantallaNuevoTratamiento" class="pantalla">
+  <div class="container">
+
+    <button onclick="mostrarPantalla('pantallaTratamiento')" 
+      style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+      &lt; Volver
+    </button> 
+
+    <img src="logo.png" alt="Logo Pets Therapy" class="tv-logo">
+    
+    <h2>Nuevo Tratamiento</h2>
+
+    <form class="formulario">
+    <input type="text" placeholder="Nombre paciente:">
+    <input type="text" placeholder="Especie:">
+    <input type="text" placeholder="Raza:">
+    <input type="text" placeholder="Medicamento:">
+    <input type="text" placeholder="Dosis:">
+    <input type="text" placeholder="Frecuencia">
+    <input type="text" placeholder="Vía de administración:">
+    <input type="text" placeholder="Duración:">
+    <input type="text" placeholder="Costo:">
+    <textarea type="text" placeholder="Observaciones:"></textarea>
+
+    <button type="button" class="btn-principal" onclick="alert('Guardado')">Guardar</button>
+
+  </form>
+
+    
+      
+    <!-- 🩷 Burbuja de confirmación -->
+    <div id="burbujaTratamiento" class="burbuja-exito">
+      Tratamiento guardado correctamente ✅
+    </div>
+  </div>
+</section>
+
+
+
+   
+
+
+<!-- Pantalla Desparasitaciones -->
+<div id="pantallaDesparasitaciones" class="pantalla">
+  
+  <div class="container">
+    <button onclick="mostrarPantalla('pantallaHistorialMedico')" 
+      style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+      &lt; Volver
+    </button>    
+
+    <img src="logo.png" alt="Logo Pets Therapy" class="d-logo">
+
+    <h2>Desparasitaciones</h2>
+
+    <form class="formulario">
+
+      <input type="text" id="nombrePacienteD" placeholder="Nombre paciente:">
+      <input type="text" id="especieDesparasitaciones" placeholder="Especie:">
+      <input type="text" id="razaD" placeholder="Raza:">
+
+      <input type="text" id="productoD" placeholder="Producto:">
+      <input type="text" id="dosisDesparasitaciones" placeholder="Dosis:">
+      <input type="text" id="viaAdministracionD" placeholder="Vía de administración:">
+      <input type="text" id="frecuenciaD" placeholder="Frecuencia:">
+
+      <div class="input-box">
+        <label for="fechaAplicacionD">Fecha de aplicación:</label>
+        <input type="date" id="fechaAplicacionD">
+      </div>
+
+      <div class="input-box">
+        <label for="proximaFechaD">Próxima fecha:</label>
+        <input type="date" id="proximaFechaD">
+      </div>
+
+<textarea id="observacionesD" placeholder="Observaciones" rows="3" style="width:100%; resize:none;"></textarea>
+
+      <button type="button" class="btn-principal" onclick="guardarDesparasitacion()">Guardar</button>
+    </form>
+
+    <!-- Lista de desparasitaciones registradas -->
+    <h3 style="margin-top:20px;">Registradas</h3>
+    <div id="listaDesparasitaciones"></div>
+
+  </div>
+</div>
+
+
+
+<!-- Pantalla Ver Desparasitación -->
+<div id="pantallaVerDesparasitacion" class="pantalla">
+  <div class="container">
+
+    <button onclick="irADesparasitaciones()"
+      style="position: absolute; top: 15px; left: 15px; background:none; border:none; font-size:18px; color:#ff66c4;">
+      &lt; Volver
+    </button>
+
+    <img src="logo.png" alt="Logo Pets Therapy" class="dv-logo">
+
+    <h2>Desparasitación</h2>
+
+    <input type="text" id="nombrePacienteD_r" placeholder="Paciente" readonly>
+    <input type="text" id="especieD_r" placeholder="Especie" readonly>
+    <input type="text" id="razaD_r" placeholder="Raza" readonly>
+
+    <input type="text" id="productoD_r" placeholder="Producto" readonly>
+    <input type="text" id="dosisD_r" placeholder="Dosis" readonly>
+    <input type="text" id="viaAdministracionD_r" placeholder="Vía administración" readonly>
+    <input type="text" id="frecuenciaD_r" placeholder="Frecuencia" readonly>
+
+    <input type="date" id="fechaAplicacionD_r" readonly>
+    <input type="date" id="proximaFechaD_r" readonly>
+
+<textarea id="observacionesD_r" placeholder="Observaciones" rows="3" style="width:100%; resize:none;" readonly></textarea>
+
+  </div>
+</div>
+
+
+
+
+
+
+<!-- 🌸 Pantalla Ver Examen -->
+<div id="pantallaVerExamen" class="pantalla">
+  <div class="container">
+
+<button onclick="volverAListaExamenes()" 
+  style="position:absolute;top:15px;left:15px;background:none;border:none;font-size:18px;color:#ff66c4;cursor:pointer;">
+  &lt; Volver
+</button>
+
+
+
+
+  <img src="logo.png" alt="Logo Pets Therapy" class="p-logo">
+  <h2>Examen registrado</h2>
+
+  <form id="formVerExamen" class="formulario">
+    <input id="verNombrePaciente" type="text" placeholder="Nombre paciente:" readonly>
+    <input id="verEspecie" type="text" placeholder="Especie:" readonly>
+    <input id="verRaza" type="text" placeholder="Raza:" readonly>
+    <input id="verNombreExamen" type="text" placeholder="Nombre de examen:" readonly>
+    <input id="verTipoExamen" type="text" placeholder="Tipo de examen:" readonly>
+    <label>Fecha:</label>
+    <input id="verFechaExamen" type="date" readonly>
+    <textarea id="verResultado" placeholder="Resultado:" readonly></textarea>
+
+    <div class="archivos-examen">
+      <div id="archivosAdjuntosVer"></div>
+    </div>
+
+  
+  </form>
+
+  </div>
+</div>
+
+<!-- 🌸 Pantalla para subir archivos -->
+<div id="pantallaExamenesSubidos" class="pantalla">
+  <div class="container">
+
+    <button onclick="mostrarPantalla('pantallaExamenes')" 
+      style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+      &lt; Volver
+    </button>
+
+    <img src="logo.png" alt="Logo Pets Therapy" class="sa-logo">
+
+    <h2>📁 Subir archivos del examen</h2>
+
+    <p>Puedes seleccionar uno o varios archivos para adjuntarlos al examen.</p>
+
+    <div class="custom-file">
+  <label for="archivosExamen" class="custom-file-label">Seleccionar archivos</label>
+  <input type="file" id="archivosExamen" class="custom-file-input" multiple accept="image/*,.pdf,.jpg,.jpeg,.png">
+  <span class="file-selected">No se ha seleccionado ningún archivo</span>
+</div>
+
+    <ul id="listaArchivosPantalla" style="margin-top:10px;"></ul>
+
+    <div style="margin-top:20px; display:flex; gap:10px;">
+      <button id="btnGuardarArchivos">Subir archivo</button>
+       </div>
+
+  </div>
+</div>
+
+
+<!-- Pantalla Antipulgas -->
+<div id="pantallaAntipulgas" class="pantalla">
+  
+  <div class="container">
+    <button onclick="mostrarPantalla('pantallaHistorialMedico')" 
+      style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+      &lt; Volver
+    </button>    
+
+    <img src="logo.png" alt="Logo Pets Therapy" class="a-logo">
+
+    <h2>Antipulgas</h2>
+
+    <form class="formulario">
+
+      <input type="text" id="nombrePacienteA" placeholder="Nombre paciente:">
+      <input type="text" id="especieAntipulgas" placeholder="Especie:">
+      <input type="text" id="razaA" placeholder="Raza:">
+
+      <input type="text" id="productoA" placeholder="Producto:">
+      <input type="text" id="dosisAntipulgas" placeholder="Dosis:">
+      <input type="text" id="viaAdministracionA" placeholder="Vía de administración:">
+      <input type="text" id="frecuenciaA" placeholder="Frecuencia:">
+
+      <div class="input-box">
+        <label for="fechaAplicacionA">Fecha de aplicación:</label>
+        <input type="date" id="fechaAplicacionA">
+      </div>
+
+      <div class="input-box">
+        <label for="proximaFechaA">Próxima fecha:</label>
+        <input type="date" id="proximaFechaA">
+      </div>
+
+      <!-- Cambia input a textarea -->
+      <textarea id="observacionesA" placeholder="Observaciones"></textarea>
+
+      <button type="button" class="btn-principal" onclick="guardarAntipulgas()">Guardar</button>
+
+    </form>
+
+    <h3 style="margin-top:20px;">Registradas</h3>
+    <div id="listaAntipulgas"></div>
+
+  </div>
+</div>
+
+
+
+<!-- Pantalla Ver Antipulgas -->
+<div id="pantallaVerAntipulgas" class="pantalla">
+  <div class="container">
+
+    <button onclick="irAAntipulgas()"
+      style="position: absolute; top: 15px; left: 15px; background:none; border:none; font-size:18px; color:#ff66c4;">
+      &lt; Volver
+    </button>
+
+    <img src="logo.png" alt="Logo Pets Therapy" class="av-logo">
+
+    <h2>Antipulgas</h2>
+
+    <input type="text" id="nombrePacienteA_r" readonly>
+    <input type="text" id="especieA_r" readonly>
+    <input type="text" id="razaA_r" readonly>
+
+    <input type="text" id="productoA_r" readonly>
+    <input type="text" id="dosisA_r" readonly>
+    <input type="text" id="viaAdministracionA_r" readonly>
+    <input type="text" id="frecuenciaA_r" readonly>
+
+    <input type="date" id="fechaAplicacionA_r" readonly>
+    <input type="date" id="proximaFechaA_r" readonly>
+
+    <textarea id="observacionesA_r" readonly></textarea>
+
+  </div>
+</div>
+
+
+<!--Pantalla Exámenes-->
+<div id="pantallaExamenes" class="pantalla">
+
+  
+  <div class="container">
+
+    <button onclick="mostrarPantalla('pantallaHistorialMedico')" 
+      style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+      &lt; Volver
+    </button>
+      
+    <img src="logo.png" alt="Logo" class="e-logo">
+  
+    <h2>Exámenes</h2>
+
+  <form id="formExamen"class="formulario">
+    <input id="nombrePacienteExamen" type="text" placeholder="Nombre paciente:">
+  <input id="especieExamen" type="text" placeholder="Especie:" >
+  <input id="razaExamen" type="text" placeholder="Raza:" >
+
+  <input id="nombreExamen" type="text" placeholder="Nombre de examen:">
+  <input id="tipoExamen" type="text" placeholder="Tipo de examen:">
+    <div class="input-box">
+  <label for="fecha">Fecha:</label>
+  <input type="date" id="fechaExamenes" name="fecha">
+</div>
+<textarea id="resultadoExamen" placeholder="Resultado:"></textarea>
+
+    <div class="input-box">
+  <label>📁 Archivos adjuntos:</label>
+  <div style="display:block ; justify-content: center; gap: 10px; margin-top: 8px;">
+<button type="button" onclick="mostrarPantalla('pantallaExamenesSubidos')">
+  Subir archivos
+</button>
+
+</button>
+  </div>
+  <ul id="listaArchivosExamen"></ul>
+</div>
+
+
+  <input type="file" id="inputArchivosExamen" multiple accept="image/*,.pdf,.jpg,.jpeg,.png" style="display:none;">
+
+
+
+<button type="button" onclick="guardarExamen()">Guardar</button>
+<button type="button" onclick="mostrarPantalla('pantallaHistorial')">Cancelar</button>
+    
+<h3 class="pt-subtitle">Exámenes registrados</h3>
+
+<div class="contenedor-lista-examenes">
+
+
+<div id="listaExamenes" class="lista-examenes"></div>     
+      </div>
+  </form>
+
+  </div>
+  
+</div>
+
+
+
+<!-- 🌸 Pantalla Recordatorios -->
+<div id="pantallaRecordatorios" class="pantalla">
+  <button onclick="mostrarPantalla('pantallaHistorialMedico')" 
+    style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+    &lt; Volver
+  </button>
+
+  <img src="logo.png" alt="Logo" class="re-logo">
+
+  <h2>Recordatorio 
+    <img src="whatsapp-icon.png" alt="WhatsApp" class="whatsapp-icon">
+  </h2>
+
+  <div class="formulario">
+
+    <input type="text" id="recNombre" placeholder="Nombre paciente:">
+    <input type="text" id="recEspecie" placeholder="Especie:">
+    <input type="text" id="recRaza" placeholder="Raza:">
+
+    <select id="tipoEvento">
+      <option value="">Tipo de evento:</option>
+      <option value="vacuna">Vacuna</option>
+      <option value="desparasitacion">Desparasitación</option>
+      <option value="antipulgas">Antipulgas</option>
+      <option value="control">Control</option>
+    </select>
+
+    <div class="input-box">
+      <label for="fechaEvento">Fecha evento:</label>
+      <input type="date" id="fechaEvento" name="fechaEvento">
+    </div>
+
+    <div class="input-box">
+      <label for="horaEvento">Hora evento:</label>
+      <input type="time" id="horaEvento">
+    </div>
+
+    <div class="input-box">
+      <label for="fechaEnvio">Fecha de envío sugerida:</label>
+      <input type="date" id="fechaEnvio" name="fechaEnvio">
+    </div>
+
+    <div class="input-box">
+      <label for="horaEnvio">Hora de envío sugerida:</label>
+      <input type="time" id="horaEnvio">
+    </div>
+
+    <textarea id="mensaje" placeholder="Mensaje:"></textarea>
+
+  </div>
+
+  <div class="contenedor-botones">
+    <button class="btn-principal" onclick="guardarRecordatorio()">Guardar</button>
+  </div>
+
+  <!-- 🌸 LISTA DE RECORDATORIOS -->
+   <h3 style="margin-top:20px;">Recordatorios Registrados</h3>
+  <div id="listaRecordatorios" class="lista-contenedor" style="margin-top: 25px;"></div>
+</div>
+
+
+
+<!-- 🌸 Pantalla Ver Recordatorio -->
+<div id="pantallaVerRecordatorio" class="pantalla" style="display:none;">
+  <button onclick="mostrarPantalla('pantallaRecordatorios')" 
+    style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+    &lt; Volver
+  </button>
+
+<img src="logo.png" alt="Logo" class="vr-logo">
+
+  <h2>Ver Recordatorio</h2>
+
+  <div class="formulario">
+    <input type="text" id="recNombre_r" readonly>
+    <input type="text" id="recEspecie_r" readonly>
+    <input type="text" id="recRaza_r" readonly>
+
+    <select id="tipoEvento_r" disabled>
+      <option value="vacuna">Vacuna</option>
+      <option value="desparasitacion">Desparasitación</option>
+      <option value="antipulgas">Antipulgas</option>
+      <option value="control">Control</option>
+    </select>
+
+    <div class="input-box">
+      <label>Fecha evento:</label>
+      <input type="date" id="fechaEvento_r" readonly>
+    </div>
+
+    <div class="input-box">
+      <label>Hora evento:</label>
+      <input type="time" id="horaEvento_r" readonly>
+    </div>
+
+    <div class="input-box">
+      <label>Fecha de envío sugerida:</label>
+      <input type="date" id="fechaEnvio_r" readonly>
+    </div>
+
+    <div class="input-box">
+      <label>Hora de envío sugerida:</label>
+      <input type="time" id="horaEnvio_r" readonly>
+    </div>
+
+    <textarea id="mensaje_r" readonly></textarea>
+  </div>
+
+  <div class="contenedor-botones">
+    <button onclick="confirmarYEnviarRecordatorio()">CONFIRMAR Y ENVIAR</button>
+<button id="enviarWA_btn" data-rec-id="694753547f589e26c01b4ea3">Enviar WhatsApp</button>
+  </div>
+</div>
+
+
+
+
+<!-- 🩺 SECCIÓN CONSULTAS -->
+<div id="pantallaConsultas" class="pantalla">
+
+  <!-- 🔙 Volver -->
+  <button onclick="mostrarPantalla('pantallaHistorialMedico')" 
+      style="position: absolute; top: 15px; left: 15px; background:none; border:none; font-size:18px; color:#ff66c4; cursor:pointer;">
+      &lt; Volver
+  </button>
+
+  <img src="logo.png" alt="Logo Pets Therapy" class="c-logo">
+
+  <h2>Consulta</h2>
+
+  <form id="formConsulta" class="formulario">
+
+    <!-- 📋 Datos generales -->
+    <input type="text" id="consultaNombre" placeholder="Nombre del paciente:" >
+    <input type="text" id="consultaEspecie" placeholder="Especie:" >
+    <input type="text" id="consultaRaza" placeholder="Raza:" >
+    <input type="text" id="consultaPropietario" placeholder="Propietario:" >
+
+    <div class="input-box">
+      <label for="fechaConsulta">Fecha:</label>
+      <input type="date" id="fechaConsulta">
+    </div>
+
+    <div class="input-box">
+      <label for="horaConsulta">Hora:</label>
+      <input type="time" id="horaConsulta">
+    </div>
+
+    <input type="text" id="consultaDireccion" placeholder="Dirección:">
+
+    <!-- 🩹 Detalles clínicos -->
+    <textarea id="motivoConsulta" placeholder="Motivo de consulta:"></textarea>
+    <textarea id="examenClinico" placeholder="Examen clínico:"></textarea>
+    <textarea id="diagnosticosDiferenciales" placeholder="Diagnósticos diferenciales:"></textarea>
+    <textarea id="pruebasDiagnosticas" placeholder="Pruebas diagnósticas:"></textarea>
+    <textarea id="diagnosticoFinal" placeholder="Diagnóstico:"></textarea>
+    <textarea id="tratamientoAplicado" placeholder="Tratamiento aplicado:"></textarea>
+    <textarea id="formulaMedica" placeholder="Fórmula médica:"></textarea>
+
+    <!-- ⏰ Próximo control -->
+    <div class="input-box">
+      <label for="fechaControl">Fecha próximo control:</label>
+      <input type="date" id="fechaControl">
+    </div>
+
+    <div class="input-box">
+      <label for="horaControl">Hora:</label>
+      <input type="time" id="horaControl">
+    </div>
+
+    <input type="text" id="costoConsulta" placeholder="Costo consulta:">
+
+    <!-- 🔘 Botones -->
+    <button type="button" class="btn-principal" onclick="guardarConsulta()">Guardar</button>
+
+  </form>
+
+  <h3 style="margin-top:20px;">Consultas Registradas</h3>
+  <div id="listaConsultas"></div>
+
+</div>
+
+
+
+<!-- 📄 PANTALLA VER CONSULTA -->
+<div id="pantallaVerConsulta" class="pantalla">
+  <div class="container">
+
+    <button onclick="irAConsultas()"
+      style="position:absolute; top:15px; left:15px; background:none; border:none; font-size:18px; color:#ff66c4;">
+      &lt; Volver
+    </button>
+
+    <img src="logo.png" class="cv-logo">
+
+    <h2>Consulta</h2>
+
+    <!-- Datos del paciente -->
+    <input type="text" id="consultaNombre_r" readonly>
+    <input type="text" id="consultaEspecie_r" readonly>
+    <input type="text" id="consultaRaza_r" readonly>
+    <input type="text" id="consultaPropietario_r" readonly>
+
+    <input type="date" id="fechaConsulta_r" readonly>
+    <input type="time" id="horaConsulta_r" readonly>
+
+    <input type="text" id="consultaDireccion_r" readonly>
+
+    <!-- Detalles -->
+    <textarea id="motivoConsulta_r" readonly></textarea>
+    <textarea id="examenClinico_r" readonly></textarea>
+    <textarea id="diagnosticosDiferenciales_r" readonly></textarea>
+    <textarea id="pruebasDiagnosticas_r" readonly></textarea>
+    <textarea id="diagnosticoFinal_r" readonly></textarea>
+    <textarea id="tratamientoAplicado_r" readonly></textarea>
+    <textarea id="formulaMedica_r" readonly></textarea>
+
+    <input type="date" id="fechaControl_r" readonly>
+    <input type="time" id="horaControl_r" readonly>
+
+    <input type="text" id="costoConsulta_r" readonly>
+
+  </div>
+</div>
+
+
+  <script>
+
+
+(function() {
+  // --- helper: detectar IDs alternativos ---
+  function detectMenuId() {
+    if (document.getElementById('menú-principal')) return 'menú-principal';
+    if (document.getElementById('menu-principal')) return 'menu-principal';
+    // fallback: cualquier .pantalla con h1 texto 'Menú Principal'
+    const heads = Array.from(document.querySelectorAll('.pantalla h1, .pantalla h2'));
+    for (const h of heads) {
+      if (h.innerText && h.innerText.toLowerCase().includes('menú principal')) {
+        const p = h.closest('.pantalla');
+        if (p && p.id) return p.id;
+      }
+    }
+    return null;
+  }
+
+  
+
+  // --- guarda referencia al mostrarPantalla anterior si existe ---
+  const originalMostrar = window.mostrarPantalla && typeof window.mostrarPantalla === 'function'
+    ? window.mostrarPantalla
+    : null;
+
+  // --- función que valida login contra localStorage ---
+  function validarLoginDesdeUI() {
+    const correoInput = document.getElementById('loginCorreo');
+    const passInput = document.getElementById('loginContrasena');
+    const stored = localStorage.getItem('usuariaPetsTherapy');
+    console.log('[DEBUG] validarLoginDesdeUI: stored usuario =', stored);
+
+    if (!stored) {
+      alert('No hay usuaria registrada. Por favor regístrate primero.');
+      // forzar pantalla de registro si existe
+      const reg = document.getElementById('pantalla-registro');
+      if (reg) {
+        (originalMostrar || fallbackMostrar)('pantalla-registro');
+      }
+      return false;
+    }
+
+    let usu;
+    try { usu = JSON.parse(stored); } catch(e) { console.error(e); alert('Error leyendo usuario guardado'); return false; }
+
+    const correo = correoInput ? correoInput.value.trim() : '';
+    const pass = passInput ? passInput.value.trim() : '';
+
+    console.log('[DEBUG] login intento:', { correo, pass, usuarioGuardadoCorreo: usu.correo });
+
+    if (correo === usu.correo && pass === usu.contrasena) {
+      // success -> activar sesión
+      localStorage.setItem('sesionActiva', 'true');
+      localStorage.setItem('usuarioActivoCorreo', correo);
+      return true;
+    } else {
+      alert('Correo o contraseña incorrectos.');
+      return false;
+    }
+  }
+
+  // --- función que valida registro desde UI (para calls inesperadas) ---
+  function validarRegistroDesdeUI() {
+    const nombre = document.getElementById('nombre') ? document.getElementById('nombre').value.trim() : '';
+    const correo = document.getElementById('correo') ? document.getElementById('correo').value.trim() : '';
+    const contrasena = document.getElementById('contrasena') ? document.getElementById('contrasena').value.trim() : '';
+    const confirmar = document.getElementById('confirmar') ? document.getElementById('confirmar').value.trim() : '';
+
+    if (!nombre || !correo || !contrasena || !confirmar) {
+      alert('Por favor completa todos los campos de registro.');
+      return false;
+    }
+    if (contrasena !== confirmar) {
+      alert('Las contraseñas no coinciden en el registro.');
+      return false;
+    }
+
+    const usuaria = {
+      nombre,
+      correo,
+      contrasena,
+      cedula: document.getElementById('cedula') ? document.getElementById('cedula').value.trim() : '',
+      telefono: document.getElementById('telefono') ? document.getElementById('telefono').value.trim() : ''
+    };
+
+    localStorage.setItem('usuariaPetsTherapy', JSON.stringify(usuaria));
+    alert('Registro exitoso. Ahora inicia sesión.');
+    return true;
+  }
+
+  // --- fallback mostrarPantalla si no existía ---
+  function fallbackMostrar(id) {
+    document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+    const el = document.getElementById(id);
+    if (el) el.classList.add('activa');
+  }
+
+  // --- reemplazo seguro de mostrarPantalla ---
+  window.mostrarPantalla = function(id) {
+    const menuId = detectMenuId();
+    // normalizamos id sin tilde
+    const normalizedTarget = (id || '').toString();
+
+    console.log('[DEBUG] llamar a mostrarPantalla(', normalizedTarget, ')');
+
+    // Si se intenta mostrar el menú principal y actualmente la pantalla de login está activa,
+    // interceptamos y forzamos validación.
+    const loginScreen = document.getElementById('pantalla-login');
+    const registroScreen = document.getElementById('pantalla-registro');
+
+    const isMenuTarget = menuId && (normalizedTarget === menuId || normalizedTarget === 'menú-principal' || normalizedTarget === 'menu-principal');
+
+    if (isMenuTarget) {
+      // Si la pantalla de login está visible -> validar login desde inputs
+      if (loginScreen && loginScreen.classList.contains('activa')) {
+        const ok = validarLoginDesdeUI();
+        if (ok) {
+          console.log('[DEBUG] login válido vía interceptor -> mostrando menú');
+          // mostrar menú
+          return (originalMostrar || fallbackMostrar)(menuId);
+        } else {
+          // si no válido, permanecer en login
+          console.log('[DEBUG] login inválido vía interceptor -> permanecer en login');
+          return; // no cambiar pantalla
+        }
+      }
+
+      // Si la pantalla de registro está visible y alguien intenta saltar al menú (por ejemplo botón "Registrar" con onclick),
+      // intentamos validar y guardar registro primero.
+      if (registroScreen && registroScreen.classList.contains('activa')) {
+        const okReg = validarRegistroDesdeUI();
+        if (okReg) {
+          // después del registro, normalmente el flujo envía a login; forzamos mostrar login
+          if (document.getElementById('pantalla-login')) {
+            (originalMostrar || fallbackMostrar)('pantalla-login');
+            return;
+          }
+        } else {
+          return;
+        }
+      }
+
+      // Si no estamos en login ni en registro (u otro caso), solo permitir mostrar si hay sesión activa
+      if (localStorage.getItem('sesionActiva') === 'true') {
+        return (originalMostrar || fallbackMostrar)(menuId);
+      } else {
+        // No permitir acceso si no hay sesión
+        alert('Debes iniciar sesión para acceder.');
+        if (document.getElementById('pantalla-login')) (originalMostrar || fallbackMostrar)('pantalla-login');
+        return;
+      }
+    }
+
+    // Para cualquier otra pantalla, si es protegida y no hay sesión -> forzar login
+    const protectedList = [
+  menuId,
+  'pantallaPacientes',
+  'pantallaHistorialMedico',
+  'pantallaVacunas',
+  'pantallaDesparasitaciones',
+  'pantallaRecordatorios',
+  'pantallaExamenes',
+  'pantallaVerExamen',
+  'pantallaExamenesSubidos',   // 💖 ESTA ES LA CLAVE
+  'pantallaTratamiento',
+  'pantallaExamenesSubidos'    // ✔ Repetida intencionalmente para asegurar carga
+];
+
+
+    if (!localStorage.getItem('sesionActiva') && protectedList.includes(normalizedTarget)) {
+      alert('Debes iniciar sesión para acceder.');
+      if (document.getElementById('pantalla-login')) (originalMostrar || fallbackMostrar)('pantalla-login');
+      return;
+    }
+
+    // Si no es caso especial, delegar a la función original (si existía) o al fallback
+    if (originalMostrar) return originalMostrar(id);
+    return fallbackMostrar(id);
+  };
+
+  // --- Exponer helpers globales para debugging ---
+  window.__debug_showStoredUser = function() {
+    console.log('usuariaPetsTherapy ->', localStorage.getItem('usuariaPetsTherapy'));
+    console.log('sesionActiva ->', localStorage.getItem('sesionActiva'));
+    console.log('usuarioActivoCorreo ->', localStorage.getItem('usuarioActivoCorreo'));
+  };
+
+  // Si había una función original, dejamos su referencia en window.__originalMostrar para inspección
+  if (originalMostrar) window.__originalMostrar = originalMostrar;
+
+  console.log('[DEBUG] Interceptor de mostrarPantalla instalado. Ejecuta __debug_showStoredUser() para ver valores guardados.');
+})();
+</script>
+
+
+
+
+<script src="app.js"></script>
+
+
+</body>
+
+
+</html>

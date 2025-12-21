@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Prueba Pantallas</title>
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #ffbce5;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .pantalla {
+      display: none;
+      padding: 20px;
+    }
+
+    .logo {
+      width: 120px;
+      margin: 20px auto;
+      display: block;
+    }
+
+    input {
+      display: block;
+      margin: 10px auto;
+      padding: 8px;
+      border: 2px solid #ff66c4;
+      border-radius: 5px;
+      width: 80%;
+    }
+
+    .btn-principal {
+      display: block;
+      margin: 10px auto;
+      padding: 10px 20px;
+      background-color: #ff66c4;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Pantalla Inicio -->
+  <div id="pantallaInicio" class="pantalla" style="display: block;">
+    <h1>Inicio</h1>
+    <button onclick="mostrarPantalla('pantallaPropietario')" class="btn-principal">Ir a Propietario</button>
+  </div>
+
+  <!-- Pantalla Propietario -->
+  <div id="pantallaPropietario" class="pantalla">
+    <!-- Botón Volver -->
+    <button onclick="mostrarPantalla('pantallaInicio')" 
+      style="position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 18px; color: #ff66c4; cursor: pointer;">
+      &lt; Volver
+    </button>
+
+    <img src="logo.png" alt="Logo PetsTherapy" class="logo">
+    <h1>Propietario</h1>
+
+    <input type="text" placeholder="Nombre completo">
+    <input type="text" placeholder="Dirección">
+    <input type="text" placeholder="Barrio">
+    <input type="text" placeholder="Localidad">
+    <input type="text" placeholder="Teléfono">
+    <input type="email" placeholder="Correo electrónico">
+
+    <button class="btn-principal">Actualizar datos</button>
+    <button class="btn-principal">Pacientes a cargo</button>
+    <button class="btn-principal">Agregar paciente</button>
+    <button class="btn-principal">Guardar</button>
+  </div>
+
+  <script>
+    function mostrarPantalla(id) {
+      const pantallas = document.querySelectorAll('.pantalla');
+      pantallas.forEach(p => p.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>

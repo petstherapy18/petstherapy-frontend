@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Restablecer contraseña | Pets Therapy</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body { 
+    font-family: 'Poppins', sans-serif; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+    background-color: #ffbce5; 
+  } 
+  
+  .container { 
+    text-align: center; 
+    background: #ffbce5; 
+    padding: 30px; 
+    width: 100%; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+  } 
+  
+  h2 { 
+    color: #ff66c4; 
+    margin-bottom: 10px; 
+  } 
+  
+  p { 
+    color: #ff66c4; 
+    font-size: 14px; 
+    margin-bottom: 20px; 
+  } 
+  
+  input { 
+    display: block; 
+    width: 80%; 
+    margin: 10px auto; 
+    padding: 10px; 
+    font-size: 18px; 
+    border: 2px solid #ff66c4; 
+    border-radius: 8px; 
+    color: #ff66c4; 
+  } 
+  
+  button { 
+    background-color: #ffbce5; 
+    color: #ff66c4; 
+    border: 2px solid #ff66c4; 
+    padding: 10px; 
+    width: 90%; 
+    margin-top: 15px; 
+    border-radius: 6px; 
+    font-size: 16px; 
+    font-weight: bold; 
+    cursor: pointer; 
+  } 
+  
+  button:hover { 
+    background-color: #ff66c4; 
+    color: #fff; 
+  } 
+  
+  .decor { 
+    width: 180px; 
+    margin-top: 30px; 
+  } 
+  
+  h1, h2, label, p { 
+    color: #ff66c4; 
+    -webkit-text-stroke: 1px 
+  } 
+  
+  /* Logo */ 
+  .rc-logo { 
+    width: 180px; 
+    margin-top: 50px; 
+  } 
+  
+  .burbuja { 
+    position: fixed; 
+    top: 20px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    background-color: #ff66c4; 
+    color: white; 
+    padding: 12px 20px; 
+    border-radius: 20px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
+    z-index: 1000; 
+    font-weight: 500; 
+    display: none; 
+    animation: fadeInOut 3s ease forwards; 
+  } 
+  
+  @keyframes fadeInOut { 
+    0% { opacity: 0; transform: translate(-50%, -20px); 
+    } 10%, 90% 
+    { opacity: 1; transform: translate(-50%, 0); } 
+    100% { opacity: 0; transform: translate(-50%, -20px); } }
+  </style>
+</head>
+<body>
+  <div class="container"> 
+    <img src="logo.png" alt="Logo Pets Therapy" class="rc-logo" /> 
+    <h2>Restablecer contraseña</h2> 
+    <p>Por favor, escribe tu nueva contraseña.</p> 
+    
+    <form id="formReset"> 
+      <input type="password" id="nuevaContrasena" name="nuevaContrasena" placeholder="Nueva contraseña" required /> 
+      <input type="password" id="confirmarContrasena" name="confirmarContrasena" placeholder="Confirmar contraseña" required /> 
+      <button type="submit">Actualizar contraseña</button> 
+    </form> 
+    <img src="olvidaste-contrasena.png" alt="Decoración" class="decor">
+    <div class="burbuja" id="burbuja"></div>
+
+  <script>
+    // Mostrar burbuja simple
+    function mostrarBurbuja(texto, tipo="info") {
+      const b = document.getElementById('burbuja');
+      b.textContent = texto;
+      b.style.background = tipo === 'error' ? '#ff4d94' : (tipo === 'exito' ? '#2ebf5b' : '#ff66c4');
+      b.style.display = 'block';
+      clearTimeout(b._hideTimer);
+      b._hideTimer = setTimeout(()=> b.style.display = 'none', 3000);
+    }
+
+    // Obtener token desde query string ?token=...
+    function getTokenFromQuery(){
+      const params = new URLSearchParams(window.location.search);
+      return params.get('token') || null;
+    }
+
+    // Al cargar, si no hay token mostramos aviso
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = getTokenFromQuery();
+      if (!token) {
+        mostrarBurbuja('Token no encontrado en el enlace. Usa el enlace enviado por correo.', 'error');
+      }
+    });
+
+    // Submit del formulario
+    document.getElementById('formReset').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nueva = document.getElementById('nuevaContrasena').value.trim();
+      const confirma = document.getElementById('confirmarContrasena').value.trim();
+
+      if (!nueva || !confirma) {
+        return mostrarBurbuja('Completa ambas contraseñas', 'error');
+      }
+      if (nueva !== confirma) {
+        return mostrarBurbuja('Las contraseñas no coinciden', 'error');
+      }
+
+      const token = getTokenFromQuery();
+      if (!token) return mostrarBurbuja('Token no encontrado en el enlace', 'error');
+
+      try {
+        // Verifica que tu servidor esté ejecutando en localhost:5000
+const res = await fetch(`http://localhost:5000/api/password/reset/${token}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nuevaContrasena: nueva })
+        });
+
+        const data = await res.json().catch(()=>({})); // evita crash si respuesta no es JSON
+
+        if (!res.ok) {
+          console.error('Respuesta backend no OK', res.status, data);
+          return mostrarBurbuja(data.message || 'Error al actualizar la contraseña', 'error');
+        }
+
+        mostrarBurbuja('Contraseña actualizada con éxito', 'exito');
+        setTimeout(()=> window.location.href = 'index.html', 2000);
+      } catch(err) {
+        console.error('Error fetch reset:', err);
+        mostrarBurbuja('Error de red. Asegúrate de que el backend esté en http://localhost:5000', 'error');
+      }
+    });
+  </script>
+</body>
+</html>
