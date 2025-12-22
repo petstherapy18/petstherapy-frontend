@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PetsTherapy</string>
+    <string name="title_activity_main">PetsTherapy</string>
+    <string name="package_name">com.yineth.petstherapy</string>
+    <string name="custom_url_scheme">com.yineth.petstherapy</string>
+</resources>
