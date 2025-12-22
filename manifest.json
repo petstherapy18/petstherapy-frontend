@@ -3,7 +3,7 @@
   "short_name": "PetsTherapy",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "##ffbce5",
+  "background_color": "#ffbce5",
   "theme_color": "#ff66c4",
   "icons": [
     {
