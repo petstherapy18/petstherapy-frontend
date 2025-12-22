@@ -1,6 +1,5 @@
 {
   "appId": "com.yineth.petstherapy",
   "appName": "PetsTherapy",
-  "webDir": "www",
-  "bundledWebRuntime": false
+  "webDir": "."
 }
