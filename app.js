@@ -284,7 +284,7 @@ mostrarBurbuja("Error de red. Intenta de nuevo.", "error");
 // 🌸 Bandera global para evitar volver al inicio cuando se ve un examen
 window._viendoExamen = false;
 
-
+const backend_url = `https://petstherapy-backend.onrender.com`
 
 
 // ✅ MANTENER SESIÓN CON BACKEND — NO ROMPE OTRAS PANTALLAS
