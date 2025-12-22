@@ -1,0 +1,1727 @@
+/* Estilos generales */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #ffbce5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Contenedor */
+.container {
+    text-align: center;
+    width: 100%;
+}
+.rcText{
+  margin-top: 5px;
+}
+
+/* Logo */
+.logo1 {
+    width: 180px;
+    margin-bottom: 30px;
+}
+
+/* Botón con borde (Iniciar sesión) */
+.btn-outline {
+    display: block;
+    width: 220px;
+    padding: 12px;
+    margin: 10px auto;
+    border: 3px solid #ff66c4;
+    background-color: #ffbce5;
+    color: #ff66c4;
+    font-size: 24px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-outline:hover {
+    background-color: #ff66c4;
+    color: #fff;
+}
+
+/* Botón Registrarme */
+.btn {
+    display: block;
+    width: 220px;
+    padding: 12px;
+    margin: 10px auto;
+    border: 3px solid #ff66c4;
+    background-color: #ffbce5;
+    color: #ff66c4;
+    font-size: 24px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #ff66c4;
+    color: #fff;
+}
+
+/* Botón tipo link */
+.btn-link {
+    display: block;
+    padding: 12px;
+    margin: 10px auto;
+    background: none;
+    border: none;
+    color: #ff66c4;
+    font-size: 20px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+/* Imagen decorativa */
+.decor {
+    width: 180px;
+    margin-top: 30px;
+}
+
+
+/*Pantalla registro ------------------------------------------*/
+
+/* Fondo general */
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #ffbce5;
+  margin: 0;
+  padding: 0;
+}
+
+/* Contenedor centrado */
+.container {
+  display: flex;
+  flex-direction: column;  /* organiza en columna */
+  justify-content: center; /* centra vertical */
+  align-items: center;     /* centra horizontal */
+  min-height: 100vh;       /* ocupa toda la altura de la pantalla */
+  text-align: center;
+}
+
+.logo {
+    width: 180px;
+    margin-top: 250px;
+}
+
+/* Título */
+.titulo {
+  color: #ff66c4;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 2px #fff;
+  text-align: center;
+}
+
+/* Campos */
+.formulario input {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #ff66c4;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #ff66c4;
+    }
+
+
+
+/* Botón principal (Registrar) */
+.btn-principal {
+  background-color: #ffbce5;
+  color: #ff66c4;
+  border: 2px solid #ff66c4;
+  padding: 12px;
+  width: 100%;
+  margin-top: 15px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  }
+
+/* Botón secundario (Volver) */
+.btn-secundario {
+  background-color: transparent;
+  border: 2px solid #ff66c4;
+  color: #ff66c4;
+  padding: 12px;
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-principal:hover {
+    background-color: #ff66c4;
+    color: #fff;
+    }
+
+
+.btn-secundario:hover {
+    background-color: #ff66c4;
+    color: #fff;
+    }    
+
+
+
+.decor {
+  width: 120px;
+  margin: 10px auto; /* margen automático izquierda/derecha lo centra */
+  display: block;    /* asegura que se centre como bloque */
+}
+
+.campos-inicio-sesion input{
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #ff66c4;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #ff66c4;
+    }
+    
+
+  body {
+  background-color: #ffbce5;
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  text-align: center;
+  padding: 20px;
+}
+
+h1, h2, label, p {
+  color: #ff66c4;
+  -webkit-text-stroke: 1px 
+}
+
+input, button {
+  display: block;
+  width: 80%;
+  margin: 10px auto;
+  padding: 10px;
+  font-size: 18px;
+  border: 2px solid #ff66c4;
+  border-radius: 8px;
+}
+
+button {
+  background-color: #ffbce5;
+  color: #ff66c4;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Contenedor general */
+.pt-container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Logo */
+.pt-logo {
+  height: 100px;      /* ajusta el tamaño a gusto */
+  margin: 10px auto;
+  display: block;
+}
+
+/* Botón volver */
+.pt-back {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #ff66c4;
+  cursor: pointer;
+}
+
+/* Título */
+.pt-title {
+  margin-top: 0px;
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: #ff66c4;
+}
+
+/* Foto paciente */
+.pt-photo img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid #ff66c4;
+  margin-bottom: 10px;
+}
+
+.pt-upload-btn {
+  background: #ff66c4;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+/* Inputs */
+.pt-input {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* Botones principales */
+.pt-btn {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 12px;
+  background: #ff66c4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#perfilPaciente .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Para mantener orden vertical */
+  padding-top: 400px; /* <-- Esto baja todo el contenido */
+}
+
+.pantalla .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra horizontalmente los elementos */
+  }
+
+  .pantalla input[type="text"],
+.pantalla input[type="email"],
+.pantalla input[type="password"],
+.pantalla input[type="tel"],
+.pantalla input[type="number"],
+.pantalla input[type="date"] {
+  /* Espacio entre los cuadros */
+  box-sizing: border-box;
+  display: block;
+}
+
+/* Logo */
+.r-logo {
+    width: 180px;
+    margin-top: 300px;
+}
+
+/* Logo */
+.rc-logo {
+    width: 180px;
+    margin-top: 20px;
+}
+
+/* Logo */
+.mp-logo {
+    width: 180px;
+    margin-top: 5px;
+}
+
+/* Logo */
+.p-logo {
+    width: 180px;
+    margin-top: 400px;
+}
+
+/* Logo */
+.pp-logo {
+    width: 180px;
+    margin-top: 150px;
+    }
+
+
+
+/* Contenedor */
+#pantallaPacientes .container {
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  margin-top: 40px;
+}
+
+/* Botón volver */
+.btn-volver {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: none;
+  border: none;
+  color: #ff66c4;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+
+/* Título */
+
+/* Sección añadir nuevo paciente */
+.nuevo-paciente {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.add-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  border: 2px solid #ff66c4;
+  background-color: #ffc6eb;
+  border-radius: 8px;
+  font-size: 60px;
+  color: #ff66c4;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.add-box:hover {
+  transform: scale(1.05);
+}
+
+.add-text {
+  color: #ff66c4;
+  font-weight: bold;
+  font-size: 17px;
+  margin-top: 8px;
+}
+
+/* Subtítulo */
+.pt-subtitle {
+  color: #ff66c4;
+  text-shadow: 1px 1px 0 #ff66c4;
+  margin-top: 35px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Lista de pacientes */
+.lista-pacientes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  justify-items: center;
+  margin-top: 15px;
+}
+
+/* Botones de pacientes */
+.btn-paciente {
+  background-color: #ffc6eb;
+  border: 2px solid #ff66c4;
+  color: #ff66c4;
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 120px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.btn-paciente:hover {
+  background-color: #ff8ed1;
+  color: white;
+}
+
+
+
+
+/* Logo */
+.ad-logo {
+    width: 180px;
+    margin-top: 200px;
+}
+
+/* Logo */
+.pc-logo {
+    width: 180px;
+    margin-top: 450px;
+}
+
+/* 🌸 Pacientes a cargo */
+.pacientes-lista {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.paciente-card {
+  width: 200px;
+  background-color: #ffd6eb;
+  border: 2px solid #ff66c4;
+  border-radius: 6px;
+  padding: 10px;
+  color: #ff66c4;
+  font-size: 16px;
+  text-align: left;
+}
+
+/* Imagen decorativa */
+.garfield {
+    width: 180px;
+    margin-top: 30px;
+}
+
+/* Logo */
+.hm-logo {
+    width: 180px;
+    margin-top: 900px;
+}
+
+.pt-photo img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 2px solid #ff66c4;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+
+.va-logo {
+    width: 180px;
+    margin-top: 900px;
+}
+
+.v-logo {
+    width: 180px;
+    margin-top: 400px;
+}
+
+/* Etiquetas de campos en Vacunas */
+.vacunas-form .etiqueta {
+  display: block;
+  font-weight: bold;
+  color: #ff66c4;
+  text-align: left;
+  width: 230px;
+  margin: 5px auto -5px auto;
+  font-size: 14px;
+}
+
+.input-box {
+  background-color: #ffe0f0; /* fondo igual al estilo rosado claro */
+  border: 2px solid #ff66c4;
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 0 5px #ffbce5;
+}
+
+.input-box label {
+  display: block;
+  font-weight: bold;
+  color: #ff66c4;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+.input-box input[type="date"] {
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 14px;
+  text-align: center;
+  background-color: #fff;
+  color: #ff66c4;
+  box-shadow: inset 0 0 5px #ffbce5;
+}
+
+/* Logo */
+.d-logo {
+    width: 180px;
+    margin-top: 900px;
+}
+
+/* Logo */
+.a-logo {
+    width: 180px;
+    margin-top: 950px;
+}
+
+
+
+.pt-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #d63384;
+}
+
+.whatsapp-icon {
+  width: 24px;
+  vertical-align: middle;
+}
+
+.pt-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.formulario input, 
+.formulario select, 
+.formulario textarea {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #ff66c4;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #ff66c4
+  }
+
+  textarea {
+  height: 50px; /* igual que los input */
+  padding: 12px; /* igual que el padding de tus inputs */
+  resize: none; /* evita agrandarlo */
+  box-sizing: border-box; /* hace que el padding no aumente la altura total */
+  font-size: 14px;
+}
+
+.pt-form button {
+  display: block;
+  width: 80%;
+  margin: 10px auto;
+  padding: 10px;
+  font-size: 18px;
+  border: 2px solid #ff66c4;
+  border-radius: 8px;
+}
+
+.pt-form button:hover {
+  background-color: #ff99d9;
+}
+
+
+/* Logo */
+.re-logo {
+    width: 180px;
+    margin-top: 1100px;
+}
+
+.contenedor-botones {
+  position: relative;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.boton {
+  display: block;
+  width: 80%;
+  margin: 10px auto;
+  padding: 10px;
+  background-color: #ffc9e5;
+  border: 2px solid #ff66c4;
+  color: #ff66c4;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.burbuja {
+  position: absolute;
+  bottom: 100%; /* Hace que salga arriba */
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  color: #ff66c4;
+  border: 2px solid #ff66c4;
+  border-radius: 15px;
+  padding: 10px 15px;
+  box-shadow: 3px 3px 0px black;
+  width: 220px;
+  font-weight: bold;
+  font-size: 13px;
+  text-align: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Adaptación para pantallas pequeñas */
+@media (max-width: 600px) {
+  .burbuja {
+    top: 70px; /* un poco más abajo del logo */
+    width: 80%; /* ocupa menos ancho */
+    font-size: 12px; /* texto más pequeño */
+    padding: 8px 15px;
+  }
+}
+
+
+/* Triángulo de la burbuja */
+.burbuja::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 10px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+  filter: drop-shadow(1px 1px 0 black);
+}
+
+.burbuja.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.check {
+  display: block;
+  color: green;
+  font-size: 18px;
+  margin-top: 5px;
+}
+
+
+/* Logo */
+.c-logo {
+    width: 180px;
+    margin-top: 1700px;
+}
+
+/* Ajuste especial para input tipo hora */
+
+.input-box input[type="time"] {
+  width: 100%;
+  background-color: white;
+  color: #ff33b5;
+  font-size: 15px;
+  box-sizing: border-box;
+  appearance: none;
+  box-shadow: inset 0 0 5px #ffbce5;
+  border: none;
+}
+
+/* Oculta el reloj que puede mover la caja */
+.input-box input[type="time"]::-webkit-datetime-edit {
+  padding: 0;
+  margin: 0;
+}
+
+/* Logo */
+.t-logo {
+    width: 180px;
+    margin-top: 850px;
+}
+
+
+
+/* 💬 Burbuja flotante */
+.burbuja-exito {
+  display: none;
+  position: fixed;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff66c4;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 999;
+}
+
+
+
+
+.burbuja-exito {
+  display: none;
+  background-color: #ffbce5;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 20px;
+  text-align: center;
+  margin-top: 15px;
+  box-shadow: 0 0 10px rgba(255, 102, 196, 0.6);
+  animation: burbujaAnim 0.3s ease-in-out;
+}
+
+@keyframes burbujaAnim {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+
+/* Logo */
+.e-logo {
+    width: 180px;
+    margin-top: 800px;
+}
+
+#listaArchivos {
+  list-style: none;
+  padding: 0;
+  margin-top: 12px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#listaArchivos li {
+  background-color: #ffe6f4;
+  border: 1px solid #ff99d6;
+  border-radius: 14px;
+  padding: 10px 14px;
+  color: #ff33aa;
+  font-size: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(255, 102, 196, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#listaArchivos li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(255, 102, 196, 0.35);
+}
+
+#listaArchivos li .icono {
+  font-size: 18px;
+}
+
+.btn-eliminar {
+  background-color: #ffbce5;
+  border: 1px solid #ff66c4;
+  color: #ff33aa;
+  border-radius: 10px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-eliminar:hover {
+  background-color: #ff66c4;
+  color: white;
+}
+
+/* Logo */
+.sa-logo {
+    width: 180px;
+    margin-top: 100px;
+}
+
+/* 🌸 Estilo para los nombres de archivos clickeables */
+.archivo-nombre {
+  color: #d63384;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Logo */
+.pf-logo {
+    width: 180px;
+    margin-top: 550px;
+}
+
+.ie-logo {
+    width: 180px;
+    margin-top: 250px;
+}
+
+.ip-logo {
+    width: 180px;
+    margin-top: 50px;
+}
+
+.rr-logo {
+    width: 180px;
+    margin-top: 80px;
+}
+
+.ra-logo {
+    width: 180px;
+    margin-top: 50px;
+}
+
+.rm-logo {
+    width: 180px;
+    margin-top: 50px;
+}
+
+.aa-logo {
+    width: 180px;
+    margin-top: 50px;
+}
+
+
+.as-logo {
+    width: 180px;
+    margin-top: 50px;
+}
+
+
+/* 🌸 Estilos para Ingresos/Egresos */
+#pantallaIngresosEgresos, 
+#pantallaIngresosEgresosPaciente, 
+#pantallaResumenReportes,
+#pantallaResumenDesplegado,
+#pantallaAnual,
+#pantallaMensual,
+#pantallaAnadirAnio,
+#pantallaAnioSeleccionado {
+  text-align: center;
+  padding-top: 80px;
+}
+
+#pantallaIngresosEgresos h2,
+#pantallaIngresosEgresosPaciente h2,
+#pantallaResumenReportes h2,
+#pantallaResumenDesplegado h2,
+#pantallaAnual h2,
+#pantallaMensual h2,
+#pantallaAnadirAnio h2,
+#pantallaAnioSeleccionado h2 {
+  color: #ff66c4;
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.formulario textarea {
+  resize: none;
+  height: 80px;
+}
+
+.btn-volver {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #ff66c4;
+  cursor: pointer;
+}
+
+
+.formulario-paciente input {
+  display: block;
+  width: 80%;
+  margin: 8px auto;
+  padding: 8px;
+  border: 2px solid #ff66c4;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #ff66c4;
+}
+
+/* Contenedor general de los pacientes */
+.lista-pacientes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  max-height: 150px; /* 🔹 Limita el alto del área de pacientes */
+  overflow-y: auto;  /* 🔹 Activa scroll vertical si hay muchos */
+  padding: 10px;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  min-height: 150px; /* reserva espacio para botones */
+  margin-bottom: 20px;
+
+
+}
+
+/* Botones individuales */
+.btn-paciente {
+  background-color: #ffbce5;
+  color: #ff66c4;
+  border: 2px solid #ff66c4;
+  border-radius: 10px;
+  padding: 6px 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+
+/* 🌸 Modal para añadir paciente */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 182, 193, 0.9);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-content {
+  background: #fff0f8;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  width: 85%;
+  max-width: 350px;
+  text-align: center;
+}
+
+.modal-content input {
+  display: block;
+  width: 90%;
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ff66c4;
+}
+
+.modal-content button {
+  margin: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background-color: #ff66c4;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-cancelar {
+  background-color: #ffb6c1;
+}
+
+
+/* 🌸 Contenedor principal */
+#listaPacientesCargo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  justify-content: center;
+  align-items: start;
+  margin: 20px auto;
+  width: 90%;
+  max-width: 300px;
+  overflow-y: auto;
+  max-height: 300px;
+  padding: 10px;
+}
+
+/* 🌸 Cada tarjeta */
+.paciente-card {
+  background: #ffc0e6;
+  border: 2px solid #ff66c4;
+  border-radius: 15px;
+  padding: 10px;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  color: #ff66c4;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  word-wrap: break-word;
+}
+
+.paciente-card:hover {
+  transform: scale(1.05);
+}
+
+/* 🌸 Títulos dentro de la tarjeta */
+.paciente-card h3 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+/* 🌸 Texto de especie y raza */
+.paciente-card p {
+  font-size: 14px;
+  margin: 4px 0;
+}
+
+/* 🌸 Scroll visualmente suave */
+#listaPacientesCargo::-webkit-scrollbar {
+  width: 8px;
+}
+
+#listaPacientesCargo::-webkit-scrollbar-thumb {
+  background-color: #ff99cc;
+  border-radius: 10px;
+}
+
+#pantallaExamenesSubidos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 130px;
+  text-align: center;
+}
+
+#pantallaExamenesSubidos h2 {
+  color: #ff66c4;
+}
+
+#pantallaExamenesSubidos p,
+#pantallaExamenesSubidos label {
+  color: #ff66c4;
+}
+
+#pantallaExamenesSubidos button {
+  background: #ffbce5;
+  border: 2px solid #ff66c4;
+  color: #ff66c4;
+  cursor: pointer;
+}
+
+#pantallaExamenesSubidos ul {
+  margin-top: 20px;
+  list-style: none;
+}
+
+
+
+
+
+/* 🔥 Versión unificada y funcional de pantallas */
+.pantalla {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #ffbce5;
+  text-align: center;
+}
+
+/* Cuando una pantalla esté activa */
+.pantalla.activa {
+  display: flex;
+}
+
+/* Contenedor que no crece más allá del espacio asignado */
+.contenedor-lista-examenes {
+    max-height: 45vh;  /* puedes subirlo a 50vh o 60vh si quieres */
+    overflow-y: auto;  /* ACTIVA el scroll vertical */
+    overflow-x: hidden;
+    padding-right: 10px;
+    margin-top: 10px;
+    text-align: center;
+    
+}
+
+/* Para que cada examen se vea limpio y ordenado */
+.examen-item {
+    background: #ffbce5;
+    border: 2px solid #ff66c4;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.examen-card {
+  background-color: #ffb3d9; /* Rosado clarito como el fondo */
+  border: 2px solid #ff4da6; /* Rosado oscuro como el del botón */
+  border-radius: 15px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+  color: #ff4da6;
+}
+
+.btn-eliminar-examen {
+  background-color: #ff4d88;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.btn-eliminar-examen:hover {
+  background-color: #ff4da6;
+}
+
+
+/* Placeholder en color gris clarito */
+input::placeholder {
+  color: #f57fba; /* O el color que prefieras */
+}
+
+/* Borde del input cuando está enfocado */
+input:focus {
+  border-color: #ff66c4; /* Color rosado que estás usando */
+  outline: none; /* Elimina el borde de enfoque por defecto */
+}
+
+
+input:focus, textarea:focus {
+  border-color: #ff66c4; /* borde rosado */
+  outline: none;          /* quita el borde por defecto del navegador */
+  color: #ff66c4;         /* color del texto mientras escribes */
+}
+
+textarea::placeholder {
+  color: #f57fba;
+}
+
+
+.custom-file {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.custom-file-label {
+  background-color: #ffb3d9;
+  color: #ff66c4;
+  border: 2px solid #ff66c4;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+}
+
+.custom-file-input {
+  display: none;
+}
+
+.file-selected {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #ff66c4;
+}
+
+
+
+
+.examen-card {
+  max-width: 170px; /* o el ancho que quieras */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  word-wrap: break-word; /* corta palabras largas */
+  overflow-wrap: anywhere; /* refuerzo moderno */
+}
+
+.examen-card .archivos-examen a {
+  display: block;        /* cada archivo en su línea */
+  color: #ff66c4;
+  text-decoration: none;
+  font-size: 14px;
+  word-break: break-word; /* corta nombres largos */
+}
+
+#pantallaVerExamen .formulario{
+
+  text-align: left;
+
+}
+
+
+#pantallaExamenesSubidos .container{
+
+max-width: 300px
+
+}
+
+
+/* Logo */
+.sa-logo {
+    width: 180px;
+    margin-top: 5px;
+    
+}
+
+
+/* Logo */
+.ex-logo {
+    width: 180px;
+    margin-top: 5px;
+}
+
+
+.vacuna-card {
+  max-width: 300px; /* o el ancho que quieras */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  word-wrap: break-word; /* corta palabras largas */
+  overflow-wrap: anywhere; /* refuerzo moderno */
+}
+
+.vacuna-card .archivos-examen a {
+  display: block;        /* cada archivo en su línea */
+  color: #ff66c4;
+  text-decoration: none;
+  font-size: 14px;
+  word-break: break-word; /* corta nombres largos */
+}
+
+
+#pantallaVacunas .container{
+
+max-width: 300px
+
+}
+
+/* Contenedor que no crece más allá del espacio asignado */
+.contenedor-listaVacunas {
+    max-height: 45vh;  /* puedes subirlo a 50vh o 60vh si quieres */
+    overflow-y: auto;  /* ACTIVA el scroll vertical */
+    overflow-x: hidden;
+    padding-right: 10px;
+    margin-top: 10px;
+    
+}
+
+/* Para que cada examen se vea limpio y ordenado */
+.vacuna-item {
+    background: #ffbce5;
+    border: 2px solid #ff66c4;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.vacuna-card {
+  background-color: #ffb3d9; /* Rosado clarito como el fondo */
+  border: 2px solid #ff4da6; /* Rosado oscuro como el del botón */
+  border-radius: 15px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+  color: #ff4da6;
+}
+
+.btn-eliminar-vacuna {
+  background-color: #ff4d88;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.btn-eliminar-vacuna:hover {
+  background-color: #ff4da6;
+}
+
+input[type="text"], input[type="date"] {
+  
+  color: #ff4da6;
+  
+}
+
+
+#listaVacunas {
+  margin-top: 20px;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.vacuna-card {
+  background: #ffbce5;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.vacuna-card button {
+  margin-left: 5px;
+}
+
+#pantallaDesparasitaciones h3{
+
+  color: #ff4da6;
+
+}
+
+#listaDesparasitaciones {
+  margin-top: 20px;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 5px;
+  background-color: #ffbce5;
+}
+
+
+/* Contenedor que no crece más allá del espacio asignado */
+.contenedor-listaDesparasitaciones {
+    max-height: 45vh;  /* puedes subirlo a 50vh o 60vh si quieres */
+    overflow-y: auto;  /* ACTIVA el scroll vertical */
+    overflow-x: hidden;
+    padding-right: 10px;
+    margin-top: 10px;
+    
+}
+
+
+/* Logo */
+.dv-logo {
+    width: 180px;
+    margin-top: 400px;
+}
+
+#pantallaVerDesparasitacion textarea, input{
+
+display: block;
+  max-width: 220px;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #ff66c4;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #ff66c4;
+
+}
+
+/* Logo */
+.av-logo {
+    width: 180px;
+    margin-top: 450px;
+}
+
+#pantallaAntipulgas h3{
+
+  color: #ff4da6;
+
+}
+
+#listaAntipulgas {
+  margin-top: 20px;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 5px;
+  background-color: #ffbce5;
+}
+
+/* Contenedor que no crece más allá del espacio asignado */
+.contenedor-listaAntipulgas {
+    max-height: 45vh;  /* puedes subirlo a 50vh o 60vh si quieres */
+    overflow-y: auto;  /* ACTIVA el scroll vertical */
+    overflow-x: hidden;
+    padding-right: 10px;
+    margin-top: 10px;
+    
+}
+
+#pantallaVerAntipulgas textarea, input{
+
+display: block;
+  max-width: 220px;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #ff66c4;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #ff66c4;
+  width: 100%;
+  
+}
+
+
+
+/* Logo */
+.tv-logo {
+    width: 180px;
+    margin-top: 500px;
+}
+
+#pantallaTratamiento h3{
+
+  color: #ff4da6;
+
+}
+
+#listaTratamientos {
+  margin-top: 20px;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 5px;
+  background-color: #ffbce5;
+}
+
+/* Contenedor que no crece más allá del espacio asignado */
+.contenedor-listaTratamientos {
+    max-height: 45vh;  /* puedes subirlo a 50vh o 60vh si quieres */
+    overflow-y: auto;  /* ACTIVA el scroll vertical */
+    overflow-x: hidden;
+    padding-right: 10px;
+    margin-top: 10px;
+    
+}
+
+#pantallaVerTratamiento textarea, input{
+
+display: block;
+  max-width: 220px;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #ff66c4;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #ff66c4;
+  width: 100%;
+  
+}
+
+
+/* Logo */
+.cv-logo {
+    width: 180px;
+    margin-top: 1100px;
+}
+
+
+#pantallaConsultas h3{
+
+  color: #ff4da6;
+
+}
+
+#listaConsultas {
+  margin-top: 20px;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 5px;
+  background-color: #ffbce5;
+}
+
+/* Contenedor que no crece más allá del espacio asignado */
+.contenedor-listaConsultas {
+    max-height: 45vh;  /* puedes subirlo a 50vh o 60vh si quieres */
+    overflow-y: auto;  /* ACTIVA el scroll vertical */
+    overflow-x: hidden;
+    padding-right: 10px;
+    margin-top: 10px;
+    
+}
+
+#pantallaVerConsulta textarea, input{
+
+display: block;
+  max-width: 220px;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #ff66c4;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #ff66c4;
+  width: 220px;
+  
+}
+
+textarea {
+
+resize: none;
+  height: 80px
+  
+}
+
+#pantallaVerConsulta input[type="time"],
+#pantallaConsultas input[type="time"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  font-size: 16px;
+}
+
+#pantallaVacunas h3{
+
+  color: #ff4da6;
+
+}
+
+
+
+
+#pantallaRecordatorios h3{
+
+  color: #ff4da6;
+
+}
+
+#listaRecordatorios {
+  margin-top: 20px;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 5px;
+  background-color: #ffbce5;
+}
+
+/* Contenedor que no crece más allá del espacio asignado */
+.contenedor-listaRecordatorios {
+    max-height: 45vh;  /* puedes subirlo a 50vh o 60vh si quieres */
+    overflow-y: auto;  /* ACTIVA el scroll vertical */
+    overflow-x: hidden;
+    padding-right: 10px;
+    margin-top: 10px;
+    
+}
+
+#pantallaVerRecordatorio {
+
+
+max-width: 220px;
+
+}
+
+#pantallaVerRecordatorio textarea, input, select{
+
+display: block;
+  max-width: 220px;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #ff66c4;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #ff66c4;
+  width: 100%;
+  
+}
+
+
+#pantallaRecordatorios .input-box
+#pantallaVerRecordatorio .input-box {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  font-size: 16px;
+  max-width: 220px;
+}
+
+
+#pantallaVerExamen form,
+#pantallaVerExamen textarea,
+#pantallaVerExamen input {
+  display: block;
+  max-width: 220px;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #ff66c4;
+  width: 100%;
+}
+
+
+#pantallaVerExamen label {
+  text-align: left;
+  align-self: flex-start;
+  width: 100%;
+  display: block;
+}
+
+#pantallaRecordatorios {
+
+max-width: 220px;
+
+}
+
+.vr-logo {
+
+ width: 180px;
+    margin-top: 750px;
+
+}
+
+#pantallaRecordatorios textarea, input, select{
+
+display: block;
+  max-width: 220px;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #ff66c4;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #ff66c4;
+  width: 100%;
+  
+}
+
+/* Logo */
+.rev-logo {
+    width: 180px;
+    margin-top: 700px;
+}
+
+
+#pantallaPropietario {
+
+max-width: 220px;
+
+}
+
+.pr-logo {
+    width: 180px;
+    margin-top: 250px;
+}
+
+#pantallaConsultas {
+
+max-width: 220px;
+
+}
+
+#pantallaVerConsulta {
+
+max-width: 220px;
+
+}

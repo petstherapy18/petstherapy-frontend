@@ -1,0 +1,35 @@
+{
+  "name": "PetsTherapy",
+  "short_name": "PetsTherapy",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffbce5",
+  "theme_color": "#ff66c4",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-720.png",
+      "sizes": "571x1280",
+      "type": "image/png"
+    }
+  ],
+  
+  "screenshots": [
+  {
+    "src": "screenshot1.png",
+    "sizes": "321x612",
+    "type": "image/png",
+    "form_factor": "wide"
+  },
+  {
+    "src": "screenshot-mobile.png",
+    "sizes": "720x1434",
+    "type": "image/png"
+  }
+]
+
+}
