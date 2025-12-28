@@ -3002,29 +3002,27 @@ function revisarRecordatoriosSeguros() {
     const paciente = obtenerPacienteActivo();
     if (!paciente || !Array.isArray(recordatoriosGlobales)) return;
 
-    const hoy = new Date();
-    hoy.setHours(0,0,0,0);
+    const ahora = new Date();
 
     recordatoriosGlobales.forEach(rec => {
       if (!rec.fechaAvisoVet || rec.enviadoVet) return;
 
-      const aviso = new Date(rec.fechaAvisoVet);
-      aviso.setHours(0,0,0,0);
+      const fechaAviso = new Date(rec.fechaAvisoVet);
 
-      if (aviso.getTime() === hoy.getTime()) {
-
-        if (Notification.permission !== "granted") {
-          Notification.requestPermission();
-        }
+      // 🔔 Si ya pasó la fecha/hora de aviso
+      if (fechaAviso <= ahora) {
 
         if (Notification.permission === "granted") {
-          new Notification("🐾 Recordatorio Pets Therapy", {
-            body: `${rec.tipo} de ${paciente.nombre} en 2 días`,
-            icon: "logo.png"
+          navigator.serviceWorker.ready.then(reg => {
+            reg.showNotification("🐾 Recordatorio Pets Therapy", {
+              body: `${rec.tipo} de ${paciente.nombre} en 2 días`,
+              icon: "logo.png",
+              vibrate: [200, 100, 200]
+            });
           });
         }
 
-        // ⚠️ IMPORTANTE: marcar en backend
+        // 🔹 Marcar como notificado en backend
         marcarNotificadoVet(paciente._id, rec._id);
       }
     });
@@ -3033,6 +3031,7 @@ function revisarRecordatoriosSeguros() {
     console.error("Error revisando recordatorios:", e);
   }
 }
+
 
 
 
@@ -3179,9 +3178,20 @@ if ("serviceWorker" in navigator) {
       .then(() => console.log("✅ Service Worker registrado"))
       .catch((err) => console.error("❌ Error SW:", err));
 
+      pedirPermisoNotificaciones();
     // 🔔 Revisar recordatorios al abrir la app
     revisarRecordatoriosHoy();
 
   });
 }
 
+
+async function pedirPermisoNotificaciones() {
+  if (!("Notification" in window)) {
+    console.warn("Este navegador no soporta notificaciones");
+    return;
+  }
+
+  const permiso = await Notification.requestPermission();
+  console.log("Permiso de notificación:", permiso);
+}
