@@ -3001,41 +3001,53 @@ const paciente = obtenerPacienteActivo();
 // - si hoy == fechaAvisoProp && vetConfirmado && !enviadoProp => abre WA al propietario y marca enviadoProp = true
 // 🌟 Notificaciones seguras 2 días antes del evento
 function revisarRecordatoriosSeguros() {
-  console.log("✅ Revisando recordatorios seguros...");
-
   try {
     const paciente = obtenerPacienteActivo();
-    if (!paciente) return;
+    if (!paciente || !Array.isArray(recordatoriosGlobales)) return;
 
-    const hoyIso = new Date().toISOString().split("T")[0];
+    const hoy = new Date();
+    hoy.setHours(0,0,0,0);
 
-    for (const rec of recordatoriosGlobales) {
-      if (!rec.fechaEvento) continue;
+    recordatoriosGlobales.forEach(rec => {
+      if (!rec.fechaAvisoVet || rec.enviadoVet) return;
 
-      const fechaEvento = new Date(rec.fechaEvento);
-      const fechaAviso = new Date(fechaEvento);
-      fechaAviso.setDate(fechaAviso.getDate() - 2);
-      const avisoIso = fechaAviso.toISOString().split("T")[0];
+      const aviso = new Date(rec.fechaAvisoVet);
+      aviso.setHours(0,0,0,0);
 
-      if (avisoIso === hoyIso && !rec.notificadoVet) {
+      if (aviso.getTime() === hoy.getTime()) {
+
         if (Notification.permission !== "granted") {
           Notification.requestPermission();
         }
 
         if (Notification.permission === "granted") {
-          new Notification("Recordatorio para ti 🐾", {
-            body: `${rec.tipo} de ${paciente.nombre} el ${fechaEvento.toISOString().split("T")[0]}`
+          new Notification("🐾 Recordatorio Pets Therapy", {
+            body: `${rec.tipo} de ${paciente.nombre} en 2 días`,
+            icon: "logo.png"
           });
         }
 
-        rec.notificadoVet = true; // solo memoria
+        // ⚠️ IMPORTANTE: marcar en backend
+        marcarNotificadoVet(paciente._id, rec._id);
       }
-    }
+    });
+
   } catch (e) {
-    console.warn("Error seguro revisando recordatorios:", e);
+    console.error("Error revisando recordatorios:", e);
   }
 }
 
+
+
+async function marcarNotificadoVet(pacienteId, recId) {
+  await fetch(
+    `https://petstherapy-backend.onrender.com/api/pacientes/${pacienteId}/recordatorios/${recId}/notificadoVet`,
+    {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" }
+    }
+  );
+}
 
 
 
