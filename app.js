@@ -3050,6 +3050,55 @@ async function marcarNotificadoVet(pacienteId, recId) {
 }
 
 
+function fechaISOHoy() {
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  return hoy.toISOString().split("T")[0];
+}
+
+
+async function revisarRecordatoriosHoy() {
+  try {
+    const hoyISO = fechaISOHoy();
+
+    const res = await fetch(
+      "https://petstherapy-backend.onrender.com/api/pacientes"
+    );
+    const pacientes = await res.json();
+
+    for (const paciente of pacientes) {
+      if (!paciente.recordatorios) continue;
+
+      for (const rec of paciente.recordatorios) {
+        if (!rec.fechaAvisoVet) continue;
+
+        const fechaAviso = new Date(rec.fechaAvisoVet);
+        fechaAviso.setHours(0, 0, 0, 0);
+        const fechaAvisoISO = fechaAviso.toISOString().split("T")[0];
+
+        if (fechaAvisoISO === hoyISO && rec.enviadoVet === false) {
+          console.log("🔔 RECORDATORIO PARA HOY:", {
+            paciente: paciente.nombre,
+            tipo: rec.tipo,
+            fechaEvento: rec.fechaEvento
+          });
+
+          alert(
+            `🔔 Recordatorio\nPaciente: ${paciente.nombre}\nTipo: ${rec.tipo}`
+          );
+
+          // 🔹 marcar como notificado
+          await fetch(
+            `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/recordatorios/${rec._id}/notificadoVet`,
+            { method: "PUT" }
+          );
+        }
+      }
+    }
+  } catch (err) {
+    console.error("❌ Error revisando recordatorios:", err);
+  }
+}
 
 
 
@@ -3126,9 +3175,16 @@ async function inicializarApp() {
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
+
+    // ✅ Registrar Service Worker
     navigator.serviceWorker
       .register("sw.js")
       .then(() => console.log("✅ Service Worker registrado"))
       .catch((err) => console.error("❌ Error SW:", err));
+
+    // 🔔 Revisar recordatorios al abrir la app
+    revisarRecordatoriosHoy();
+
   });
 }
+
