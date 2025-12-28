@@ -2737,7 +2737,6 @@ const paciente = obtenerPacienteActivo();
   document.getElementById("fechaEnvio").value = "";
   document.getElementById("horaEnvio").value = "";
   document.getElementById("mensaje").value = "";
-  document.getElementById("estado").value = "";
 
   // cargar recordatorios desde backend
   cargarRecordatorios(paciente._id);
@@ -2756,7 +2755,6 @@ const paciente = obtenerPacienteActivo();
     const fechaEnvio = document.getElementById("fechaEnvio").value;
     const horaEnvio = document.getElementById("horaEnvio").value;
     const mensaje = document.getElementById("mensaje").value;
-    const estado = document.getElementById("estado").value;
 
     if (!fecha || !tipo) return mostrarBurbuja("⚠ Por favor completa la fecha y el tipo");
 
@@ -2767,7 +2765,6 @@ const paciente = obtenerPacienteActivo();
       fechaEnvio,
       horaEnvio,
       mensaje,
-      notas: estado
     };
 
     // Guardar en backend
@@ -2785,7 +2782,7 @@ const paciente = obtenerPacienteActivo();
     }
 
     // ✅ Limpiar campos del formulario
-    ["tipoEvento","fechaEvento","horaEvento","fechaEnvio","horaEnvio","mensaje","estado"]
+    ["tipoEvento","fechaEvento","horaEvento","fechaEnvio","horaEnvio","mensaje"]
       .forEach(id => document.getElementById(id).value = "");
 
     // ✅ Recargar lista de recordatorios
