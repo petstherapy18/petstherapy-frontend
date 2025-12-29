@@ -3205,24 +3205,19 @@ async function pedirPermisoNotificaciones() {
 }
 
 
-function programarNotificacion(titulo, mensaje, fechaEvento) {
-  const ahora = Date.now();
-
-  // 🧪 PRUEBA: notificar en 10 segundos
-  const delay = 10 * 1000; // 10 segundos
-
-  console.log("🔔 Notificación de prueba programada en 10 segundos");
+function programarNotificacionPrueba() {
+  console.log("🧪 Programando notificación de prueba...");
 
   setTimeout(() => {
     navigator.serviceWorker.ready.then(registro => {
-      registro.showNotification(titulo, {
-        body: mensaje,
+      registro.showNotification("🐾 Prueba PetsTherapy", {
+        body: "Si ves esto, las notificaciones funcionan ✅",
         icon: "icon-192.png",
         badge: "icon-192.png",
         vibrate: [200, 100, 200],
-        tag: "petstherapy-recordatorio"
+        tag: "petstherapy-test"
       });
     });
-  }, delay);
+  }, 5000); // ⏱ 5 segundos
 }
 
