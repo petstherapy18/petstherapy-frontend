@@ -2748,11 +2748,14 @@ async function guardarRecordatorio() {
     if (!paciente?._id) return mostrarBurbuja("⚠ No hay paciente seleccionado");
 
     const recordatorio = {
-      tipo: document.getElementById("tipoEvento").value,
-      fechaEvento: document.getElementById("fechaEvento").value,
-      horaEvento: document.getElementById("horaEvento").value || null,
-      mensaje: document.getElementById("mensaje").value || ""
-    };
+  tipo: document.getElementById("tipoEvento").value,
+  fechaEvento: document.getElementById("fechaEvento").value,
+  horaEvento: document.getElementById("horaEvento").value || null,
+  mensaje: document.getElementById("mensaje").value || "",
+  diasAntesVet: 2,   // 👈 CLAVE
+  diasAntesProp: 0   // 👈 CLAVE
+};
+
 
     if (!recordatorio.fechaEvento || !recordatorio.tipo) {
       return mostrarBurbuja("⚠ Fecha y tipo son obligatorios");
