@@ -3020,8 +3020,7 @@ function revisarRecordatoriosSeguros() {
           });
         }
 
-        // ✅ Luego avisar al backend
-        marcarNotificadoVet(paciente._id, rec._id);
+        
       }
     });
 
@@ -3034,15 +3033,7 @@ function revisarRecordatoriosSeguros() {
 
 
 
-async function marcarNotificadoVet(pacienteId, recId) {
-  await fetch(
-    `https://petstherapy-backend.onrender.com/api/pacientes/${pacienteId}/recordatorios/${recId}/notificadoVet`,
-    {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" }
-    }
-  );
-}
+
 
 
 function fechaISOHoy() {
