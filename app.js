@@ -2792,8 +2792,10 @@ const paciente = obtenerPacienteActivo();
 programarNotificacionReal(
   "🐾 Recordatorio PetsTherapy",
   recordatorio.mensaje,
-  recordatorio.fechaAvisoVet
+  recordatorio.fechaAvisoVet,
+  recordatorio.horaAvisoVet
 );
+
 
 
 
@@ -3209,15 +3211,18 @@ async function pedirPermisoNotificaciones() {
 
 
 
-function programarNotificacionReal(titulo, mensaje, fechaAvisoISO) {
+function programarNotificacionReal(titulo, mensaje, fecha, hora) {
   const ahora = Date.now();
-  const fechaAviso = new Date(fechaAvisoISO).getTime();
-  const delay = fechaAviso - ahora;
+
+  const fechaAviso = construirFecha(fecha, hora);
+  const tiempoNotificacion = fechaAviso.getTime();
+
+  const delay = tiempoNotificacion - ahora;
 
   console.log("⏰ Delay notificación (ms):", delay);
 
-  if (delay <= 0) {
-    console.warn("⚠️ La fecha de aviso ya pasó");
+  if (isNaN(delay) || delay <= 0) {
+    console.warn("⚠️ Fecha inválida o ya pasada");
     return;
   }
 
@@ -3227,10 +3232,13 @@ function programarNotificacionReal(titulo, mensaje, fechaAvisoISO) {
         body: mensaje,
         icon: "icon-192.png",
         badge: "icon-192.png",
-        vibrate: [200, 100, 200],
         tag: "petstherapy-recordatorio"
       });
     });
   }, delay);
 }
 
+
+function construirFecha(fecha, hora) {
+  return new Date(`${fecha.split("T")[0]}T${hora}:00`);
+}
