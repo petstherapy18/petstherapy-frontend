@@ -2789,14 +2789,18 @@ const paciente = obtenerPacienteActivo();
     cargarRecordatorios(paciente._id);
 
     // 🔔 Programar notificación local (2 días antes)
-if (recordatorio.fechaAvisoVet && recordatorio.horaAvisoVet) {
-  programarNotificacionReal(
+const recGuardado = data.recordatorio;
+
+// 🔔 PROGRAMAR NOTIFICACIÓN SOLO CON DATOS DEL BACKEND
+if (recGuardado?.fechaAvisoVet && recGuardado?.horaAvisoVet) {
+  programarNotificacionPrueba(
     "🐾 Recordatorio PetsTherapy",
-    recordatorio.mensaje,
-    recordatorio.fechaAvisoVet,
-    recordatorio.horaAvisoVet
+    recGuardado.mensaje,
+    recGuardado.fechaAvisoVet,
+    recGuardado.horaAvisoVet
   );
 }
+
 
 
 
@@ -3214,18 +3218,17 @@ async function pedirPermisoNotificaciones() {
 
 
 
-function programarNotificacionReal(titulo, mensaje, fecha, hora) {
-  const ahora = Date.now();
+function programarNotificacionPrueba(titulo, mensaje, fecha, hora) {
+  console.log("🧪 Programando notificación de prueba...");
 
-  const fechaAviso = construirFecha(fecha, hora);
-  if (!fechaAviso) return;
+  const fechaNoti = construirFecha(fecha, hora);
+  if (!fechaNoti) return;
 
-  const delay = fechaAviso.getTime() - ahora;
-
+  const delay = fechaNoti.getTime() - Date.now();
   console.log("⏰ Delay notificación (ms):", delay);
 
-  if (isNaN(delay) || delay <= 0) {
-    console.warn("⚠️ Fecha inválida o ya pasada");
+  if (delay <= 0) {
+    console.log("⚠️ Fecha ya pasada");
     return;
   }
 
@@ -3235,6 +3238,7 @@ function programarNotificacionReal(titulo, mensaje, fecha, hora) {
         body: mensaje,
         icon: "icon-192.png",
         badge: "icon-192.png",
+        vibrate: [200, 100, 200],
         tag: "petstherapy-recordatorio"
       });
     });
@@ -3243,12 +3247,14 @@ function programarNotificacionReal(titulo, mensaje, fecha, hora) {
 
 
 
-function construirFecha(fecha, hora) {
-  if (!fecha || !hora) {
-    console.warn("⚠️ Fecha u hora no definida:", fecha, hora);
-    return null;
-  }
 
-  return new Date(`${fecha.split("T")[0]}T${hora}:00`);
+function construirFecha(fecha, hora) {
+  if (!fecha || !hora) return null;
+
+  const fechaStr = typeof fecha === "string"
+    ? fecha.split("T")[0]
+    : new Date(fecha).toISOString().split("T")[0];
+
+  return new Date(`${fechaStr}T${hora}:00`);
 }
 
