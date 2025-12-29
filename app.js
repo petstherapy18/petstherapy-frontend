@@ -3258,3 +3258,17 @@ function construirFecha(fecha, hora) {
   return new Date(`${fechaStr}T${hora}:00`);
 }
 
+
+
+window.notificacionPruebaReal = function () {
+  console.log("🧪 Lanzando notificación de prueba inmediata");
+
+  navigator.serviceWorker.ready.then(registro => {
+    registro.showNotification("🐾 PetsTherapy", {
+      body: "Esta es una notificación de prueba inmediata",
+      icon: "icon-192.png",
+      badge: "icon-192.png",
+      vibrate: [200, 100, 200]
+    });
+  });
+};
