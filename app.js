@@ -3057,13 +3057,7 @@ function revisarRecordatoriosHoy() {
 document.addEventListener("DOMContentLoaded", () => {
   // revisar al cargar
 
-   if (vetBtn) vetBtn.addEventListener("click", async (ev) => {
-    const recId = ev.target.dataset.recId;
-    if (!recId) return;
-    await confirmarRecordatorio(recId);
-  });
-
-  const cambiarBtn = document.getElementById("cambiarFecha_btn");
+    const cambiarBtn = document.getElementById("cambiarFecha_btn");
   if (cambiarBtn) cambiarBtn.addEventListener("click", async (ev) => {
     const recId = ev.target.dataset.recId;
     if (!recId) return;
