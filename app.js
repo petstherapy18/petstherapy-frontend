@@ -3205,7 +3205,10 @@ async function pedirPermisoNotificaciones() {
 }
 
 
-function programarNotificacionPrueba() {
+
+
+
+window.programarNotificacionPrueba = function () {
   console.log("🧪 Programando notificación de prueba...");
 
   setTimeout(() => {
@@ -3218,6 +3221,6 @@ function programarNotificacionPrueba() {
         tag: "petstherapy-test"
       });
     });
-  }, 5000); // ⏱ 5 segundos
-}
+  }, 5000);
+};
 
