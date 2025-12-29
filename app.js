@@ -2789,12 +2789,15 @@ const paciente = obtenerPacienteActivo();
     cargarRecordatorios(paciente._id);
 
     // 🔔 Programar notificación local (2 días antes)
-programarNotificacionReal(
-  "🐾 Recordatorio PetsTherapy",
-  recordatorio.mensaje,
-  recordatorio.fechaAvisoVet,
-  recordatorio.horaAvisoVet
-);
+if (recordatorio.fechaAvisoVet && recordatorio.horaAvisoVet) {
+  programarNotificacionReal(
+    "🐾 Recordatorio PetsTherapy",
+    recordatorio.mensaje,
+    recordatorio.fechaAvisoVet,
+    recordatorio.horaAvisoVet
+  );
+}
+
 
 
 
@@ -3215,9 +3218,9 @@ function programarNotificacionReal(titulo, mensaje, fecha, hora) {
   const ahora = Date.now();
 
   const fechaAviso = construirFecha(fecha, hora);
-  const tiempoNotificacion = fechaAviso.getTime();
+  if (!fechaAviso) return;
 
-  const delay = tiempoNotificacion - ahora;
+  const delay = fechaAviso.getTime() - ahora;
 
   console.log("⏰ Delay notificación (ms):", delay);
 
@@ -3239,6 +3242,13 @@ function programarNotificacionReal(titulo, mensaje, fecha, hora) {
 }
 
 
+
 function construirFecha(fecha, hora) {
+  if (!fecha || !hora) {
+    console.warn("⚠️ Fecha u hora no definida:", fecha, hora);
+    return null;
+  }
+
   return new Date(`${fecha.split("T")[0]}T${hora}:00`);
 }
+
