@@ -2900,24 +2900,7 @@ function verRecordatorio(recordatorioId) {
 
 
 
-// confirmar por vet -> llama al PATCH del backend
-async function confirmarRecordatorio(recId) {
-  const paciente = obtenerPacienteActivo();
-  if (!paciente) return mostrarBurbuja("No hay paciente activo");
 
-  const res = await fetch(
-    `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/recordatorios/${recId}/confirm`,
-    { method: "PATCH" }
-  );
-
-  if (!res.ok) {
-    const e = await res.json().catch(() => ({ message: "Error servidor" }));
-    return mostrarBurbuja(`❌ ${e.message}`);
-  }
-
-  mostrarBurbuja("✅ Confirmado. El propietario recibirá el recordatorio.");
-  cargarRecordatorios(paciente._id);
-}
 
 
 // cambiar fecha -> abre prompt simple o usar un input en UI
@@ -3074,8 +3057,7 @@ function revisarRecordatoriosHoy() {
 document.addEventListener("DOMContentLoaded", () => {
   // revisar al cargar
 
-  const vetBtn = document.getElementById("vetConfirm_btn");
-  if (vetBtn) vetBtn.addEventListener("click", async (ev) => {
+   if (vetBtn) vetBtn.addEventListener("click", async (ev) => {
     const recId = ev.target.dataset.recId;
     if (!recId) return;
     await confirmarRecordatorio(recId);
