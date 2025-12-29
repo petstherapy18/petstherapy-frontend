@@ -2788,6 +2788,14 @@ const paciente = obtenerPacienteActivo();
     // ✅ Recargar lista de recordatorios
     cargarRecordatorios(paciente._id);
 
+    // 🔔 Programar notificación local (2 días antes)
+programarNotificacion(
+  "🐾 Recordatorio PetsTherapy",
+  `${tipo} de ${paciente.nombre} en 2 días`,
+  fecha
+);
+
+
   mostrarBurbuja("✔ Recordatorio guardado con éxito 🎉");
 
   } catch (e) {
@@ -3195,3 +3203,26 @@ async function pedirPermisoNotificaciones() {
   const permiso = await Notification.requestPermission();
   console.log("Permiso de notificación:", permiso);
 }
+
+
+function programarNotificacion(titulo, mensaje, fechaEvento) {
+  const ahora = Date.now();
+
+  // 🧪 PRUEBA: notificar en 10 segundos
+  const delay = 10 * 1000; // 10 segundos
+
+  console.log("🔔 Notificación de prueba programada en 10 segundos");
+
+  setTimeout(() => {
+    navigator.serviceWorker.ready.then(registro => {
+      registro.showNotification(titulo, {
+        body: mensaje,
+        icon: "icon-192.png",
+        badge: "icon-192.png",
+        vibrate: [200, 100, 200],
+        tag: "petstherapy-recordatorio"
+      });
+    });
+  }, delay);
+}
+
