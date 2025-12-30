@@ -2774,6 +2774,10 @@ async function guardarRecordatorio() {
     if (!res.ok) throw new Error(data.error || "Error servidor");
 
     mostrarBurbuja("✔ Recordatorio guardado");
+
+    limpiarFormularioRecordatorio();
+
+
     cargarRecordatorios(paciente._id);
 
   } catch (e) {
@@ -2990,40 +2994,29 @@ const paciente = obtenerPacienteActivo();
 // - si hoy == fechaAvisoProp && vetConfirmado && !enviadoProp => abre WA al propietario y marca enviadoProp = true
 // 🌟 Notificaciones seguras 2 días antes del evento
 function revisarRecordatoriosSeguros() {
-  try {
-    const paciente = obtenerPacienteActivo();
-    if (!paciente || !Array.isArray(recordatoriosGlobales)) return;
+  const ahora = new Date();
 
-    const ahora = new Date();
+  recordatoriosGlobales.forEach(async rec => {
+    if (!rec.fechaAvisoVet || rec.enviadoVet) return;
 
-    recordatoriosGlobales.forEach(rec => {
-      if (!rec.fechaAvisoVet || rec.enviadoVet) return;
+    const fechaAviso = new Date(rec.fechaAvisoVet);
+    if (fechaAviso > ahora) return;
 
-      const fechaAviso = new Date(rec.fechaAvisoVet);
+    // 🔔 Notificación
+    if (Notification.permission === "granted") {
+      const reg = await navigator.serviceWorker.ready;
+      reg.showNotification("🐾 Recordatorio PetsTherapy", {
+        body: `${rec.tipo} de ${rec.nombrePaciente} en 2 días`,
+        icon: "icon-192.png",
+        vibrate: [200, 100, 200]
+      });
+    }
 
-      if (fechaAviso <= ahora) {
-
-        // ✅ MARCAR PRIMERO EN MEMORIA
-        rec.enviadoVet = true;
-
-        if (Notification.permission === "granted") {
-          navigator.serviceWorker.ready.then(reg => {
-            reg.showNotification("🐾 Recordatorio Pets Therapy", {
-              body: `${rec.tipo} de ${paciente.nombre} en 2 días`,
-              icon: "logo.png",
-              vibrate: [200, 100, 200]
-            });
-          });
-        }
-
-        
-      }
-    });
-
-  } catch (e) {
-    console.error("Error revisando recordatorios:", e);
-  }
+    // ⚠️ IMPORTANTE: solo marcar en memoria
+    rec.enviadoVet = true;
+  });
 }
+
 
 
 
@@ -3225,4 +3218,12 @@ function estadoRecordatorio(r) {
   if (r.vetConfirmado && r.enviadoProp) return "confirmado";
   if (r.enviadoVet) return "pendiente";
   return "nuevo";
+}
+function limpiarFormularioRecordatorio() {
+  document.getElementById("tipoEvento").value = "";
+  document.getElementById("fechaEvento").value = "";
+  document.getElementById("horaEvento").value = "";
+  document.getElementById("fechaEnvio").value = "";
+  document.getElementById("horaEnvio").value = "";
+  document.getElementById("mensaje").value = "";
 }
