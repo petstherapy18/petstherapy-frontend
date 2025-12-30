@@ -2820,27 +2820,40 @@ function mostrarRecordatorios(lista) {
   cont.innerHTML = "";
 
   if (!Array.isArray(lista) || lista.length === 0) {
-    cont.innerHTML = "<p style='text-align:center;color:##ff4da6;'>No hay recordatorios registrados.</p>";
+    cont.innerHTML = "<p style='text-align:center;color:#ff4da6;'>No hay recordatorios registrados.</p>";
     return;
   }
 
   lista.forEach(r => {
-    const fechaEv = r.fechaEvento ? (new Date(r.fechaEvento)).toISOString().split("T")[0] : "";
-    const descripcion = r.descripcion || r.descripcionEnvio || "";
+
+    // 👉 determinar estado del recordatorio
+    let estadoTexto = "🕒 Pendiente de confirmar";
+    let estadoClase = "estado-pendiente";
+
+    if (r.vetConfirmado && r.enviadoProp) {
+      estadoTexto = "✅ Confirmado y enviado";
+      estadoClase = "estado-confirmado";
+    }
+
     const div = document.createElement("div");
     div.classList.add("vacuna-card");
+
     div.innerHTML = `
-      <span><strong>${(r.tipo||"TIPO").toUpperCase()}</strong></span>
+      <div class="${estadoClase}">
+        <strong>${(r.tipo || "TIPO").toUpperCase()}</strong><br>
+        <span style="font-size:12px;">${estadoTexto}</span>
+      </div>
+
       <div>
         <button class="btn-principal" onclick="verRecordatorio('${r._id}')">Ver</button>
         <button onclick="eliminarRecordatorio('${r._id}')">🗑</button>
       </div>
     `;
+
     cont.appendChild(div);
   });
-
-
 }
+
 
 
 async function confirmarYEnviarRecordatorio() {
@@ -3206,3 +3219,10 @@ window.notificacionPruebaReal = function () {
     });
   });
 };
+
+
+function estadoRecordatorio(r) {
+  if (r.vetConfirmado && r.enviadoProp) return "confirmado";
+  if (r.enviadoVet) return "pendiente";
+  return "nuevo";
+}
