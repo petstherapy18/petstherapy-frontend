@@ -2806,8 +2806,7 @@ async function cargarRecordatorios(id) {
     mostrarRecordatorios(recordatoriosGlobales);
 
     revisarRecordatoriosSeguros();
-    revisarRecordatoriosHoy();
-
+    
   } catch (err) {
     console.error(err);
     mostrarBurbuja("Error cargando recordatorios");
@@ -2994,28 +2993,33 @@ const paciente = obtenerPacienteActivo();
 // - si hoy == fechaAvisoProp && vetConfirmado && !enviadoProp => abre WA al propietario y marca enviadoProp = true
 // 🌟 Notificaciones seguras 2 días antes del evento
 function revisarRecordatoriosSeguros() {
-  const ahora = new Date();
+  if (Notification.permission !== "granted") return;
 
-  recordatoriosGlobales.forEach(async rec => {
-    if (!rec.fechaAvisoVet || rec.enviadoVet) return;
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
 
-    const fechaAviso = new Date(rec.fechaAvisoVet);
-    if (fechaAviso > ahora) return;
+  navigator.serviceWorker.ready.then(reg => {
+    recordatoriosGlobales.forEach(rec => {
+      if (!rec.fechaAvisoVet) return;
+      if (rec.enviadoVet) return;
 
-    // 🔔 Notificación
-    if (Notification.permission === "granted") {
-      const reg = await navigator.serviceWorker.ready;
+      const fechaAviso = new Date(rec.fechaAvisoVet);
+      fechaAviso.setHours(0, 0, 0, 0);
+
+      // 🔒 SOLO el día exacto
+      if (fechaAviso.getTime() !== hoy.getTime()) return;
+
       reg.showNotification("🐾 Recordatorio PetsTherapy", {
         body: `${rec.tipo} de ${rec.nombrePaciente} en 2 días`,
         icon: "icon-192.png",
         vibrate: [200, 100, 200]
       });
-    }
 
-    // ⚠️ IMPORTANTE: solo marcar en memoria
-    rec.enviadoVet = true;
+      rec.enviadoVet = true;
+    });
   });
 }
+
 
 
 
@@ -3032,28 +3036,7 @@ function fechaISOHoy() {
 }
 
 
-function revisarRecordatoriosHoy() {
 
-  const hoy = new Date().toISOString().split("T")[0];
-  if (Notification.permission !== "granted") return;
-
-  navigator.serviceWorker.ready.then(reg => {
-    recordatoriosGlobales.forEach(rec => {
-      if (rec.enviadoVet) return;
-
-      const fechaAviso = rec.fechaAvisoVet?.split("T")[0];
-      if (fechaAviso === hoy) {
-        notificacionHoyMostrada = true;
-
-        reg.showNotification("🔔 Recordatorio hoy", {
-          body: `Paciente: ${rec.nombrePaciente}\nTipo: ${rec.tipo}`,
-          icon: "icon-192.png",
-          vibrate: [200, 100, 200]
-        });
-      }
-    });
-  });
-}
 
 
 
@@ -3120,7 +3103,6 @@ async function inicializarApp() {
 
   setTimeout(() => {
   revisarRecordatoriosSeguros();
-  revisarRecordatoriosHoy();
 }, 2000);
 
 }
