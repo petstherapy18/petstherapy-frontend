@@ -3107,9 +3107,14 @@ async function inicializarApp() {
     console.error("Error inicializando app:", e);
   }
 
-  setTimeout(() => {
-  revisarRecordatoriosSeguros();
-}, 2000);
+  setTimeout(async () => {
+  const paciente = obtenerPacienteActivo();
+  if (!paciente?._id) return;
+
+  await cargarRecordatorios(paciente._id); // 👈 carga primero
+  revisarRecordatoriosSeguros();            // 👈 luego revisa
+}, 3000);
+
 
 }
 
