@@ -2991,40 +2991,40 @@ const paciente = obtenerPacienteActivo();
 // - si hoy == fechaAvisoVet && !enviadoVet => notifica a la vet (UI) y marca enviadoVet = true
 // - si hoy == fechaAvisoProp && vetConfirmado && !enviadoProp => abre WA al propietario y marca enviadoProp = true
 // 🌟 Notificaciones seguras 2 días antes del evento
-function revisarRecordatoriosSeguros() {
-  if (Notification.permission !== "granted") return;
+// function revisarRecordatoriosSeguros() {
+//   if (Notification.permission !== "granted") return;
 
-  const hoy = new Date();
-  hoy.setHours(0, 0, 0, 0);
+//   const hoy = new Date();
+//   hoy.setHours(0, 0, 0, 0);
 
-  recordatoriosGlobales.forEach(async rec => {
+//   recordatoriosGlobales.forEach(async rec => {
 
-    if (!rec.fechaAvisoVet) return;
-    if (rec.enviadoVet) return;
+//     if (!rec.fechaAvisoVet) return;
+//     if (rec.enviadoVet) return;
 
-    const fechaAviso = new Date(rec.fechaAvisoVet);
-    fechaAviso.setHours(0, 0, 0, 0);
+//     const fechaAviso = new Date(rec.fechaAvisoVet);
+//     fechaAviso.setHours(0, 0, 0, 0);
 
-    const fechaEvento = new Date(rec.fechaEvento);
-    fechaEvento.setHours(0, 0, 0, 0);
+//     const fechaEvento = new Date(rec.fechaEvento);
+//     fechaEvento.setHours(0, 0, 0, 0);
 
-    // ❌ Evento vencido → jamás notificar
-    if (fechaEvento < hoy) return;
+//     // ❌ Evento vencido → jamás notificar
+//     if (fechaEvento < hoy) return;
 
-    // ❌ Aún no es el día del aviso
-    if (fechaAviso.getTime() !== hoy.getTime()) return;
+//     // ❌ Aún no es el día del aviso
+//     if (fechaAviso.getTime() !== hoy.getTime()) return;
 
-    const reg = await navigator.serviceWorker.ready;
-    reg.showNotification("🐾 Recordatorio PetsTherapy", {
-      body: `${rec.tipo} de ${rec.nombrePaciente} en 2 días`,
-      icon: "icon-192.png",
-      vibrate: [200, 100, 200]
-    });
+//     const reg = await navigator.serviceWorker.ready;
+//     reg.showNotification("🐾 Recordatorio PetsTherapy", {
+//       body: `${rec.tipo} de ${rec.nombrePaciente} en 2 días`,
+//       icon: "icon-192.png",
+//       vibrate: [200, 100, 200]
+//     });
 
-    // ⚠️ SOLO en memoria (MVP)
-    rec.enviadoVet = true;
-  });
-}
+//     // ⚠️ SOLO en memoria (MVP)
+//     rec.enviadoVet = true;
+//   });
+// }
 
 
 
@@ -3107,13 +3107,13 @@ async function inicializarApp() {
     console.error("Error inicializando app:", e);
   }
 
-  setTimeout(async () => {
-  const paciente = obtenerPacienteActivo();
-  if (!paciente?._id) return;
+//   setTimeout(async () => {
+//   const paciente = obtenerPacienteActivo();
+//   if (!paciente?._id) return;
 
-  await cargarRecordatorios(paciente._id); // 👈 carga primero
-  revisarRecordatoriosSeguros();            // 👈 luego revisa
-}, 3000);
+//   await cargarRecordatorios(paciente._id); // 👈 carga primero
+//   revisarRecordatoriosSeguros();            // 👈 luego revisa
+// }, 3000);
 
 
 }
@@ -3148,32 +3148,32 @@ async function pedirPermisoNotificaciones() {
 
 
 
-function programarNotificacionPrueba(titulo, mensaje, fecha, hora) {
-  console.log("🧪 Programando notificación de prueba...");
+// function programarNotificacionPrueba(titulo, mensaje, fecha, hora) {
+//   console.log("🧪 Programando notificación de prueba...");
 
-  const fechaNoti = construirFecha(fecha, hora);
-  if (!fechaNoti) return;
+//   const fechaNoti = construirFecha(fecha, hora);
+//   if (!fechaNoti) return;
 
-  const delay = fechaNoti.getTime() - Date.now();
-  console.log("⏰ Delay notificación (ms):", delay);
+//   const delay = fechaNoti.getTime() - Date.now();
+//   console.log("⏰ Delay notificación (ms):", delay);
 
-  if (delay <= 0) {
-    console.log("⚠️ Fecha ya pasada");
-    return;
-  }
+//   if (delay <= 0) {
+//     console.log("⚠️ Fecha ya pasada");
+//     return;
+//   }
 
-  setTimeout(() => {
-    navigator.serviceWorker.ready.then(registro => {
-      registro.showNotification(titulo, {
-        body: mensaje,
-        icon: "icon-192.png",
-        badge: "icon-192.png",
-        vibrate: [200, 100, 200],
-        tag: "petstherapy-recordatorio"
-      });
-    });
-  }, delay);
-}
+//   setTimeout(() => {
+//     navigator.serviceWorker.ready.then(registro => {
+//       registro.showNotification(titulo, {
+//         body: mensaje,
+//         icon: "icon-192.png",
+//         badge: "icon-192.png",
+//         vibrate: [200, 100, 200],
+//         tag: "petstherapy-recordatorio"
+//       });
+//     });
+//   }, delay);
+// }
 
 
 
