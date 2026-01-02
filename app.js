@@ -2805,7 +2805,6 @@ async function cargarRecordatorios(id) {
     recordatoriosGlobales = await res.json();
     mostrarRecordatorios(recordatoriosGlobales);
 
-    revisarRecordatoriosSeguros();
     
   } catch (err) {
     console.error(err);
@@ -2998,25 +2997,32 @@ function revisarRecordatoriosSeguros() {
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
 
-  navigator.serviceWorker.ready.then(reg => {
-    recordatoriosGlobales.forEach(rec => {
-      if (!rec.fechaAvisoVet) return;
-      if (rec.enviadoVet) return;
+  recordatoriosGlobales.forEach(async rec => {
 
-      const fechaAviso = new Date(rec.fechaAvisoVet);
-      fechaAviso.setHours(0, 0, 0, 0);
+    if (!rec.fechaAvisoVet) return;
+    if (rec.enviadoVet) return;
 
-      // 🔒 SOLO el día exacto
-      if (fechaAviso.getTime() !== hoy.getTime()) return;
+    const fechaAviso = new Date(rec.fechaAvisoVet);
+    fechaAviso.setHours(0, 0, 0, 0);
 
-      reg.showNotification("🐾 Recordatorio PetsTherapy", {
-        body: `${rec.tipo} de ${rec.nombrePaciente} en 2 días`,
-        icon: "icon-192.png",
-        vibrate: [200, 100, 200]
-      });
+    const fechaEvento = new Date(rec.fechaEvento);
+    fechaEvento.setHours(0, 0, 0, 0);
 
-      rec.enviadoVet = true;
+    // ❌ Evento vencido → jamás notificar
+    if (fechaEvento < hoy) return;
+
+    // ❌ Aún no es el día del aviso
+    if (fechaAviso.getTime() !== hoy.getTime()) return;
+
+    const reg = await navigator.serviceWorker.ready;
+    reg.showNotification("🐾 Recordatorio PetsTherapy", {
+      body: `${rec.tipo} de ${rec.nombrePaciente} en 2 días`,
+      icon: "icon-192.png",
+      vibrate: [200, 100, 200]
     });
+
+    // ⚠️ SOLO en memoria (MVP)
+    rec.enviadoVet = true;
   });
 }
 
