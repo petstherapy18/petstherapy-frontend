@@ -3220,3 +3220,12 @@ function limpiarFormularioRecordatorio() {
   document.getElementById("horaEnvio").value = "";
   document.getElementById("mensaje").value = "";
 }
+
+
+async function registrarTokenPush(token) {
+  await fetch("https://petstherapy-backend.onrender.com/api/push/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token })
+  });
+}
