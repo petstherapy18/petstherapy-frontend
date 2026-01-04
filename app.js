@@ -3111,6 +3111,9 @@ async function inicializarApp() {
     console.error("Error inicializando app:", e);
   }
 
+  iniciarPushFCM();
+
+
 //   setTimeout(async () => {
 //   const paciente = obtenerPacienteActivo();
 //   if (!paciente?._id) return;
@@ -3123,19 +3126,19 @@ async function inicializarApp() {
 }
 
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
+// if ("serviceWorker" in navigator) {
+//   window.addEventListener("load", () => {
 
-    // ✅ Registrar Service Worker
-    navigator.serviceWorker
-      .register("sw.js")
-      .then(() => console.log("✅ Service Worker registrado"))
-      .catch((err) => console.error("❌ Error SW:", err));
+//     // ✅ Registrar Service Worker
+//     navigator.serviceWorker
+//       .register("sw.js")
+//       .then(() => console.log("✅ Service Worker registrado"))
+//       .catch((err) => console.error("❌ Error SW:", err));
 
-      pedirPermisoNotificaciones();
+//       pedirPermisoNotificaciones();
 
-  });
-}
+//   });
+// }
 
 
 async function pedirPermisoNotificaciones() {
@@ -3236,33 +3239,42 @@ async function registrarTokenPush(token) {
 
 
 import { PushNotifications } from '@capacitor/push-notifications';
+import { Capacitor } from '@capacitor/core';
 
-document.addEventListener('deviceready', () => {
-  console.log("App lista");
-  alert("TOKEN FCM:\n" + token.value);
+async function iniciarPushFCM() {
+  if (!Capacitor.isNativePlatform()) {
+    console.log("No es plataforma nativa, FCM no aplica");
+    return;
+  }
 
+  const perm = await PushNotifications.requestPermissions();
+  console.log("Permisos FCM:", perm);
 
-  PushNotifications.requestPermissions().then(result => {
-    if (result.receive === 'granted') {
-      PushNotifications.register();
-    } else {
-      console.log("Permiso de notificaciones DENEGADO");
-    }
-  });
+  if (perm.receive !== 'granted') {
+    alert("Permiso de notificaciones denegado");
+    return;
+  }
+
+  await PushNotifications.register();
 
   PushNotifications.addListener('registration', token => {
-    console.log('TOKEN FCM:', token.value);
+    console.log('🔥 TOKEN FCM:', token.value);
+    alert("TOKEN FCM:\n" + token.value);
+
+    // opcional: enviarlo al backend
+    registrarTokenPush(token.value);
   });
 
   PushNotifications.addListener('registrationError', err => {
-    console.error('Error registro:', err);
+    console.error('❌ Error registro FCM:', err);
+    alert("Error FCM: " + JSON.stringify(err));
   });
 
   PushNotifications.addListener('pushNotificationReceived', notification => {
     alert(
-      "Notificación recibida:\n" +
+      "🔔 Notificación recibida\n\n" +
       notification.title + "\n" +
       notification.body
     );
   });
-});
+}
