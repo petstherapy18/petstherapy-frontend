@@ -3275,3 +3275,7 @@ async function iniciarPushFCM() {
     );
   });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  alert("APP.JS SE CARGÓ CORRECTAMENTE");
+});
