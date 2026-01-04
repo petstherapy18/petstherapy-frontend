@@ -284,7 +284,7 @@ mostrarBurbuja("Error de red. Intenta de nuevo.", "error");
 // 🌸 Bandera global para evitar volver al inicio cuando se ve un examen
 window._viendoExamen = false;
 
-
+const backend_url = `https://petstherapy-backend.onrender.com`
 
 
 // ✅ MANTENER SESIÓN CON BACKEND — NO ROMPE OTRAS PANTALLAS
@@ -2737,7 +2737,6 @@ const paciente = obtenerPacienteActivo();
   document.getElementById("fechaEnvio").value = "";
   document.getElementById("horaEnvio").value = "";
   document.getElementById("mensaje").value = "";
-  document.getElementById("estado").value = "";
 
   // cargar recordatorios desde backend
   cargarRecordatorios(paciente._id);
@@ -2745,57 +2744,45 @@ const paciente = obtenerPacienteActivo();
 
 async function guardarRecordatorio() {
   try {
-const paciente = obtenerPacienteActivo();
+    const paciente = obtenerPacienteActivo();
     if (!paciente?._id) return mostrarBurbuja("⚠ No hay paciente seleccionado");
-    const id = paciente._id;
-
-    // ⬅ Campos del HTML
-    const tipo = document.getElementById("tipoEvento").value;
-    const fecha = document.getElementById("fechaEvento").value;
-    const hora = document.getElementById("horaEvento").value;
-    const fechaEnvio = document.getElementById("fechaEnvio").value;
-    const horaEnvio = document.getElementById("horaEnvio").value;
-    const mensaje = document.getElementById("mensaje").value;
-    const estado = document.getElementById("estado").value;
-
-    if (!fecha || !tipo) return mostrarBurbuja("⚠ Por favor completa la fecha y el tipo");
 
     const recordatorio = {
-      tipo,
-      fechaEvento: fecha,
-      horaEvento: hora,
-      fechaEnvio,
-      horaEnvio,
-      mensaje,
-      notas: estado
-    };
+  tipo: document.getElementById("tipoEvento").value,
+  fechaEvento: document.getElementById("fechaEvento").value,
+  horaEvento: document.getElementById("horaEvento").value || null,
+  mensaje: document.getElementById("mensaje").value || "",
+  diasAntesVet: 2,   // 👈 CLAVE
+  diasAntesProp: 0   // 👈 CLAVE
+};
 
-    // Guardar en backend
-    const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${id}/recordatorios`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(recordatorio)
-    });
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      console.error("Error servidor →", data);
-      return mostrarBurbuja("❌ Error guardando recordatorio");
+    if (!recordatorio.fechaEvento || !recordatorio.tipo) {
+      return mostrarBurbuja("⚠ Fecha y tipo son obligatorios");
     }
 
-    // ✅ Limpiar campos del formulario
-    ["tipoEvento","fechaEvento","horaEvento","fechaEnvio","horaEnvio","mensaje","estado"]
-      .forEach(id => document.getElementById(id).value = "");
+    const res = await fetch(
+      `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/recordatorios`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(recordatorio)
+      }
+    );
 
-    // ✅ Recargar lista de recordatorios
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Error servidor");
+
+    mostrarBurbuja("✔ Recordatorio guardado");
+
+    limpiarFormularioRecordatorio();
+
+
     cargarRecordatorios(paciente._id);
 
-  mostrarBurbuja("✔ Recordatorio guardado con éxito 🎉");
-
   } catch (e) {
-    console.error("🚨 ERROR INTERNO:", e);
-    mostrarBurbuja("❌ Fallo inesperado, revisa la consola");
+    console.error(e);
+    mostrarBurbuja("❌ No se pudo guardar");
   }
 }
 
@@ -2807,17 +2794,25 @@ const paciente = obtenerPacienteActivo();
 
 
 
+
+
+// ✅ SOLO AQUÍ
 async function cargarRecordatorios(id) {
   try {
     const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${id}/recordatorios`);
     if (!res.ok) throw new Error("No se cargaron recordatorios");
-    recordatoriosGlobales = await res.json(); // ⚡ guardamos solo en memoria
+
+    recordatoriosGlobales = await res.json();
     mostrarRecordatorios(recordatoriosGlobales);
+
+    
   } catch (err) {
     console.error(err);
     mostrarBurbuja("Error cargando recordatorios");
   }
 }
+
+
 
 
 // mostrar lista
@@ -2827,27 +2822,40 @@ function mostrarRecordatorios(lista) {
   cont.innerHTML = "";
 
   if (!Array.isArray(lista) || lista.length === 0) {
-    cont.innerHTML = "<p style='text-align:center;color:##ff4da6;'>No hay recordatorios registrados.</p>";
+    cont.innerHTML = "<p style='text-align:center;color:#ff4da6;'>No hay recordatorios registrados.</p>";
     return;
   }
 
   lista.forEach(r => {
-    const fechaEv = r.fechaEvento ? (new Date(r.fechaEvento)).toISOString().split("T")[0] : "";
-    const descripcion = r.descripcion || r.descripcionEnvio || "";
+
+    // 👉 determinar estado del recordatorio
+    let estadoTexto = "🕒 Pendiente de confirmar";
+    let estadoClase = "estado-pendiente";
+
+    if (r.vetConfirmado && r.enviadoProp) {
+      estadoTexto = "✅ Confirmado y enviado";
+      estadoClase = "estado-confirmado";
+    }
+
     const div = document.createElement("div");
     div.classList.add("vacuna-card");
+
     div.innerHTML = `
-      <span><strong>${(r.tipo||"TIPO").toUpperCase()}</strong></span>
+      <div class="${estadoClase}">
+        <strong>${(r.tipo || "TIPO").toUpperCase()}</strong><br>
+        <span style="font-size:12px;">${estadoTexto}</span>
+      </div>
+
       <div>
         <button class="btn-principal" onclick="verRecordatorio('${r._id}')">Ver</button>
         <button onclick="eliminarRecordatorio('${r._id}')">🗑</button>
       </div>
     `;
+
     cont.appendChild(div);
   });
-
-
 }
+
 
 
 async function confirmarYEnviarRecordatorio() {
@@ -2907,24 +2915,7 @@ function verRecordatorio(recordatorioId) {
 
 
 
-// confirmar por vet -> llama al PATCH del backend
-async function confirmarRecordatorio(recId) {
-  const paciente = obtenerPacienteActivo();
-  if (!paciente) return mostrarBurbuja("No hay paciente activo");
 
-  const res = await fetch(
-    `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/recordatorios/${recId}/confirm`,
-    { method: "PATCH" }
-  );
-
-  if (!res.ok) {
-    const e = await res.json().catch(() => ({ message: "Error servidor" }));
-    return mostrarBurbuja(`❌ ${e.message}`);
-  }
-
-  mostrarBurbuja("✅ Confirmado. El propietario recibirá el recordatorio.");
-  cargarRecordatorios(paciente._id);
-}
 
 
 // cambiar fecha -> abre prompt simple o usar un input en UI
@@ -3000,41 +2991,57 @@ const paciente = obtenerPacienteActivo();
 // - si hoy == fechaAvisoVet && !enviadoVet => notifica a la vet (UI) y marca enviadoVet = true
 // - si hoy == fechaAvisoProp && vetConfirmado && !enviadoProp => abre WA al propietario y marca enviadoProp = true
 // 🌟 Notificaciones seguras 2 días antes del evento
-function revisarRecordatoriosSeguros() {
-  console.log("✅ Revisando recordatorios seguros...");
+// function revisarRecordatoriosSeguros() {
+//   if (Notification.permission !== "granted") return;
 
-  try {
-    const paciente = obtenerPacienteActivo();
-    if (!paciente) return;
+//   const hoy = new Date();
+//   hoy.setHours(0, 0, 0, 0);
 
-    const hoyIso = new Date().toISOString().split("T")[0];
+//   recordatoriosGlobales.forEach(async rec => {
 
-    for (const rec of recordatoriosGlobales) {
-      if (!rec.fechaEvento) continue;
+//     if (!rec.fechaAvisoVet) return;
+//     if (rec.enviadoVet) return;
 
-      const fechaEvento = new Date(rec.fechaEvento);
-      const fechaAviso = new Date(fechaEvento);
-      fechaAviso.setDate(fechaAviso.getDate() - 2);
-      const avisoIso = fechaAviso.toISOString().split("T")[0];
+//     const fechaAviso = new Date(rec.fechaAvisoVet);
+//     fechaAviso.setHours(0, 0, 0, 0);
 
-      if (avisoIso === hoyIso && !rec.notificadoVet) {
-        if (Notification.permission !== "granted") {
-          Notification.requestPermission();
-        }
+//     const fechaEvento = new Date(rec.fechaEvento);
+//     fechaEvento.setHours(0, 0, 0, 0);
 
-        if (Notification.permission === "granted") {
-          new Notification("Recordatorio para ti 🐾", {
-            body: `${rec.tipo} de ${paciente.nombre} el ${fechaEvento.toISOString().split("T")[0]}`
-          });
-        }
+//     // ❌ Evento vencido → jamás notificar
+//     if (fechaEvento < hoy) return;
 
-        rec.notificadoVet = true; // solo memoria
-      }
-    }
-  } catch (e) {
-    console.warn("Error seguro revisando recordatorios:", e);
-  }
+//     // ❌ Aún no es el día del aviso
+//     if (fechaAviso.getTime() !== hoy.getTime()) return;
+
+//     const reg = await navigator.serviceWorker.ready;
+//     reg.showNotification("🐾 Recordatorio PetsTherapy", {
+//       body: `${rec.tipo} de ${rec.nombrePaciente} en 2 días`,
+//       icon: "icon-192.png",
+//       vibrate: [200, 100, 200]
+//     });
+
+//     // ⚠️ SOLO en memoria (MVP)
+//     rec.enviadoVet = true;
+//   });
+// }
+
+
+
+
+
+
+
+
+
+
+function fechaISOHoy() {
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  return hoy.toISOString().split("T")[0];
 }
+
+
 
 
 
@@ -3044,16 +3051,8 @@ function revisarRecordatoriosSeguros() {
 // listeners para botones dentro de pantallaVerRecordatorio (debe existir en DOM)
 document.addEventListener("DOMContentLoaded", () => {
   // revisar al cargar
-  revisarRecordatoriosSeguros();
 
-  const vetBtn = document.getElementById("vetConfirm_btn");
-  if (vetBtn) vetBtn.addEventListener("click", async (ev) => {
-    const recId = ev.target.dataset.recId;
-    if (!recId) return;
-    await confirmarRecordatorio(recId);
-  });
-
-  const cambiarBtn = document.getElementById("cambiarFecha_btn");
+    const cambiarBtn = document.getElementById("cambiarFecha_btn");
   if (cambiarBtn) cambiarBtn.addEventListener("click", async (ev) => {
     const recId = ev.target.dataset.recId;
     if (!recId) return;
@@ -3079,14 +3078,15 @@ const rec = recordatoriosGlobales.find(x => x._id === recId);
 async function actualizarPacientesLocal() {
   try {
 const paciente = obtenerPacienteActivo();
-    if (sel?._id) {
-      const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/id/${sel._id}`);
+    if (paciente?._id) {
+      const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/id/${paciente._id}`);
       if (res.ok) {
         const actualizado = await res.json();
       }
     }
 
-    const resTodos = await fetch(`https://petstherapy-backend.onrender.comapi/pacientes`);
+    const resTodos = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes`);
+
     if (resTodos.ok) {
       const todos = await resTodos.json();
     }
@@ -3107,16 +3107,125 @@ async function inicializarApp() {
     console.error("Error inicializando app:", e);
   }
 
-  // ahora sí revisar recordatorios
-  revisarRecordatoriosSeguros();
+//   setTimeout(async () => {
+//   const paciente = obtenerPacienteActivo();
+//   if (!paciente?._id) return;
+
+//   await cargarRecordatorios(paciente._id); // 👈 carga primero
+//   revisarRecordatoriosSeguros();            // 👈 luego revisa
+// }, 3000);
+
+
 }
 
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
+
+    // ✅ Registrar Service Worker
     navigator.serviceWorker
       .register("sw.js")
       .then(() => console.log("✅ Service Worker registrado"))
       .catch((err) => console.error("❌ Error SW:", err));
+
+      pedirPermisoNotificaciones();
+
+  });
+}
+
+
+async function pedirPermisoNotificaciones() {
+  if (!("Notification" in window)) {
+    console.warn("Este navegador no soporta notificaciones");
+    return;
+  }
+
+  const permiso = await Notification.requestPermission();
+  console.log("Permiso de notificación:", permiso);
+}
+
+
+
+
+
+// function programarNotificacionPrueba(titulo, mensaje, fecha, hora) {
+//   console.log("🧪 Programando notificación de prueba...");
+
+//   const fechaNoti = construirFecha(fecha, hora);
+//   if (!fechaNoti) return;
+
+//   const delay = fechaNoti.getTime() - Date.now();
+//   console.log("⏰ Delay notificación (ms):", delay);
+
+//   if (delay <= 0) {
+//     console.log("⚠️ Fecha ya pasada");
+//     return;
+//   }
+
+//   setTimeout(() => {
+//     navigator.serviceWorker.ready.then(registro => {
+//       registro.showNotification(titulo, {
+//         body: mensaje,
+//         icon: "icon-192.png",
+//         badge: "icon-192.png",
+//         vibrate: [200, 100, 200],
+//         tag: "petstherapy-recordatorio"
+//       });
+//     });
+//   }, delay);
+// }
+
+
+
+
+function construirFecha(fecha, hora) {
+  if (!fecha) return null;
+  if (!hora) return null; // 👈 NO inventar horas
+
+  const fechaStr = typeof fecha === "string"
+    ? fecha.split("T")[0]
+    : new Date(fecha).toISOString().split("T")[0];
+
+  return new Date(`${fechaStr}T${hora}:00`);
+}
+
+
+
+
+
+window.notificacionPruebaReal = function () {
+  console.log("🧪 Lanzando notificación de prueba inmediata");
+
+  navigator.serviceWorker.ready.then(registro => {
+    registro.showNotification("🐾 PetsTherapy", {
+      body: "Esta es una notificación de prueba inmediata",
+      icon: "icon-192.png",
+      badge: "icon-192.png",
+      vibrate: [200, 100, 200]
+    });
+  });
+};
+
+
+function estadoRecordatorio(r) {
+  if (r.vetConfirmado && r.enviadoProp) return "confirmado";
+  if (r.enviadoVet) return "pendiente";
+  return "nuevo";
+}
+function limpiarFormularioRecordatorio() {
+  document.getElementById("tipoEvento").value = "";
+  document.getElementById("fechaEvento").value = "";
+  document.getElementById("horaEvento").value = "";
+  document.getElementById("fechaEnvio").value = "";
+  document.getElementById("horaEnvio").value = "";
+  document.getElementById("mensaje").value = "";
+}
+
+
+async function registrarTokenPush(token) {
+  await fetch("https://petstherapy-backend.onrender.com/api/push/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token })
   });
 }

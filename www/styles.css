@@ -1725,3 +1725,11 @@ max-width: 220px;
 max-width: 220px;
 
 }
+
+.estado-pendiente {
+  color: #ff9800;
+}
+
+.estado-confirmado {
+  color: #4caf50;
+}

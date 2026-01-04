@@ -1,5 +1,5 @@
 {
   "appId": "com.yineth.petstherapy",
   "appName": "PetsTherapy",
-  "webDir": "."
+  "webDir": "www"
 }
