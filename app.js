@@ -7,35 +7,7 @@ let archivosExamenBase64 = [];
 let fotoBase64 = "";
 
 
-import { PushNotifications } from '@capacitor/push-notifications';
 
-document.addEventListener('deviceready', () => {
-  console.log("App lista");
-
-  PushNotifications.requestPermissions().then(result => {
-    if (result.receive === 'granted') {
-      PushNotifications.register();
-    } else {
-      console.log("Permiso de notificaciones DENEGADO");
-    }
-  });
-
-  PushNotifications.addListener('registration', token => {
-    console.log('TOKEN FCM:', token.value);
-  });
-
-  PushNotifications.addListener('registrationError', err => {
-    console.error('Error registro:', err);
-  });
-
-  PushNotifications.addListener('pushNotificationReceived', notification => {
-    alert(
-      "Notificación recibida:\n" +
-      notification.title + "\n" +
-      notification.body
-    );
-  });
-});
 
 
 function mostrarFoto(event) {
@@ -3261,3 +3233,36 @@ async function registrarTokenPush(token) {
     body: JSON.stringify({ token })
   });
 }
+
+
+import { PushNotifications } from '@capacitor/push-notifications';
+
+document.addEventListener('deviceready', () => {
+  console.log("App lista");
+  alert("TOKEN FCM:\n" + token.value);
+
+
+  PushNotifications.requestPermissions().then(result => {
+    if (result.receive === 'granted') {
+      PushNotifications.register();
+    } else {
+      console.log("Permiso de notificaciones DENEGADO");
+    }
+  });
+
+  PushNotifications.addListener('registration', token => {
+    console.log('TOKEN FCM:', token.value);
+  });
+
+  PushNotifications.addListener('registrationError', err => {
+    console.error('Error registro:', err);
+  });
+
+  PushNotifications.addListener('pushNotificationReceived', notification => {
+    alert(
+      "Notificación recibida:\n" +
+      notification.title + "\n" +
+      notification.body
+    );
+  });
+});
