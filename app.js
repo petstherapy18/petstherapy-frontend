@@ -3238,9 +3238,6 @@ async function registrarTokenPush(token) {
 }
 
 
-import { PushNotifications } from '@capacitor/push-notifications';
-import { Capacitor } from '@capacitor/core';
-
 async function iniciarPushFCM() {
   if (!Capacitor.isNativePlatform()) {
     console.log("No es plataforma nativa, FCM no aplica");
