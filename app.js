@@ -3238,6 +3238,8 @@ async function registrarTokenPush(token) {
 }
 
 
+
+
 async function iniciarPushFCM() {
   if (!Capacitor.isNativePlatform()) {
     console.log("No es plataforma nativa, FCM no aplica");
@@ -3275,7 +3277,3 @@ async function iniciarPushFCM() {
     );
   });
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  alert("APP.JS SE CARGÓ CORRECTAMENTE");
-});

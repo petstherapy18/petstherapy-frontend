@@ -7,35 +7,7 @@ let archivosExamenBase64 = [];
 let fotoBase64 = "";
 
 
-import { PushNotifications } from '@capacitor/push-notifications';
 
-document.addEventListener('deviceready', () => {
-  console.log("App lista");
-
-  PushNotifications.requestPermissions().then(result => {
-    if (result.receive === 'granted') {
-      PushNotifications.register();
-    } else {
-      console.log("Permiso de notificaciones DENEGADO");
-    }
-  });
-
-  PushNotifications.addListener('registration', token => {
-    console.log('TOKEN FCM:', token.value);
-  });
-
-  PushNotifications.addListener('registrationError', err => {
-    console.error('Error registro:', err);
-  });
-
-  PushNotifications.addListener('pushNotificationReceived', notification => {
-    alert(
-      "Notificación recibida:\n" +
-      notification.title + "\n" +
-      notification.body
-    );
-  });
-});
 
 
 function mostrarFoto(event) {
@@ -3139,6 +3111,9 @@ async function inicializarApp() {
     console.error("Error inicializando app:", e);
   }
 
+  iniciarPushFCM();
+
+
 //   setTimeout(async () => {
 //   const paciente = obtenerPacienteActivo();
 //   if (!paciente?._id) return;
@@ -3151,19 +3126,19 @@ async function inicializarApp() {
 }
 
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
+// if ("serviceWorker" in navigator) {
+//   window.addEventListener("load", () => {
 
-    // ✅ Registrar Service Worker
-    navigator.serviceWorker
-      .register("sw.js")
-      .then(() => console.log("✅ Service Worker registrado"))
-      .catch((err) => console.error("❌ Error SW:", err));
+//     // ✅ Registrar Service Worker
+//     navigator.serviceWorker
+//       .register("sw.js")
+//       .then(() => console.log("✅ Service Worker registrado"))
+//       .catch((err) => console.error("❌ Error SW:", err));
 
-      pedirPermisoNotificaciones();
+//       pedirPermisoNotificaciones();
 
-  });
-}
+//   });
+// }
 
 
 async function pedirPermisoNotificaciones() {
@@ -3261,3 +3236,46 @@ async function registrarTokenPush(token) {
     body: JSON.stringify({ token })
   });
 }
+
+
+async function iniciarPushFCM() {
+  if (!Capacitor.isNativePlatform()) {
+    console.log("No es plataforma nativa, FCM no aplica");
+    return;
+  }
+
+  const perm = await PushNotifications.requestPermissions();
+  console.log("Permisos FCM:", perm);
+
+  if (perm.receive !== 'granted') {
+    alert("Permiso de notificaciones denegado");
+    return;
+  }
+
+  await PushNotifications.register();
+
+  PushNotifications.addListener('registration', token => {
+    console.log('🔥 TOKEN FCM:', token.value);
+    alert("TOKEN FCM:\n" + token.value);
+
+    // opcional: enviarlo al backend
+    registrarTokenPush(token.value);
+  });
+
+  PushNotifications.addListener('registrationError', err => {
+    console.error('❌ Error registro FCM:', err);
+    alert("Error FCM: " + JSON.stringify(err));
+  });
+
+  PushNotifications.addListener('pushNotificationReceived', notification => {
+    alert(
+      "🔔 Notificación recibida\n\n" +
+      notification.title + "\n" +
+      notification.body
+    );
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  alert("APP.JS SE CARGÓ CORRECTAMENTE");
+});
