@@ -1,3 +1,7 @@
+import { Capacitor } from '@capacitor/core';
+import { PushNotifications } from '@capacitor/push-notifications';
+
+
 // Botones
 const btnIniciar = document.getElementById('btn-iniciar'); 
 const btnRegistrar = document.getElementById('btn-registrar'); 
