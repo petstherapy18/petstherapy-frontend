@@ -3250,6 +3250,9 @@ async function iniciarPushFCM() {
     return;
   }
 
+  const { PushNotifications } = Capacitor.Plugins;
+
+
   const perm = await PushNotifications.requestPermissions();
   console.log("Permisos FCM:", perm);
 
@@ -3281,3 +3284,7 @@ async function iniciarPushFCM() {
     );
   });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  inicializarApp();
+});
