@@ -2,6 +2,15 @@ import { Capacitor } from '@capacitor/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 
 
+alert("JS cargado");
+
+if (window.Capacitor) {
+  alert("Capacitor EXISTE");
+} else {
+  alert("Capacitor NO existe");
+}
+
+
 // Botones
 const btnIniciar = document.getElementById('btn-iniciar'); 
 const btnRegistrar = document.getElementById('btn-registrar'); 
