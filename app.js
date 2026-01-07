@@ -1,6 +1,8 @@
 import { Capacitor } from '@capacitor/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 
+let historialPantallas = [];
+
 
 alert("JS cargado");
 
@@ -1097,14 +1099,34 @@ if (btnGuardarPropietario) {
 
 
 
+document.addEventListener("backbutton", function (e) {
+  e.preventDefault();
+
+  // Si hay historial, volver atrás
+  if (historialPantallas.length > 0) {
+    const anterior = historialPantallas.pop();
+    mostrarPantalla(anterior);
+  } else {
+    navigator.app.exitApp(); // ya no hay más atrás
+  }
+}, false);
+
+
+
+
+
+
+
 // 🌸 --- NAVEGACIÓN SEGURA ENTRE PANTALLAS ---
 window._viendoExamen = false; // bandera global
 
 function mostrarPantalla(idPantalla) {
-  // Si estamos viendo examen, proteger que no se redirija al inicio
-  if (window._viendoExamen && idPantalla === "pantalla-inicio") {
-    console.log("🔒 Ignorando redirección al inicio mientras se ve examen");
-    return;
+   
+  const actual = document.querySelector(".pantalla.activa")?.id;
+
+  // Guardar historial SOLO si cambia de pantalla
+  if (actual && actual !== idPantalla) {
+    historialPantallas.push(actual);
   }
 
   // Ocultar todas las pantallas
