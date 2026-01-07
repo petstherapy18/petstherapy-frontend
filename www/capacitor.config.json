@@ -1,5 +1,6 @@
 {
   "appId": "com.yineth.petstherapy",
   "appName": "PetsTherapy",
-  "webDir": "www"
-}
+  "webDir": "www",
+  "backgroundColor": "#ffbce5"
+  }
