@@ -1127,6 +1127,10 @@ window._viendoExamen = false; // bandera global
 
 function mostrarPantalla(idPantalla) {
    
+
+  window.location.hash = idPantalla;
+
+
   // Guardar en historial real del navegador
   history.pushState({ pantalla: idPantalla }, "", "#" + idPantalla);
 
