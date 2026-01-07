@@ -2,6 +2,9 @@ import { Capacitor } from '@capacitor/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 
 
+alert("APP.JS REAL EJECUTÁNDOSE");
+
+
 alert("JS cargado");
 
 if (window.Capacitor) {

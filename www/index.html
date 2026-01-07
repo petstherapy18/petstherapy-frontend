@@ -9,6 +9,11 @@
   <link rel="manifest" href="manifest.json">
 </head>
 
+<script>
+  console.log("🔥 INDEX CARGADO EN ANDROID");
+  document.body.style.border = "5px solid red";
+</script>
+
 
 
 <body>
@@ -1299,6 +1304,19 @@
 <script src="capacitor.js"></script>
 
 <script src="app.js"></script>
+
+<script>
+  const msg = document.createElement("div");
+  msg.innerText = "JS cargado correctamente";
+  msg.style.position = "fixed";
+  msg.style.top = "10px";
+  msg.style.left = "10px";
+  msg.style.background = "black";
+  msg.style.color = "white";
+  msg.style.padding = "10px";
+  msg.style.zIndex = "9999";
+  document.body.appendChild(msg);
+</script>
 
 
 </body>
