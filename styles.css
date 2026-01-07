@@ -250,17 +250,7 @@ button {
   display: block;
 }
 
-/* Botón volver */
-.pt-back {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  background: none;
-  border: none;
-  font-size: 18px;
-  color: #ff66c4;
-  cursor: pointer;
-}
+
 
 /* Título */
 .pt-title {
