@@ -1113,6 +1113,11 @@ document.addEventListener("backbutton", function (e) {
 
 
 
+window.onpopstate = function (event) {
+  if (event.state && event.state.pantalla) {
+    mostrarPantalla(event.state.pantalla);
+  }
+};
 
 
 
@@ -1122,12 +1127,8 @@ window._viendoExamen = false; // bandera global
 
 function mostrarPantalla(idPantalla) {
    
-  const actual = document.querySelector(".pantalla.activa")?.id;
-
-  // Guardar historial SOLO si cambia de pantalla
-  if (actual && actual !== idPantalla) {
-    historialPantallas.push(actual);
-  }
+  // Guardar en historial real del navegador
+  history.pushState({ pantalla: idPantalla }, "", "#" + idPantalla);
 
   // Ocultar todas las pantallas
   document.querySelectorAll(".pantalla").forEach(p => {
