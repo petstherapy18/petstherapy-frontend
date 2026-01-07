@@ -10,6 +10,11 @@ body {
     height: 100vh;
 }
 
+body {
+  padding-top: env(safe-area-inset-top);
+}
+
+
 /* Contenedor */
 .container {
     text-align: center;
@@ -372,17 +377,7 @@ button {
   margin-top: 40px;
 }
 
-/* Botón volver */
-.btn-volver {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  background: none;
-  border: none;
-  color: #ff66c4;
-  font-size: 18px;
-  cursor: pointer;
-}
+
 
 
 /* Título */
@@ -928,16 +923,17 @@ button {
   height: 80px;
 }
 
-.btn-volver {
-  position: absolute;
-  top: 15px;
-  left: 15px;
+.boton-volver {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 12px);
+  left: calc(env(safe-area-inset-left) + 12px);
   background: none;
   border: none;
   font-size: 18px;
   color: #ff66c4;
-  cursor: pointer;
+  z-index: 1000;
 }
+
 
 
 .formulario-paciente input {
