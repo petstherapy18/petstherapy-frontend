@@ -14,6 +14,30 @@
 </script>
 
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  if (window.Capacitor && Capacitor.Plugins && Capacitor.Plugins.App) {
+
+    Capacitor.Plugins.App.addListener('backButton', () => {
+
+      const activa = document.querySelector('.pantalla.activa');
+
+      if (!activa || activa.id === 'pantallaInicio') {
+        Capacitor.Plugins.App.exitApp();
+      } else {
+        volverPantallaAnterior();
+      }
+
+    });
+
+  }
+
+});
+</script>
+
+
+
 <body>
 
 history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
@@ -38,9 +62,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
   <!-- Pantalla 2: Iniciar Sesión -->
   <div id="pantalla-login" class="pantalla">
     <div class="container">
-      <button class="boton-volver" onclick="mostrarPantalla('pantalla-inicio')" >
-      &lt; Volver
-    </button>
+     
       <img src="logo.png" alt="Logo Pets Therapy" class="logo">
       <h2 class="titulo">Iniciar Sesión</h2>
       <form id="formLogin" class= "formulario"> 
@@ -59,9 +81,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
   <!-- Pantalla 3: Registro -->
   <div id="pantalla-registro" class="pantalla">
   <div class="container">
-    <button class="boton-volver" onclick="mostrarPantalla('pantalla-inicio')" >
-      &lt; Volver
-    </button>
+    
     <img src="logo.png" alt="Logo Pets Therapy" class="r-logo">
     <h2 class="titulo">Registrarme</h2>
 
@@ -144,9 +164,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
     <!-- Encabezado -->
     
       
-    <button class="boton-volver" onclick="mostrarPantalla('pantallaPacientes')" >
-      &lt; Volver
-    </button>
+   
       <!-- el logo lo centramos por separado -->
       <img src="logo.png" alt="Logo PetsTherapy" class="pf-logo">
 
@@ -206,10 +224,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <div id="pantallaPropietario" class="pantalla">
   <div class="container">
 
-    <!-- Botón Volver -->
-    <button class="boton-volver" onclick="mostrarPantalla('perfilPaciente')" >
-      &lt; Volver
-    </button>
+   
 
     <!-- Logo -->
     <img src="logo.png" alt="Logo PetsTherapy" class="pr-logo">
@@ -243,9 +258,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <div id="pantallaPacientes" class="pantalla">
   <div class="container">
 
-    <!-- Botón Volver -->
-    <button onclick="mostrarPantalla('menú-principal')" 
-      class="boton-volver">&lt; volver</button>
+    
 
     <!-- Logo -->
     <img src="logo.png" alt="Logo Pets Therapy" class="pp-logo">
@@ -284,9 +297,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <div id="pantallaNuevoPaciente" class="pantalla">
   <div class="container">
 
-    <button class="boton-volver" onclick="mostrarPantalla('pantallaPacientes')">
-      &lt; volver
-    </button>
+   
 
     <h2>Nuevo paciente</h2>
 
@@ -312,10 +323,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <div>
 
 <section id="pacientesCargo" class="pantalla">
-  <!-- Botón Volver -->
-    <button class="boton-volver" onclick="mostrarPantalla('pantallaPropietario')" >
-      &lt; Volver
-    </button>
+  
 
   <img src="logo.png" alt="Logo Pets Therapy" class="pc-logo">
 
@@ -333,10 +341,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
  <div>
 
   <section id="pantallaHistorialMedico" class="pantalla">
-  <!-- Botón Volver -->
-    <button class="boton-volver" onclick="mostrarPantalla('perfilPaciente')" >
-      &lt; Volver
-    </button>
+  
 
   <img src="logo.png" alt="Logo Pets Therapy" class="hm-logo">
 
@@ -380,10 +385,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <div id="pantallaVacunas" class="pantalla">
   
   <div class="container">
-    <!-- Botón volver -->
-    <button class="boton-volver" onclick="mostrarPantalla('pantallaHistorialMedico')" >
-      &lt; Volver
-    </button>   
+    
 
     <img src="logo.png" alt="Logo Pets Therapy" class="va-logo">
 
@@ -423,10 +425,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <!-- Pantalla Ver Vacuna (solo lectura) -->
 <div id="pantallaVerVacuna" class="pantalla">
   <div class="container">
-    <!-- Botón volver -->
-    <button class="boton-volver"onclick="irAVacunas()" >
-      &lt; Volver
-    </button>
+    
 
     <img src="logo.png" alt="Logo Pets Therapy" class="v-logo">
 
@@ -463,9 +462,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <section id="pantallaTratamiento" class="pantalla">
   <div class="container">
 
-    <button class="boton-volver"onclick="mostrarPantalla('pantallaHistorialMedico')" >
-      &lt; Volver
-    </button>  
+     
 
     <img src="logo.png" alt="Logo Pets Therapy" class="t-logo">
     
@@ -499,9 +496,6 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <section id="pantallaVerTratamiento" class="pantalla">
   <div class="container">
 
-    <button class="boton-volver"onclick="irATratamiento()">
-    &lt; Volver
-    </button>
 
     <img src="logo.png" alt="Logo Pets Therapy" class="tv-logo">
 
@@ -539,9 +533,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <section id="pantallaNuevoTratamiento" class="pantalla">
   <div class="container">
 
-    <button class="boton-volver"onclick="mostrarPantalla('pantallaTratamiento')" >
-      &lt; Volver
-    </button> 
+ 
 
     <img src="logo.png" alt="Logo Pets Therapy" class="tv-logo">
     
@@ -581,10 +573,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <div id="pantallaDesparasitaciones" class="pantalla">
   
   <div class="container">
-    <button class="boton-volver"onclick="mostrarPantalla('pantallaHistorialMedico')" >
-      &lt; Volver
-    </button>    
-
+    
     <img src="logo.png" alt="Logo Pets Therapy" class="d-logo">
 
     <h2>Desparasitaciones</h2>
@@ -628,9 +617,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <div id="pantallaVerDesparasitacion" class="pantalla">
   <div class="container">
 
-    <button class="boton-volver"onclick="irADesparasitaciones()">
-      &lt; Volver
-    </button>
+    
 
     <img src="logo.png" alt="Logo Pets Therapy" class="dv-logo">
 
@@ -662,9 +649,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <div id="pantallaVerExamen" class="pantalla">
   <div class="container">
 
-<button class="boton-volver"onclick="volverAListaExamenes()" >
-  &lt; Volver
-</button>
+
 
 
 
@@ -696,10 +681,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <div id="pantallaExamenesSubidos" class="pantalla">
   <div class="container">
 
-    <button class="boton-volver"onclick="mostrarPantalla('pantallaExamenes')" >
-      &lt; Volver
-    </button>
-
+  
     <img src="logo.png" alt="Logo Pets Therapy" class="sa-logo">
 
     <h2>📁 Subir archivos del examen</h2>
@@ -726,9 +708,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <div id="pantallaAntipulgas" class="pantalla">
   
   <div class="container">
-    <button class="boton-volver"onclick="mostrarPantalla('pantallaHistorialMedico')" >
-      &lt; Volver
-    </button>    
+    
 
     <img src="logo.png" alt="Logo Pets Therapy" class="a-logo">
 
@@ -774,9 +754,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <div id="pantallaVerAntipulgas" class="pantalla">
   <div class="container">
 
-    <button class="boton-volver"onclick="irAAntipulgas()">
-      &lt; Volver
-    </button>
+   
 
     <img src="logo.png" alt="Logo Pets Therapy" class="av-logo">
 
@@ -806,9 +784,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
   
   <div class="container">
 
-    <button class="boton-volver"onclick="mostrarPantalla('pantallaHistorialMedico')" >
-      &lt; Volver
-    </button>
+    
       
     <img src="logo.png" alt="Logo" class="e-logo">
   
@@ -864,9 +840,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 
 <!-- 🌸 Pantalla Recordatorios -->
 <div id="pantallaRecordatorios" class="pantalla">
-  <button onclick="mostrarPantalla('pantallaHistorialMedico')" >
-    &lt; Volver
-  </button>
+
 
   <img src="logo.png" alt="Logo" class="re-logo">
 
@@ -925,9 +899,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 
 <!-- 🌸 Pantalla Ver Recordatorio -->
 <div id="pantallaVerRecordatorio" class="pantalla" style="display:none;">
-  <button class="boton-volver"onclick="mostrarPantalla('pantallaRecordatorios')" >
-    &lt; Volver
-  </button>
+
 
 <img src="logo.png" alt="Logo" class="vr-logo">
 
@@ -980,10 +952,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <!-- 🩺 SECCIÓN CONSULTAS -->
 <div id="pantallaConsultas" class="pantalla">
 
-  <!-- 🔙 Volver -->
-  <button class="boton-volver"onclick="mostrarPantalla('pantallaHistorialMedico')" >
-      &lt; Volver
-  </button>
+ 
 
   <img src="logo.png" alt="Logo Pets Therapy" class="c-logo">
 
@@ -1047,9 +1016,7 @@ history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
 <div id="pantallaVerConsulta" class="pantalla">
   <div class="container">
 
-    <button class="boton-volver"onclick="irAConsultas()">
-      &lt; Volver
-    </button>
+   
 
     <img src="logo.png" class="cv-logo">
 

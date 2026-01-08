@@ -3327,19 +3327,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+import { App } from '@capacitor/app';
 
-document.addEventListener("deviceready", () => {
-  if (window.Capacitor && Capacitor.Plugins && Capacitor.Plugins.App) {
+App.addListener('backButton', ({ canGoBack }) => {
+  const pantallaActual = document.querySelector('.pantalla.activa');
 
-    const App = Capacitor.Plugins.App;
+  if (pantallaActual?.id === 'pantallaInicio') {
+    // Si está en la pantalla principal → salir de la app
+    App.exitApp();
+  } else {
+    // Si NO está en inicio → volver
+    volverPantallaAnterior();
+  }
+});
 
-    App.addListener('backButton', () => {
-      if (window.history.length > 1) {
-        window.history.back();
-      } else {
-        App.exitApp();
-      }
-    });
 
+function volverPantallaAnterior() {
+  mostrarPantalla('pantallaInicio');
+}
+
+
+window.addEventListener('backButtonPressed', () => {
+  const pantallaActual = document.querySelector('.pantalla.activa');
+
+  if (pantallaActual?.id === 'pantallaInicio') {
+    navigator.app.exitApp();
+  } else {
+    volverPantallaAnterior();
   }
 });

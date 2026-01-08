@@ -14,6 +14,29 @@
 </script>
 
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  if (window.Capacitor && Capacitor.Plugins && Capacitor.Plugins.App) {
+
+    Capacitor.Plugins.App.addListener('backButton', () => {
+
+      const activa = document.querySelector('.pantalla.activa');
+
+      if (!activa || activa.id === 'pantallaInicio') {
+        Capacitor.Plugins.App.exitApp();
+      } else {
+        volverPantallaAnterior();
+      }
+
+    });
+
+  }
+
+});
+</script>
+
+
 <body>
 
 history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
