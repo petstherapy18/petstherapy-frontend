@@ -3324,3 +3324,22 @@ async function iniciarPushFCM() {
 document.addEventListener("DOMContentLoaded", () => {
   inicializarApp();
 });
+
+
+
+
+document.addEventListener("deviceready", () => {
+  if (window.Capacitor && Capacitor.Plugins && Capacitor.Plugins.App) {
+
+    const App = Capacitor.Plugins.App;
+
+    App.addListener('backButton', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        App.exitApp();
+      }
+    });
+
+  }
+});
