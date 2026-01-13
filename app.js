@@ -2,7 +2,6 @@
 
 
 
-const isNative = !!window.Capacitor && window.Capacitor.isNativePlatform?.();
 
 
 
@@ -3282,18 +3281,26 @@ function mostrarPantallaSinGuardar(id) {
   }
 }
 
+/* 🔴 ESTO ES LO QUE FALTABA TODA ESTA VEZ */
+App.addListener('backButton', (event) => {
+  event.preventDefault(); // ⬅️ ESTA LÍNEA BLOQUEA EL CIERRE
+
+  if (historialPantallas.length > 0) {
+    const anterior = historialPantallas.pop();
+    mostrarPantallaSinGuardar(anterior);
+  }
+});
 
 
 
 
-
+const isNative = !!window.Capacitor?.isNativePlatform?.();
 
 if (isNative) {
-  const App = window.Capacitor.Plugins.App;
+  console.log("Ejecutando en APK (Capacitor)");
 
-  App.addListener('backButton', ({ canGoBack }) => {
-    if (!canGoBack) {
-      App.exitApp();
-    }
-  });
+  const App = window.Capacitor.Plugins.App;
+  const PushNotifications = window.Capacitor.Plugins.PushNotifications;
+
+  // aquí va tu lógica nativa
 }
