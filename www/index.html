@@ -7,41 +7,23 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
   <link rel="manifest" href="manifest.json">
+
+
+<div class="pantalla">
+  <div class="header">
+    <button class="btn-volver" onclick="volver()">← Volver</button>
+  </div>
+
+  <div class="container">
+    <!-- contenido -->
+  </div>
+</div>
+
+
 </head>
-
-<script>
-  alert("INDEX CARGADO DESDE APK");
-</script>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-
-  if (window.Capacitor && Capacitor.Plugins && Capacitor.Plugins.App) {
-
-    Capacitor.Plugins.App.addListener('backButton', () => {
-
-      const activa = document.querySelector('.pantalla.activa');
-
-      if (!activa || activa.id === 'pantallaInicio') {
-        Capacitor.Plugins.App.exitApp();
-      } else {
-        volverPantallaAnterior();
-      }
-
-    });
-
-  }
-
-});
-</script>
-
 
 
 <body>
-
-history.replaceState({ pantalla: "pantalla-inicio" }, "", "#pantalla-inicio");
-
 
   <!-- Pantalla 1: Inicio -->
   <div id="pantalla-inicio" class="pantalla activa">

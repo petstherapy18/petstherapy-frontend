@@ -53,6 +53,16 @@ public class MainActivity extends BridgeActivity {
                 });
 
 
+        // 🔒 BLOQUEAR BOTÓN ATRÁS DEL SISTEMA (FORMA CORRECTA)
+        getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // NO hacer nada aquí
+                // El control queda en JavaScript (Capacitor)
+            }
+        });
+
+
 
 
 

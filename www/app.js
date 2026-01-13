@@ -1,16 +1,9 @@
-import { Capacitor } from '@capacitor/core';
-import { PushNotifications } from '@capacitor/push-notifications';
-
-let historialPantallas = [];
 
 
-alert("JS cargado");
 
-if (window.Capacitor) {
-  alert("Capacitor EXISTE");
-} else {
-  alert("Capacitor NO existe");
-}
+
+
+
 
 
 // Botones
@@ -1099,89 +1092,16 @@ if (btnGuardarPropietario) {
 
 
 
-document.addEventListener("backbutton", function (e) {
-  e.preventDefault();
-
-  // Si hay historial, volver atrás
-  if (historialPantallas.length > 0) {
-    const anterior = historialPantallas.pop();
-    mostrarPantalla(anterior);
-  } else {
-    navigator.app.exitApp(); // ya no hay más atrás
-  }
-}, false);
-
-
-
-window.onpopstate = function (event) {
-  if (event.state && event.state.pantalla) {
-    mostrarPantalla(event.state.pantalla);
-  }
-};
-
 
 
 
 // 🌸 --- NAVEGACIÓN SEGURA ENTRE PANTALLAS ---
 window._viendoExamen = false; // bandera global
 
-function mostrarPantalla(idPantalla) {
-   
-
-  window.location.hash = idPantalla;
 
 
-  // Guardar en historial real del navegador
-  history.pushState({ pantalla: idPantalla }, "", "#" + idPantalla);
 
-  // Ocultar todas las pantallas
-  document.querySelectorAll(".pantalla").forEach(p => {
-    p.style.display = "none"; 
-    p.classList.remove("activa");
-  });
 
-  // Mostrar la pantalla solicitada
-  const pantalla = document.getElementById(idPantalla);
-  if (pantalla) {
-    pantalla.classList.add("activa");
-    pantalla.style.display = ""; // permitir que CSS maneje el display
-    console.log("➡️ Mostrando pantalla:", idPantalla);
-  } else {
-    console.warn("⚠️ Pantalla no encontrada:", idPantalla);
-  }
-
-  // --- Funciones especiales por pantalla ---
-  if (idPantalla === "pantallaPacientes") {
-    if (window._cargandoPacientes) return;
-    window._cargandoPacientes = true;
-    cargarPacientes().finally(() => {
-      window._cargandoPacientes = false;
-    });
-  }
-
-  if (idPantalla === "pantallaHistorialMedico") {
-    cargarHistorialMedico();
-  }
-
-  // Pantallas que necesitan ID de paciente
-  const pantallasConPaciente = [
-    { id: "pantallaDesparasitaciones", fn: cargarDesparasitaciones },
-    { id: "pantallaAntipulgas", fn: cargarAntipulgas },
-    { id: "pantallaTratamiento", fn: cargarTratamientos },
-    { id: "pantallaConsultas", fn: cargarConsultas },
-    { id: "pantallaVacunas", fn: cargarVacunas },
-    { id: "pantallaExamenes", fn: fetchPacienteById },
-    { id: "pantallaRecordatorios", fn: cargarRecordatorios },
-  ];
-
-  if (pantallasConPaciente.some(p => p.id === idPantalla)) {
-    const paciente = window.pacienteActivo;
-    if (paciente && paciente._id) {
-      const pantallaData = pantallasConPaciente.find(p => p.id === idPantalla);
-      pantallaData.fn(paciente._id);
-    }
-  }
-}
 
 
 function descargarBase64(base64, nombreArchivo) {
@@ -3327,32 +3247,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-import { App } from '@capacitor/app';
 
-App.addListener('backButton', ({ canGoBack }) => {
-  const pantallaActual = document.querySelector('.pantalla.activa');
 
-  if (pantallaActual?.id === 'pantallaInicio') {
-    // Si está en la pantalla principal → salir de la app
-    App.exitApp();
-  } else {
-    // Si NO está en inicio → volver
-    volverPantallaAnterior();
+
+let historialPantallas = [];
+let pantallaActual = null;
+
+function mostrarPantalla(id) {
+  if (pantallaActual) {
+    historialPantallas.push(pantallaActual);
   }
-});
 
+  document.querySelectorAll('.pantalla').forEach(p =>
+    p.classList.remove('activa')
+  );
 
-function volverPantallaAnterior() {
-  mostrarPantalla('pantallaInicio');
+  const nueva = document.getElementById(id);
+  if (nueva) {
+    nueva.classList.add('activa');
+    pantallaActual = id;
+  }
 }
 
+function mostrarPantallaSinGuardar(id) {
+  document.querySelectorAll('.pantalla').forEach(p =>
+    p.classList.remove('activa')
+  );
 
-window.addEventListener('backButtonPressed', () => {
-  const pantallaActual = document.querySelector('.pantalla.activa');
+  const nueva = document.getElementById(id);
+  if (nueva) {
+    nueva.classList.add('activa');
+    pantallaActual = id;
+  }
+}
 
-  if (pantallaActual?.id === 'pantallaInicio') {
-    navigator.app.exitApp();
-  } else {
-    volverPantallaAnterior();
+/* 🔴 ESTO ES LO QUE FALTABA TODA ESTA VEZ */
+App.addListener('backButton', (event) => {
+  event.preventDefault(); // ⬅️ ESTA LÍNEA BLOQUEA EL CIERRE
+
+  if (historialPantallas.length > 0) {
+    const anterior = historialPantallas.pop();
+    mostrarPantallaSinGuardar(anterior);
   }
 });
+
+
+
+
+const isNative = !!window.Capacitor?.isNativePlatform?.();
+
+if (isNative) {
+  console.log("Ejecutando en APK (Capacitor)");
+
+  const App = window.Capacitor.Plugins.App;
+  const PushNotifications = window.Capacitor.Plugins.PushNotifications;
+
+  // aquí va tu lógica nativa
+}
