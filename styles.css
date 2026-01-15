@@ -1734,3 +1734,40 @@ max-width: 220px;
   font-size: 16px;
   color: #ff4da6;
 }
+
+
+.sugerencias {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 2px solid #ff66c4;
+  max-height: 150px;
+  overflow-y: auto;
+  background: #ffbce5;
+  position: absolute;
+  width: 100%;
+  z-index: 10;
+}
+
+.sugerencias {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 2px solid #ff66c4;
+  max-height: 150px;
+  overflow-y: auto;
+  background: #ffbce5;
+  position: absolute;
+  width: 100%;
+  z-index: 10;
+}
+
+.sugerencias li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.sugerencias li:hover {
+  background: #ffbce5;
+}
+

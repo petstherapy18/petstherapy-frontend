@@ -170,8 +170,23 @@
     <!-- Campos -->
     <form class="formulario">
     <input id="nombrePerfil" type="text" placeholder="Nombre">
-    <input id="especiePerfil" type="text" placeholder="Especie">
-    <input id="razaPerfil" type="text" placeholder="Raza">
+    <label>Especie</label>
+<select id="especiePerfil">
+  <option value="">Seleccione especie</option>
+  <option value="perro">Perro</option>
+  <option value="gato">Gato</option>
+</select>
+
+    <label>Raza</label>
+<input
+  type="text"
+  id="razaPerfil"
+  placeholder="Empiece a escribir la raza"
+  autocomplete="off"
+/>
+
+<ul id="sugerenciasRaza" class="sugerencias"></ul>
+
     <div class="input-box">
   <label for="fechaNacimiento">Fecha de nacimiento:</label>
   <input type="date" id="fechaAplicacionPF" name="fechaAplicacion">
@@ -266,10 +281,25 @@
   <!-- Formulario oculto para agregar paciente -->
 <div id="formNuevoPaciente" class="formulario-paciente" style="display:none;">
   <input type="text" id="nombrePaciente" placeholder="Nombre del paciente" required>
-  <input type="text" id="especiePaciente" placeholder="Especie (opcional)">
-  <input type="text" id="razaPaciente" placeholder="Raza (opcional)">
-  <input type="text" id="edadPaciente" placeholder="Edad (opcional)">
-  <button id="btnGuardarPaciente" class="btn-principal">Guardar</button>
+<label>Especie</label>
+<select id="especie">
+  <option value="">Seleccione especie</option>
+  <option value="perro">Perro</option>
+  <option value="gato">Gato</option>
+</select>
+
+<label>Raza</label>
+<input
+  type="text"
+  id="razaPaciente"
+  placeholder="Empiece a escribir la raza"
+  autocomplete="off"
+/>
+
+<ul id="sugerenciasRaza" class="sugerencias"></ul>  <input type="text" id="edadPaciente" placeholder="Edad (opcional)" required>
+
+
+<button id="btnGuardarPaciente" class="btn-principal">Guardar</button>
 </div>
 
 
