@@ -3741,3 +3741,21 @@ especieSelect.addEventListener("change", () => {
     razaSelect.appendChild(option);
   });
 });
+
+
+fetch(`/api/pacientes/${pacienteActivoId}`)
+  .then(res => res.json())
+  .then(paciente => {
+    if (document.getElementById("nombrePaciente")) {
+      document.getElementById("nombrePaciente").value = paciente.nombre;
+    }
+
+    if (document.getElementById("especie")) {
+      document.getElementById("especie").value = paciente.especie;
+      razasActuales = razas[paciente.especie];
+    }
+
+    if (document.getElementById("razaInput")) {
+      document.getElementById("razaInput").value = paciente.raza;
+    }
+  });
