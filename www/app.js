@@ -3851,3 +3851,42 @@ fetch(`/api/pacientes/${pacienteActivoId}`)
       document.getElementById("razaInput").value = paciente.raza;
     }
   });
+
+
+
+  function activarAutocompletado(especieId, razaId, sugerenciasId) {
+  const especieSelect = document.getElementById(especieId);
+  const razaInput = document.getElementById(razaId);
+  const sugerencias = document.getElementById(sugerenciasId);
+
+  razaInput.addEventListener("input", () => {
+    const especie = especieSelect.value;
+    const texto = razaInput.value.toLowerCase();
+
+    sugerencias.innerHTML = "";
+    if (!especie || !texto) return;
+
+    razas[especie]
+      .filter(r => r.toLowerCase().includes(texto))
+      .forEach(r => {
+        const li = document.createElement("li");
+        li.textContent = r;
+        li.onclick = () => {
+          razaInput.value = r;
+          sugerencias.innerHTML = "";
+        };
+        sugerencias.appendChild(li);
+      });
+  });
+
+  document.addEventListener("click", e => {
+    if (!razaInput.contains(e.target)) {
+      sugerencias.innerHTML = "";
+    }
+  });
+}
+
+
+
+activarAutocompletado("especie", "razaPaciente", "sugerenciasRaza");
+activarAutocompletado("especiePerfil", "razaPerfil", "sugerenciasRaza");

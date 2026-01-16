@@ -463,6 +463,7 @@ async function cargarPacientes() {
     const res = await fetch(
       `https://petstherapy-backend.onrender.com/api/pacientes/${encodeURIComponent(correoActivo)}`
     );
+
     if (!res.ok) throw new Error(res.status);
 
     const pacientes = await res.json();
@@ -473,7 +474,8 @@ async function cargarPacientes() {
     contenedor.innerHTML = "";
 
     if (pacientes.length === 0) {
-      contenedor.innerHTML = "<p style='text-align:center;color:##ff4da6;'>No hay pacientes registrados</p>";
+      contenedor.innerHTML =
+        "<p style='text-align:center;color:#ff4da6;'>No hay pacientes registrados</p>";
       return;
     }
 
@@ -481,7 +483,17 @@ async function cargarPacientes() {
       const btn = document.createElement("button");
       btn.className = "btn-paciente";
       btn.textContent = p.nombre;
-      btn.onclick = () => abrirPerfilPaciente(p);
+
+      // 🔑 AQUÍ está la diferencia importante
+      btn.onclick = () => {
+        abrirPerfilPaciente({
+          _id: p._id,
+          nombre: p.nombre,
+          especie: p.especie,
+          raza: p.raza
+        });
+      };
+
       contenedor.appendChild(btn);
     });
 
@@ -490,6 +502,7 @@ async function cargarPacientes() {
     mostrarBurbuja("❌ Error al cargar pacientes", "error");
   }
 }
+
 
 
 
@@ -544,18 +557,48 @@ window.pacienteActivo = null;
 
 // --- Añadir nuevo paciente ---
 async function crearNuevoPaciente() {
-  const nombre = document.getElementById("nombrePaciente").value.trim();
-  const especie = document.getElementById("especie").value.trim();
-  const raza = document.getElementById("razaPaciente").value.trim();
-  const edad = document.getElementById("edadPaciente").value.trim();
+  const nombre = document.getElementById("npNombre").value.trim();
+  const especie = document.getElementById("npEspecie").value; // SELECT
+  const raza = document.getElementById("npRaza").value.trim(); // INPUT autocompletado
+  const edad = document.getElementById("npEdad").value.trim();
 
   const propietarioCorreo = sessionStorage.getItem("usuarioActivoCorreo");
 
-  if (!nombre || !especie || !propietarioCorreo) {
-    mostrarBurbuja("Nombre y especie obligatorios", "error");
+  // ----------------------------
+  // ✅ VALIDACIONES OBLIGATORIAS
+  // ----------------------------
+  if (!nombre) {
+    mostrarBurbuja("El nombre del paciente es obligatorio", "error");
     return;
   }
 
+  if (!especie) {
+    mostrarBurbuja("Debe seleccionar la especie", "error");
+    return;
+  }
+
+  if (!raza) {
+    mostrarBurbuja("Debe ingresar la raza", "error");
+    return;
+  }
+
+  // 🔑 VALIDAR RAZA SEGÚN ESPECIE
+  if (!RAZAS[especie] || !RAZAS[especie].includes(raza)) {
+    mostrarBurbuja(
+      "La raza no corresponde a la especie seleccionada",
+      "error"
+    );
+    return;
+  }
+
+  if (!propietarioCorreo) {
+    mostrarBurbuja("Sesión no válida", "error");
+    return;
+  }
+
+  // ----------------------------
+  // 📡 ENVÍO A BACKEND
+  // ----------------------------
   try {
     const res = await fetch(
       "https://petstherapy-backend.onrender.com/api/pacientes/nuevo",
@@ -574,9 +617,22 @@ async function crearNuevoPaciente() {
     );
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.message);
+    if (!res.ok) throw new Error(data.message || "Error al crear paciente");
 
+    // ----------------------------
+    // 🔒 GUARDAR PACIENTE ACTIVO
+    // ----------------------------
+    sessionStorage.setItem(
+      "pacienteSeleccionado",
+      JSON.stringify(data.paciente)
+    );
+
+    // ----------------------------
+    // 🎉 ÉXITO
+    // ----------------------------
     mostrarBurbuja("Paciente creado 💖", "exito");
+
+    // 🔑 Abrir perfil (esto dispara autocompletado)
     abrirPerfilPaciente(data.paciente);
 
   } catch (error) {
@@ -606,10 +662,10 @@ async function abrirPerfilPaciente(paciente) {
 
     const pacienteCompleto = await res.json();
 
-    // 🔥 ESTADO GLOBAL (CLAVE PARA PROPIETARIO)
+    // 🔥 ESTADO GLOBAL (SE MANTIENE)
     window.pacienteActivo = pacienteCompleto;
 
-    // 🔒 Respaldo en sessionStorage
+    // 🔒 Respaldo en sessionStorage (SE MANTIENE)
     sessionStorage.setItem(
       "pacienteSeleccionado",
       JSON.stringify(pacienteCompleto)
@@ -618,23 +674,47 @@ async function abrirPerfilPaciente(paciente) {
     // ----------------------------
     // 🧾 Cargar datos del paciente
     // ----------------------------
-    document.getElementById("nombrePerfil").value =
-      pacienteCompleto.nombre || "";
-    document.getElementById("especiePerfil").value =
-      pacienteCompleto.especie || "";
-    document.getElementById("razaPerfil").value =
-      pacienteCompleto.raza || "";
-    document.getElementById("pesoPerfil").value =
-      pacienteCompleto.peso || "";
-    document.getElementById("fechaAplicacionPF").value =
-      pacienteCompleto.fechaNacimiento || "";
 
-    // ✅ Guardar ID para eliminar / actualizar
-    document.getElementById("nombrePerfil").dataset.pacienteId =
-      pacienteCompleto._id;
+    // Nombre
+    const nombrePerfil = document.getElementById("nombrePerfil");
+    if (nombrePerfil) {
+      nombrePerfil.value = pacienteCompleto.nombre || "";
+      nombrePerfil.dataset.pacienteId = pacienteCompleto._id;
+    }
+
+    // Especie (SELECT)
+    const especiePerfil = document.getElementById("especiePerfil");
+    if (especiePerfil) {
+      especiePerfil.value = pacienteCompleto.especie || "";
+
+      // 🔑 CLAVE: activar razas según especie
+      if (pacienteCompleto.especie && RAZAS[pacienteCompleto.especie]) {
+        razasActivas = RAZAS[pacienteCompleto.especie];
+      } else {
+        razasActivas = [];
+      }
+    }
+
+    // Raza (INPUT con autocompletado)
+    const razaPerfil = document.getElementById("razaPerfil");
+    if (razaPerfil) {
+      razaPerfil.value = pacienteCompleto.raza || "";
+    }
+
+    // Peso
+    const pesoPerfil = document.getElementById("pesoPerfil");
+    if (pesoPerfil) {
+      pesoPerfil.value = pacienteCompleto.peso || "";
+    }
+
+    // Fecha nacimiento / aplicación
+    const fechaPerfil = document.getElementById("fechaAplicacionPF");
+    if (fechaPerfil) {
+      fechaPerfil.value = pacienteCompleto.fechaNacimiento || "";
+    }
 
     // ----------------------------
-    // 🖼️ Cargar foto
+    // 🖼️ Cargar foto (SE MANTIENE)
     // ----------------------------
     const preview = document.getElementById("previewFoto");
 
@@ -662,6 +742,7 @@ async function abrirPerfilPaciente(paciente) {
     mostrarBurbuja("❌ Error al abrir paciente", "error");
   }
 }
+
 
 
 
@@ -3722,23 +3803,35 @@ const razas = {
 };
 
 
-const especieSelect = document.getElementById("especie");
-const razaSelect = document.getElementById("raza");
+const especiePerfil = document.getElementById("especiePerfil");
+const razaPerfil = document.getElementById("razaPerfil");
+const sugerenciasPerfil = document.getElementById("sugerenciasRazaPerfil");
 
-especieSelect.addEventListener("change", () => {
-  const especie = especieSelect.value;
+let razasActivas = [];
 
-  // Limpiar razas
-  razaSelect.innerHTML = '<option value="">Seleccione raza</option>';
+especiePerfil.addEventListener("change", () => {
+  razasActivas = RAZAS[especiePerfil.value] || [];
+  razaPerfil.value = "";
+  sugerenciasPerfil.innerHTML = "";
+});
 
-  if (!especie) return;
+razaPerfil.addEventListener("input", () => {
+  const texto = razaPerfil.value.toLowerCase();
+  sugerenciasPerfil.innerHTML = "";
 
-  razas[especie].forEach(raza => {
-    const option = document.createElement("option");
-    option.value = raza;
-    option.textContent = raza;
-    razaSelect.appendChild(option);
-  });
+  if (!texto) return;
+
+  razasActivas
+    .filter(r => r.toLowerCase().includes(texto))
+    .forEach(raza => {
+      const li = document.createElement("li");
+      li.textContent = raza;
+      li.onclick = () => {
+        razaPerfil.value = raza;
+        sugerenciasPerfil.innerHTML = "";
+      };
+      sugerenciasPerfil.appendChild(li);
+    });
 });
 
 
@@ -3758,15 +3851,10 @@ fetch(`/api/pacientes/${pacienteActivoId}`)
       document.getElementById("razaInput").value = paciente.raza;
     }
   });
-document.getElementById("btnGuardarPaciente")
-  ?.addEventListener("click", crearNuevoPaciente);
 
 
 
-  
-  
-  
-function activarAutocompletado(especieId, razaId, sugerenciasId) {
+  function activarAutocompletado(especieId, razaId, sugerenciasId) {
   const especieSelect = document.getElementById(especieId);
   const razaInput = document.getElementById(razaId);
   const sugerencias = document.getElementById(sugerenciasId);
