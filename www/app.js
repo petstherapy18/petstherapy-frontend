@@ -3723,23 +3723,35 @@ const razas = {
 };
 
 
-const especieSelect = document.getElementById("especie");
-const razaSelect = document.getElementById("raza");
+const especiePerfil = document.getElementById("especiePerfil");
+const razaPerfil = document.getElementById("razaPerfil");
+const sugerenciasPerfil = document.getElementById("sugerenciasRazaPerfil");
 
-especieSelect.addEventListener("change", () => {
-  const especie = especieSelect.value;
+let razasActivas = [];
 
-  // Limpiar razas
-  razaSelect.innerHTML = '<option value="">Seleccione raza</option>';
+especiePerfil.addEventListener("change", () => {
+  razasActivas = RAZAS[especiePerfil.value] || [];
+  razaPerfil.value = "";
+  sugerenciasPerfil.innerHTML = "";
+});
 
-  if (!especie) return;
+razaPerfil.addEventListener("input", () => {
+  const texto = razaPerfil.value.toLowerCase();
+  sugerenciasPerfil.innerHTML = "";
 
-  razas[especie].forEach(raza => {
-    const option = document.createElement("option");
-    option.value = raza;
-    option.textContent = raza;
-    razaSelect.appendChild(option);
-  });
+  if (!texto) return;
+
+  razasActivas
+    .filter(r => r.toLowerCase().includes(texto))
+    .forEach(raza => {
+      const li = document.createElement("li");
+      li.textContent = raza;
+      li.onclick = () => {
+        razaPerfil.value = raza;
+        sugerenciasPerfil.innerHTML = "";
+      };
+      sugerenciasPerfil.appendChild(li);
+    });
 });
 
 
