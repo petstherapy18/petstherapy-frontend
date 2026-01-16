@@ -544,39 +544,37 @@ window.pacienteActivo = null;
 
 // --- Añadir nuevo paciente ---
 async function crearNuevoPaciente() {
-  const nombre = document.getElementById("npNombre").value.trim();
-  const especie = document.getElementById("npEspecie").value.trim();
-  const raza = document.getElementById("npRaza").value.trim();
-  const edad = document.getElementById("npEdad").value.trim();
+  const nombre = document.getElementById("nombrePaciente").value.trim();
+  const especie = document.getElementById("especie").value.trim();
+  const raza = document.getElementById("razaPaciente").value.trim();
+  const edad = document.getElementById("edadPaciente").value.trim();
 
   const propietarioCorreo = sessionStorage.getItem("usuarioActivoCorreo");
 
-  if (!nombre || !propietarioCorreo) {
-    mostrarBurbuja("Nombre y correo obligatorios", "error");
+  if (!nombre || !especie || !propietarioCorreo) {
+    mostrarBurbuja("Nombre y especie obligatorios", "error");
     return;
   }
 
   try {
-    const res = await fetch("https://petstherapy-backend.onrender.com/api/pacientes/nuevo", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        nombre,
-        especie,
-        raza,
-        edad,
-        propietarioCorreo,
-        foto: ""
-      })
-    });
+    const res = await fetch(
+      "https://petstherapy-backend.onrender.com/api/pacientes/nuevo",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre,
+          especie,
+          raza,
+          edad,
+          propietarioCorreo,
+          foto: ""
+        })
+      }
+    );
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
-
-    sessionStorage.setItem(
-      "pacienteSeleccionado",
-      JSON.stringify(data.paciente)
-    );
 
     mostrarBurbuja("Paciente creado 💖", "exito");
     abrirPerfilPaciente(data.paciente);
@@ -586,6 +584,7 @@ async function crearNuevoPaciente() {
     mostrarBurbuja("Error al crear paciente", "error");
   }
 }
+
 
 
 
@@ -3759,3 +3758,47 @@ fetch(`/api/pacientes/${pacienteActivoId}`)
       document.getElementById("razaInput").value = paciente.raza;
     }
   });
+document.getElementById("btnGuardarPaciente")
+  ?.addEventListener("click", crearNuevoPaciente);
+
+
+
+  
+  
+  
+function activarAutocompletado(especieId, razaId, sugerenciasId) {
+  const especieSelect = document.getElementById(especieId);
+  const razaInput = document.getElementById(razaId);
+  const sugerencias = document.getElementById(sugerenciasId);
+
+  razaInput.addEventListener("input", () => {
+    const especie = especieSelect.value;
+    const texto = razaInput.value.toLowerCase();
+
+    sugerencias.innerHTML = "";
+    if (!especie || !texto) return;
+
+    razas[especie]
+      .filter(r => r.toLowerCase().includes(texto))
+      .forEach(r => {
+        const li = document.createElement("li");
+        li.textContent = r;
+        li.onclick = () => {
+          razaInput.value = r;
+          sugerencias.innerHTML = "";
+        };
+        sugerencias.appendChild(li);
+      });
+  });
+
+  document.addEventListener("click", e => {
+    if (!razaInput.contains(e.target)) {
+      sugerencias.innerHTML = "";
+    }
+  });
+}
+
+
+
+activarAutocompletado("especie", "razaPaciente", "sugerenciasRaza");
+activarAutocompletado("especiePerfil", "razaPerfil", "sugerenciasRaza");
