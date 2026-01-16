@@ -557,10 +557,11 @@ window.pacienteActivo = null;
 
 // --- Añadir nuevo paciente ---
 async function crearNuevoPaciente() {
-  const nombre = document.getElementById("npNombre").value.trim();
-  const especie = document.getElementById("npEspecie").value; // SELECT
-  const raza = document.getElementById("npRaza").value.trim(); // INPUT autocompletado
-  const edad = document.getElementById("npEdad").value.trim();
+const nombre = document.getElementById("nombrePaciente").value.trim();
+const especie = document.getElementById("especie").value.trim();
+const raza = document.getElementById("razaPaciente").value.trim();
+const edad = document.getElementById("edadPaciente").value.trim();
+
 
   const propietarioCorreo = sessionStorage.getItem("usuarioActivoCorreo");
 
@@ -3890,3 +3891,35 @@ fetch(`/api/pacientes/${pacienteActivoId}`)
 
 activarAutocompletado("especie", "razaPaciente", "sugerenciasRaza");
 activarAutocompletado("especiePerfil", "razaPerfil", "sugerenciasRaza");
+
+
+const razaInput = document.getElementById("razaPaciente");
+const especieSelect = document.getElementById("especie");
+const sugerencias = document.getElementById("sugerenciasRazaNuevo");
+
+razaInput.addEventListener("input", async () => {
+  const texto = razaInput.value.trim();
+  const especie = especieSelect.value;
+
+  if (texto.length < 2 || !especie) {
+    sugerencias.innerHTML = "";
+    return;
+  }
+
+  const res = await fetch(
+    `https://petstherapy-backend.onrender.com/api/razas?especie=${especie}&texto=${texto}`
+  );
+
+  const razas = await res.json();
+  sugerencias.innerHTML = "";
+
+  razas.forEach(r => {
+    const li = document.createElement("li");
+    li.textContent = r;
+    li.onclick = () => {
+      razaInput.value = r;
+      sugerencias.innerHTML = "";
+    };
+    sugerencias.appendChild(li);
+  });
+});
