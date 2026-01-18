@@ -3387,7 +3387,7 @@ if (isNative) {
 }
 
 
-const razas = {
+const RAZAS = {
   perro: [
     "Mestizo",
     "Affenpinscher",
@@ -3804,118 +3804,55 @@ const razas = {
 };
 
 
-const especiePerfil = document.getElementById("especiePerfil");
-const razaPerfil = document.getElementById("razaPerfil");
-const sugerenciasPerfil = document.getElementById("sugerenciasRazaPerfil");
-
-let razasActivas = [];
-
-especiePerfil.addEventListener("change", () => {
-  razasActivas = RAZAS[especiePerfil.value] || [];
-  razaPerfil.value = "";
-  sugerenciasPerfil.innerHTML = "";
-});
-
-razaPerfil.addEventListener("input", () => {
-  const texto = razaPerfil.value.toLowerCase();
-  sugerenciasPerfil.innerHTML = "";
-
-  if (!texto) return;
-
-  razasActivas
-    .filter(r => r.toLowerCase().includes(texto))
-    .forEach(raza => {
-      const li = document.createElement("li");
-      li.textContent = raza;
-      li.onclick = () => {
-        razaPerfil.value = raza;
-        sugerenciasPerfil.innerHTML = "";
-      };
-      sugerenciasPerfil.appendChild(li);
-    });
-});
-
-
-fetch(`/api/pacientes/${pacienteActivoId}`)
-  .then(res => res.json())
-  .then(paciente => {
-    if (document.getElementById("nombrePaciente")) {
-      document.getElementById("nombrePaciente").value = paciente.nombre;
-    }
-
-    if (document.getElementById("especie")) {
-      document.getElementById("especie").value = paciente.especie;
-      razasActuales = razas[paciente.especie];
-    }
-
-    if (document.getElementById("razaInput")) {
-      document.getElementById("razaInput").value = paciente.raza;
-    }
-  });
 
 
 
-function activarAutocompletado(especieSelectId, razaInputId, sugerenciasId) {
-  const especieSelect = document.getElementById(especieSelectId);
-  const razaInput = document.getElementById(razaInputId);
-  const sugerencias = document.getElementById(sugerenciasId);
 
-  razaInput.addEventListener("input", () => {
-    const especie = especieSelect.value;
-    const texto = razaInput.value.toLowerCase();
 
-    sugerencias.innerHTML = "";
-    if (!especie || !razas[especie] || texto.length < 2) return;
 
-    const resultados = razas[especie]
+
+
+
+
+function activarAutocompletado(especieId, razaId, sugerenciasId) {
+  const especie = document.getElementById(especieId);
+  const raza = document.getElementById(razaId);
+  const lista = document.getElementById(sugerenciasId);
+
+  if (!especie || !raza || !lista) return;
+
+  raza.addEventListener("input", () => {
+    const texto = raza.value.toLowerCase();
+    const tipo = especie.value;
+
+    lista.innerHTML = "";
+    if (!tipo || !RAZAS[tipo] || texto.length < 2) return;
+
+    RAZAS[tipo]
       .filter(r => r.toLowerCase().includes(texto))
-      .slice(0, 10);
-
-    resultados.forEach(raza => {
-      const li = document.createElement("li");
-      li.textContent = raza;
-      li.onclick = () => {
-        razaInput.value = raza;
-        sugerencias.innerHTML = "";
-      };
-      sugerencias.appendChild(li);
-    });
+      .slice(0, 10)
+      .forEach(r => {
+        const li = document.createElement("li");
+        li.textContent = r;
+        li.onclick = () => {
+          raza.value = r;
+          lista.innerHTML = "";
+        };
+        lista.appendChild(li);
+      });
   });
 }
 
 
 
-activarAutocompletado("especie", "razaPaciente", "sugerenciasRazaNuevo");
 
+document.addEventListener("DOMContentLoaded", () => {
+  // NUEVO PACIENTE
+  activarAutocompletado("especie", "razaPaciente", "sugerenciasRazaNuevo");
 
-
-const razaInput = document.getElementById("razaPaciente");
-const especieSelect = document.getElementById("especie");
-const sugerencias = document.getElementById("sugerenciasRazaNuevo");
-
-razaInput.addEventListener("input", async () => {
-  const texto = razaInput.value.trim();
-  const especie = especieSelect.value;
-
-  if (texto.length < 2 || !especie) {
-    sugerencias.innerHTML = "";
-    return;
-  }
-
-  const res = await fetch(
-    `https://petstherapy-backend.onrender.com/api/razas?especie=${especie}&texto=${texto}`
-  );
-
-  const razas = await res.json();
-  sugerencias.innerHTML = "";
-
-  razas.forEach(r => {
-    const li = document.createElement("li");
-    li.textContent = r;
-    li.onclick = () => {
-      razaInput.value = r;
-      sugerencias.innerHTML = "";
-    };
-    sugerencias.appendChild(li);
-  });
+  // PERFIL PACIENTE
+  activarAutocompletado("especiePerfil", "razaPerfil", "sugerenciasRazaPerfil");
 });
+
+
+
