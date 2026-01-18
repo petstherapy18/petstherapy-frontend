@@ -3855,9 +3855,9 @@ fetch(`/api/pacientes/${pacienteActivoId}`)
 
 
 
-  function activarAutocompletado(especieId, razaId, sugerenciasId) {
-  const especieSelect = document.getElementById(especieId);
-  const razaInput = document.getElementById(razaId);
+function activarAutocompletado(especieSelectId, razaInputId, sugerenciasId) {
+  const especieSelect = document.getElementById(especieSelectId);
+  const razaInput = document.getElementById(razaInputId);
   const sugerencias = document.getElementById(sugerenciasId);
 
   razaInput.addEventListener("input", () => {
@@ -3865,32 +3865,28 @@ fetch(`/api/pacientes/${pacienteActivoId}`)
     const texto = razaInput.value.toLowerCase();
 
     sugerencias.innerHTML = "";
-    if (!especie || !texto) return;
+    if (!especie || !razas[especie] || texto.length < 2) return;
 
-    razas[especie]
+    const resultados = razas[especie]
       .filter(r => r.toLowerCase().includes(texto))
-      .forEach(r => {
-        const li = document.createElement("li");
-        li.textContent = r;
-        li.onclick = () => {
-          razaInput.value = r;
-          sugerencias.innerHTML = "";
-        };
-        sugerencias.appendChild(li);
-      });
-  });
+      .slice(0, 10);
 
-  document.addEventListener("click", e => {
-    if (!razaInput.contains(e.target)) {
-      sugerencias.innerHTML = "";
-    }
+    resultados.forEach(raza => {
+      const li = document.createElement("li");
+      li.textContent = raza;
+      li.onclick = () => {
+        razaInput.value = raza;
+        sugerencias.innerHTML = "";
+      };
+      sugerencias.appendChild(li);
+    });
   });
 }
 
 
 
-activarAutocompletado("especie", "razaPaciente", "sugerenciasRaza");
-activarAutocompletado("especiePerfil", "razaPerfil", "sugerenciasRaza");
+activarAutocompletado("especie", "razaPaciente", "sugerenciasRazaNuevo");
+
 
 
 const razaInput = document.getElementById("razaPaciente");
