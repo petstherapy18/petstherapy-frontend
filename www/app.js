@@ -3804,6 +3804,10 @@ if (especieSelect && razaInput && listaRazas) {
       option.value = raza;
       listaRazas.appendChild(option);
     });
+
+console.log("Razas cargadas:", RAZAS[especie].length);
+
+
   });
 }
 
