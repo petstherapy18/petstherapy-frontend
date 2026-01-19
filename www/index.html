@@ -315,8 +315,23 @@
 
     <form class="formulario" onsubmit="return false;">
       <input id="npNombre" placeholder="Nombre del paciente" required>
-      <input id="npEspecie" placeholder="Especie">
-      <input id="npRaza" placeholder="Raza">
+      <label>Especie</label>
+<select id="npEspecie">
+  <option value="">Seleccione especie</option>
+  <option value="perro">Perro</option>
+  <option value="gato">Gato</option>
+</select>
+
+<label>Raza</label>
+<input
+  type="text"
+  id="npRaza"
+  placeholder="Empiece a escribir la raza"
+  autocomplete="off"
+/>
+
+<ul id="sugerenciasRazaNP" class="sugerencias"></ul>
+
       <input id="npEdad" placeholder="Edad">
 
       <button type="button" class="btn-principal" onclick="crearNuevoPaciente()">
