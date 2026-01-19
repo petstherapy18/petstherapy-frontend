@@ -3366,9 +3366,10 @@ function mostrarPantalla(id) {
 
 
 // Selectores
-const especieSelect = document.getElementById("especie");
-const razaInput = document.getElementById("raza");
+const especieSelect = document.getElementById("npEspecie");
+const razaInput = document.getElementById("npRaza");
 const listaRazas = document.getElementById("listaRazas");
+
 
 // Razas por especie
 
@@ -3788,6 +3789,7 @@ const RAZAS = {
   ]
 };
 
+// Cuando cambia la especie
 // Cuando cambia la especie
 if (especieSelect && razaInput && listaRazas) {
   especieSelect.addEventListener("change", () => {
