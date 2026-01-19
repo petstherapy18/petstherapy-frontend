@@ -3285,8 +3285,8 @@ async function registrarTokenPush(token) {
 
 
 async function iniciarPushFCM() {
-  if (!Capacitor.isNativePlatform()) {
-    console.log("No es plataforma nativa, FCM no aplica");
+  if (!window.Capacitor || !Capacitor.isNativePlatform()) {
+    console.log("FCM solo disponible en APK");
     return;
   }
 
@@ -3785,19 +3785,22 @@ const RAZAS = {
 };
 
 // Cuando cambia la especie
-especieSelect.addEventListener("change", () => {
-  razaInput.value = ""; // limpia el campo
-  listaRazas.innerHTML = ""; // limpia sugerencias
+if (especieSelect && razaInput && listaRazas) {
+  especieSelect.addEventListener("change", () => {
+    razaInput.value = "";
+    listaRazas.innerHTML = "";
 
-  const especie = especieSelect.value;
-  if (!especie) return;
+    const especie = especieSelect.value;
+    if (!especie) return;
 
-  razas[especie].forEach(raza => {
-    const option = document.createElement("option");
-    option.value = raza;
-    listaRazas.appendChild(option);
+    RAZAS[especie].forEach(raza => {
+      const option = document.createElement("option");
+      option.value = raza;
+      listaRazas.appendChild(option);
+    });
   });
-});
+}
+
 
 
 
@@ -3820,8 +3823,12 @@ function cargarRazas(especie, datalistId) {
 }
 
 
-document.getElementById("npEspecie").addEventListener("change", e => {
-  cargarRazas(e.target.value, "listaRazasNP");
-});
+const npEspecie = document.getElementById("npEspecie");
+
+if (npEspecie) {
+  npEspecie.addEventListener("change", e => {
+    cargarRazas(e.target.value, "listaRazasNP");
+  });
+}
 
 
