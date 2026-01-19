@@ -507,6 +507,10 @@ async function cargarPacientes() {
 }
 
 
+function irAPacientes() {
+  mostrarPantalla("pantallaPacientes");
+  cargarPacientes();
+}
 
 
 async function seleccionarPaciente(pacienteId) {
