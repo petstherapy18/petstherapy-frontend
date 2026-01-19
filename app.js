@@ -3808,31 +3808,9 @@ if (especieSelect && razaInput && listaRazas) {
 
 
 
-function cargarRazas(especie, datalistId) {
-  const razas = {
-    perro: ["Labrador", "Pastor Alemán", "Pug", "Criollo"],
-    gato: ["Persa", "Siamés", "Maine Coon", "Criollo"]
-  };
-
-  const datalist = document.getElementById(datalistId);
-  datalist.innerHTML = "";
-
-  if (!razas[especie]) return;
-
-  razas[especie].forEach(r => {
-    const option = document.createElement("option");
-    option.value = r;
-    datalist.appendChild(option);
-  });
-}
 
 
-const npEspecie = document.getElementById("npEspecie");
 
-if (npEspecie) {
-  npEspecie.addEventListener("change", e => {
-    cargarRazas(e.target.value, "listaRazasNP");
-  });
-}
+
 
 
