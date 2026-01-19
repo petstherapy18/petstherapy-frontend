@@ -695,6 +695,65 @@
 
 
 
+<!--Pantalla Exámenes-->
+<div id="pantallaExamenes" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('perfilPaciente')">← Volver</button>
+  
+  <div class="container">
+
+    
+      
+    <img src="logo.png" alt="Logo" class="e-logo">
+  
+    <h2>Exámenes</h2>
+
+  <form id="formExamen"class="formulario">
+    <input id="nombrePacienteExamen" type="text" placeholder="Nombre paciente:">
+  <input id="especieExamen" type="text" placeholder="Especie:" >
+  <input id="razaExamen" type="text" placeholder="Raza:" >
+
+  <input id="nombreExamen" type="text" placeholder="Nombre de examen:">
+  <input id="tipoExamen" type="text" placeholder="Tipo de examen:">
+    <div class="input-box">
+  <label for="fecha">Fecha:</label>
+  <input type="date" id="fechaExamenes" name="fecha">
+</div>
+<textarea id="resultadoExamen" placeholder="Resultado:"></textarea>
+
+    <div class="input-box">
+  <label>📁 Archivos adjuntos:</label>
+  <div style="display:block ; justify-content: center; gap: 10px; margin-top: 8px;">
+<button type="button" onclick="mostrarPantalla('pantallaExamenesSubidos')">
+  Subir archivos
+</button>
+
+  </div>
+  <ul id="listaArchivosExamen"></ul>
+</div>
+
+
+  <input type="file" id="inputArchivosExamen" multiple accept="image/*,.pdf,.jpg,.jpeg,.png" style="display:none;">
+
+
+
+<button type="button" onclick="guardarExamen()">Guardar</button>
+<button type="button" onclick="mostrarPantalla('pantallaHistorial')">Cancelar</button>
+    
+  </form>
+
+<h3 class="pt-subtitle">Exámenes registrados</h3>
+
+<div class="contenedor-lista-examenes">
+
+
+<div id="listaExamenes" class="lista-examenes"></div>     
+      </div>
+
+  </div>
+  
+</div>
+
 
 
 
@@ -842,65 +901,6 @@
   </div>
 </div>
 
-
-<!--Pantalla Exámenes-->
-<div id="pantallaExamenes" class="pantalla">
-
-<button class="btn-volver" onclick="mostrarPantalla('perfilPaciente')">← Volver</button>
-  
-  <div class="container">
-
-    
-      
-    <img src="logo.png" alt="Logo" class="e-logo">
-  
-    <h2>Exámenes</h2>
-
-  <form id="formExamen"class="formulario">
-    <input id="nombrePacienteExamen" type="text" placeholder="Nombre paciente:">
-  <input id="especieExamen" type="text" placeholder="Especie:" >
-  <input id="razaExamen" type="text" placeholder="Raza:" >
-
-  <input id="nombreExamen" type="text" placeholder="Nombre de examen:">
-  <input id="tipoExamen" type="text" placeholder="Tipo de examen:">
-    <div class="input-box">
-  <label for="fecha">Fecha:</label>
-  <input type="date" id="fechaExamenes" name="fecha">
-</div>
-<textarea id="resultadoExamen" placeholder="Resultado:"></textarea>
-
-    <div class="input-box">
-  <label>📁 Archivos adjuntos:</label>
-  <div style="display:block ; justify-content: center; gap: 10px; margin-top: 8px;">
-<button type="button" onclick="mostrarPantalla('pantallaExamenesSubidos')">
-  Subir archivos
-</button>
-
-  </div>
-  <ul id="listaArchivosExamen"></ul>
-</div>
-
-
-  <input type="file" id="inputArchivosExamen" multiple accept="image/*,.pdf,.jpg,.jpeg,.png" style="display:none;">
-
-
-
-<button type="button" onclick="guardarExamen()">Guardar</button>
-<button type="button" onclick="mostrarPantalla('pantallaHistorial')">Cancelar</button>
-    
-  </form>
-
-<h3 class="pt-subtitle">Exámenes registrados</h3>
-
-<div class="contenedor-lista-examenes">
-
-
-<div id="listaExamenes" class="lista-examenes"></div>     
-      </div>
-
-  </div>
-  
-</div>
 
 
 

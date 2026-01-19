@@ -1771,3 +1771,12 @@ max-width: 220px;
   background: #ffbce5;
 }
 
+
+
+.pantalla {
+  display: none;
+}
+
+.pantalla.activa {
+  display: block;
+}
