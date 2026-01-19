@@ -557,9 +557,9 @@ window.pacienteActivo = null;
 
 // --- Añadir nuevo paciente ---
 async function crearNuevoPaciente() {
-const nombre = document.getElementById("npNombre").value.trim();
-const especie = document.getElementById("npEspecie").value.trim();
-const raza = document.getElementById("npRaza").value.trim();
+const nombre = document.getElementById("nombrePaciente").value.trim();
+const especie = document.getElementById("especie").value.trim();
+const raza = document.getElementById("raza").value.trim();
 const edad = document.getElementById("edadPaciente").value.trim();
 
 
@@ -3392,6 +3392,17 @@ if (isNative) {
 }
 
 
+
+
+
+
+// Selectores
+const especieSelect = document.getElementById("especie");
+const razaInput = document.getElementById("raza");
+const listaRazas = document.getElementById("listaRazas");
+
+// Razas por especie
+
 const RAZAS = {
   perro: [
     "Mestizo",
@@ -3808,64 +3819,24 @@ const RAZAS = {
   ]
 };
 
+// Cuando cambia la especie
+especieSelect.addEventListener("change", () => {
+  razaInput.value = ""; // limpia el campo
+  listaRazas.innerHTML = ""; // limpia sugerencias
 
+  const especie = especieSelect.value;
+  if (!especie) return;
 
-
-
-
-
-
-
-
-
-
-function activarAutocompletado(especieId, razaId, sugerenciasId) {
-  const especie = document.getElementById(especieId);
-  const raza = document.getElementById(razaId);
-  const lista = document.getElementById(sugerenciasId);
-
-  if (!especie || !raza || !lista) return;
-
-  raza.addEventListener("input", () => {
-    const texto = raza.value.toLowerCase();
-    const tipo = especie.value;
-
-    lista.innerHTML = "";
-    if (!tipo || !RAZAS[tipo] || texto.length < 2) return;
-
-    RAZAS[tipo]
-      .filter(r => r.toLowerCase().includes(texto))
-      .slice(0, 10)
-      .forEach(r => {
-        const li = document.createElement("li");
-        li.textContent = r;
-        li.onclick = () => {
-          raza.value = r;
-          lista.innerHTML = "";
-        };
-        lista.appendChild(li);
-      });
+  razas[especie].forEach(raza => {
+    const option = document.createElement("option");
+    option.value = raza;
+    listaRazas.appendChild(option);
   });
-}
+});
 
 
 
 
 
-function inicializarAutocompletadosPantalla() {
-  // NUEVO PACIENTE
-  activarAutocompletado(
-    "npEspecie",
-    "npRaza",
-    "sugerenciasRazaNP"
-  );
-
-  // PERFIL PACIENTE
-  activarAutocompletado(
-    "especiePerfil",
-    "razaPerfil",
-    "sugerenciasRazaPerfil"
-  );
-}
 
 
