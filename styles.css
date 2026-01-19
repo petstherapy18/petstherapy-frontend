@@ -1721,17 +1721,18 @@ max-width: 220px;
   color: #ff4da6;
 }
 
-
 .sugerencias {
-  padding: 0;
-  margin: 0;
-  border: 2px solid #ff66c4;
-  max-height: 150px;
-  overflow-y: auto;
-  background: #ffbce5;
   position: absolute;
+  top: 100%;
+  left: 0;
   width: 100%;
-  z-index: 10;
+  background: #ffffff; /* color de tu app */
+  border: 1px solid #f2a6c9; /* rosado suave (ajústalo) */
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 
