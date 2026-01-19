@@ -1070,7 +1070,6 @@ button {
 }
 
 #pantallaExamenesSubidos {
-  display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 130px;
@@ -1773,10 +1772,4 @@ max-width: 220px;
 
 
 
-.pantalla {
-  display: none;
-}
 
-.pantalla.activa {
-  display: block;
-}
