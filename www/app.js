@@ -3348,6 +3348,11 @@ function mostrarPantalla(id) {
     nueva.classList.add('activa');
     pantallaActual = id;
   }
+
+  setTimeout(() => {
+  inicializarAutocompletadosPantalla();
+}, 50);
+
 }
 
 function mostrarPantallaSinGuardar(id) {
@@ -3846,13 +3851,21 @@ function activarAutocompletado(especieId, razaId, sugerenciasId) {
 
 
 
-document.addEventListener("DOMContentLoaded", () => {
+
+function inicializarAutocompletadosPantalla() {
   // NUEVO PACIENTE
-  activarAutocompletado("especie", "razaPaciente", "sugerenciasRazaNuevo");
+  activarAutocompletado(
+    "npEspecie",
+    "npRaza",
+    "sugerenciasRazaNP"
+  );
 
   // PERFIL PACIENTE
-  activarAutocompletado("especiePerfil", "razaPerfil", "sugerenciasRazaPerfil");
-});
-
+  activarAutocompletado(
+    "especiePerfil",
+    "razaPerfil",
+    "sugerenciasRazaPerfil"
+  );
+}
 
 
