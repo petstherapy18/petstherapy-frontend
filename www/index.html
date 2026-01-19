@@ -269,14 +269,14 @@
 <div id="formNuevoPaciente" class="formulario-paciente" style="display:none;">
   <input type="text" id="nombrePaciente" placeholder="Nombre del paciente" required>
 <label for="especie">Especie</label>
-<select id="especie">
+<select id="especieNuevo">
   <option value="">Selecciona una especie</option>
   <option value="perro">Perro</option>
   <option value="gato">Gato</option>
 </select>
 
 
-<label for="raza">Raza</label>
+<label for="razaNuevo">Raza</label>
 <input 
   type="text" 
   id="raza" 
@@ -303,8 +303,23 @@
 
     <form class="formulario" onsubmit="return false;">
       <input id="npNombre" placeholder="Nombre del paciente" required>
-   <input id="npEspecie" type="text" placeholder="Especie">
-    <input id="npRaza" type="text" placeholder="Raza">
+   <label for="especie">Especie</label>
+<select id="especie">
+  <option value="">Selecciona una especie</option>
+  <option value="perro">Perro</option>
+  <option value="gato">Gato</option>
+</select>
+
+
+<label for="raza">Raza</label>
+<input 
+  type="text" 
+  id="raza" 
+  list="listaRazas" 
+  placeholder="Escribe la raza"
+/>
+
+<datalist id="listaRazas"></datalist>
       <input id="npEdad" placeholder="Edad">
 
       <button type="button" class="btn-principal" onclick="crearNuevoPaciente()">
