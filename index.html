@@ -9,17 +9,6 @@
   <link rel="manifest" href="manifest.json">
 
 
-<div class="pantalla">
-  <div class="header">
-    <button class="btn-volver" onclick="volver()">← Volver</button>
-  </div>
-
-  <div class="container">
-    <!-- contenido -->
-  </div>
-</div>
-
-
 </head>
 
 
@@ -43,6 +32,10 @@
 
   <!-- Pantalla 2: Iniciar Sesión -->
   <div id="pantalla-login" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('pantalla-inicio')">← Volver</button>
+
+
     <div class="container">
      
       <img src="logo.png" alt="Logo Pets Therapy" class="logo">
@@ -62,6 +55,9 @@
 
   <!-- Pantalla 3: Registro -->
   <div id="pantalla-registro" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('pantalla-inicio')">← Volver</button>
+
   <div class="container">
     
     <img src="logo.png" alt="Logo Pets Therapy" class="r-logo">
@@ -85,6 +81,9 @@
 
   <!-- Pantalla 4: Recuperar contraseña -->
   <div id="pantalla-recuperar" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('pantalla-login')">← Volver</button>
+
     <div class="container">
       <img src="logo.png" alt="Logo Pets Therapy" class="rc-logo">
       <h2>Recupera tu contraseña</h2>
@@ -101,6 +100,9 @@
 
   <!-- 🌸 Pantalla: Restablecer contraseña -->
 <div id="pantalla-reset" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('pantalla-recuperar')">← Volver</button>
+
   <div class="container">
     <img src="logo.png" alt="Logo Pets Therapy" class="logo">
     <h2>Restablecer contraseña</h2>
@@ -122,6 +124,7 @@
 
   <!-- Pantalla 5: menú principal -->
    <div id="menú-principal" class="pantalla">
+
   <div class="container">
     <!-- Logo -->
     <img src="logo.png" alt="Logo PetsTherapy" class="mp-logo">
@@ -130,7 +133,7 @@
     <h1>Menú Principal</h1>
 
     <!-- Botones -->
-         <button type="button" class="btn-principal" onclick="mostrarPantalla('pantallaPacientes')">Ver pacientes</button>
+         <button type="button" class="btn-principal" onclick="irAPacientes()">Ver pacientes</button>
         <button type="button" class="btn-secundario" onclick="cerrarSesion()">Cerrar sesión</button>
     <!-- Imagen decorativa -->
       <img src="menu-principal.png" alt="Decoración" class="decor">
@@ -139,6 +142,8 @@
 
  <!-- PERFIL PACIENTE -->
   <div id="perfilPaciente" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('pantallaPacientes')">← Volver</button>
 
 <div class="container">
 
@@ -170,22 +175,9 @@
     <!-- Campos -->
     <form class="formulario">
     <input id="nombrePerfil" type="text" placeholder="Nombre">
-    <label>Especie</label>
-<select id="especiePerfil">
-  <option value="">Seleccione especie</option>
-  <option value="perro">Perro</option>
-  <option value="gato">Gato</option>
-</select>
+      <input id="especiePerfil" type="text" placeholder="Especie">
+    <input id="razaPerfil" type="text" placeholder="Raza">
 
-    <label>Raza</label>
-<input
-  type="text"
-  id="razaPerfil"
-  placeholder="Raza"
-  autocomplete="off"
-/>
-
-<ul id="sugerenciasRazaPerfil" class="sugerencias"></ul>
 
     <div class="input-box">
   <label for="fechaNacimiento">Fecha de nacimiento:</label>
@@ -219,6 +211,9 @@
 
 <!-- Pantalla Propietario -->
 <div id="pantallaPropietario" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('perfilPaciente')">← Volver</button>
+
   <div class="container">
 
    
@@ -253,6 +248,9 @@
 
 <!-- PANTALLA AÑADIR PACIENTES -->
 <div id="pantallaPacientes" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('menú-principal')">← Volver</button>
+
   <div class="container">
 
     
@@ -281,22 +279,23 @@
   <!-- Formulario oculto para agregar paciente -->
 <div id="formNuevoPaciente" class="formulario-paciente" style="display:none;">
   <input type="text" id="nombrePaciente" placeholder="Nombre del paciente" required>
-<label>Especie</label>
-<select id="especie">
-  <option value="">Seleccione especie</option>
+<label for="especie">Especie</label>
+<select id="especieNuevo">
+  <option value="">Selecciona una especie</option>
   <option value="perro">Perro</option>
   <option value="gato">Gato</option>
 </select>
 
-<label>Raza</label>
-<input
-  type="text"
-  id="razaPaciente"
-  placeholder="Empiece a escribir la raza"
-  autocomplete="off"
+
+<label for="razaNuevo">Raza</label>
+<input 
+  type="text" 
+  id="raza" 
+  list="listaRazas" 
+  placeholder="Escribe la raza"
 />
 
-<ul id="sugerenciasRazaNuevo" class="sugerencias"></ul>  <input type="text" id="edadPaciente" placeholder="Edad (opcional)" required>
+<datalist id="listaRazasNuevo"></datalist>
 
 
 <button id="btnGuardarPaciente" class="btn-principal">Guardar</button>
@@ -307,6 +306,9 @@
 
 
 <div id="pantallaNuevoPaciente" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('pantallaPacientes')">← Volver</button>
+
   <div class="container">
 
    
@@ -315,23 +317,23 @@
 
     <form class="formulario" onsubmit="return false;">
       <input id="npNombre" placeholder="Nombre del paciente" required>
-      <label>Especie</label>
+   <label for="especie">Especie</label>
 <select id="npEspecie">
-  <option value="">Seleccione especie</option>
+  <option value="">Selecciona una especie</option>
   <option value="perro">Perro</option>
   <option value="gato">Gato</option>
 </select>
 
-<label>Raza</label>
-<input
-  type="text"
-  id="npRaza"
-  placeholder="Empiece a escribir la raza"
-  autocomplete="off"
+
+<label for="raza">Raza</label>
+<input 
+  type="text" 
+  id="npRaza" 
+  list="listaRazas" 
+  placeholder="Escribe la raza"
 />
 
-<ul id="sugerenciasRazaNP" class="sugerencias"></ul>
-
+<datalist id="listaRazas"></datalist>
       <input id="npEdad" placeholder="Edad">
 
       <button type="button" class="btn-principal" onclick="crearNuevoPaciente()">
@@ -350,9 +352,12 @@
 <div>
 
 <section id="pacientesCargo" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('pantallaPropietario')">← Volver</button>
   
 
   <img src="logo.png" alt="Logo Pets Therapy" class="pc-logo">
+  
 
   <h2>Pacientes a cargo</h2>
 
@@ -368,7 +373,8 @@
  <div>
 
   <section id="pantallaHistorialMedico" class="pantalla">
-  
+    
+<button class="btn-volver" onclick="mostrarPantalla('perfilPaciente')">← Volver</button>
 
   <img src="logo.png" alt="Logo Pets Therapy" class="hm-logo">
 
@@ -410,6 +416,8 @@
 
  <!-- Pantalla Vacunas -->
 <div id="pantallaVacunas" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('perfilPaciente')">← Volver</button>
   
   <div class="container">
     
@@ -451,6 +459,9 @@
 
 <!-- Pantalla Ver Vacuna (solo lectura) -->
 <div id="pantallaVerVacuna" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('pantallaVacunas')">← Volver</button>
+
   <div class="container">
     
 
@@ -487,6 +498,9 @@
 
 <!-- 🌸 Pantalla Tratamiento -->
 <section id="pantallaTratamiento" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('perfilPaciente')">← Volver</button>
+
   <div class="container">
 
      
@@ -521,6 +535,9 @@
 
 <!-- 🌸 Pantalla Ver Tratamiento -->
 <section id="pantallaVerTratamiento" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('pantallaTratamiento')">← Volver</button>
+
   <div class="container">
 
 
@@ -558,6 +575,9 @@
 
 <!-- 🌸 Pantalla Nuevo Tratamiento -->
 <section id="pantallaNuevoTratamiento" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('pantallaTratamiento')">← Volver</button>
+
   <div class="container">
 
  
@@ -598,6 +618,9 @@
 
 <!-- Pantalla Desparasitaciones -->
 <div id="pantallaDesparasitaciones" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('perfilPaciente')">← Volver</button>
+
   
   <div class="container">
     
@@ -642,6 +665,9 @@
 
 <!-- Pantalla Ver Desparasitación -->
 <div id="pantallaVerDesparasitacion" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('pantallaDesparasitaciones')">← Volver</button>
+
   <div class="container">
 
     
@@ -669,11 +695,73 @@
 
 
 
+<!--Pantalla Exámenes-->
+<div id="pantallaExamenes" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('perfilPaciente')">← Volver</button>
+  
+  <div class="container">
+
+    
+      
+    <img src="logo.png" alt="Logo" class="e-logo">
+  
+    <h2>Exámenes</h2>
+
+  <form id="formExamen"class="formulario">
+    <input id="nombrePacienteExamen" type="text" placeholder="Nombre paciente:">
+  <input id="especieExamen" type="text" placeholder="Especie:" >
+  <input id="razaExamen" type="text" placeholder="Raza:" >
+
+  <input id="nombreExamen" type="text" placeholder="Nombre de examen:">
+  <input id="tipoExamen" type="text" placeholder="Tipo de examen:">
+    <div class="input-box">
+  <label for="fecha">Fecha:</label>
+  <input type="date" id="fechaExamenes" name="fecha">
+</div>
+<textarea id="resultadoExamen" placeholder="Resultado:"></textarea>
+
+    <div class="input-box">
+  <label>📁 Archivos adjuntos:</label>
+  <div style="display:block ; justify-content: center; gap: 10px; margin-top: 8px;">
+<button type="button" onclick="mostrarPantalla('pantallaExamenesSubidos')">
+  Subir archivos
+</button>
+
+  </div>
+  <ul id="listaArchivosExamen"></ul>
+</div>
+
+
+  <input type="file" id="inputArchivosExamen" multiple accept="image/*,.pdf,.jpg,.jpeg,.png" style="display:none;">
+
+
+
+<button type="button" onclick="guardarExamen()">Guardar</button>
+<button type="button" onclick="mostrarPantalla('pantallaHistorial')">Cancelar</button>
+    
+  </form>
+
+<h3 class="pt-subtitle">Exámenes registrados</h3>
+
+<div class="contenedor-lista-examenes">
+
+
+<div id="listaExamenes" class="lista-examenes"></div>     
+      </div>
+
+  </div>
+  
+</div>
+
 
 
 
 <!-- 🌸 Pantalla Ver Examen -->
 <div id="pantallaVerExamen" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('pantallaExamenes')">← Volver</button>
+
   <div class="container">
 
 
@@ -706,6 +794,9 @@
 
 <!-- 🌸 Pantalla para subir archivos -->
 <div id="pantallaExamenesSubidos" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('pantallaVerExamen')">← Volver</button>
+
   <div class="container">
 
   
@@ -733,6 +824,9 @@
 
 <!-- Pantalla Antipulgas -->
 <div id="pantallaAntipulgas" class="pantalla">
+
+ <button class="btn-volver" onclick="mostrarPantalla('perfilPaciente')">← Volver</button>
+ 
   
   <div class="container">
     
@@ -779,6 +873,9 @@
 
 <!-- Pantalla Ver Antipulgas -->
 <div id="pantallaVerAntipulgas" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('pantallaAntipulgas')">← Volver</button>
+
   <div class="container">
 
    
@@ -805,68 +902,13 @@
 </div>
 
 
-<!--Pantalla Exámenes-->
-<div id="pantallaExamenes" class="pantalla">
-
-  
-  <div class="container">
-
-    
-      
-    <img src="logo.png" alt="Logo" class="e-logo">
-  
-    <h2>Exámenes</h2>
-
-  <form id="formExamen"class="formulario">
-    <input id="nombrePacienteExamen" type="text" placeholder="Nombre paciente:">
-  <input id="especieExamen" type="text" placeholder="Especie:" >
-  <input id="razaExamen" type="text" placeholder="Raza:" >
-
-  <input id="nombreExamen" type="text" placeholder="Nombre de examen:">
-  <input id="tipoExamen" type="text" placeholder="Tipo de examen:">
-    <div class="input-box">
-  <label for="fecha">Fecha:</label>
-  <input type="date" id="fechaExamenes" name="fecha">
-</div>
-<textarea id="resultadoExamen" placeholder="Resultado:"></textarea>
-
-    <div class="input-box">
-  <label>📁 Archivos adjuntos:</label>
-  <div style="display:block ; justify-content: center; gap: 10px; margin-top: 8px;">
-<button type="button" onclick="mostrarPantalla('pantallaExamenesSubidos')">
-  Subir archivos
-</button>
-
-</button>
-  </div>
-  <ul id="listaArchivosExamen"></ul>
-</div>
-
-
-  <input type="file" id="inputArchivosExamen" multiple accept="image/*,.pdf,.jpg,.jpeg,.png" style="display:none;">
-
-
-
-<button type="button" onclick="guardarExamen()">Guardar</button>
-<button type="button" onclick="mostrarPantalla('pantallaHistorial')">Cancelar</button>
-    
-<h3 class="pt-subtitle">Exámenes registrados</h3>
-
-<div class="contenedor-lista-examenes">
-
-
-<div id="listaExamenes" class="lista-examenes"></div>     
-      </div>
-  </form>
-
-  </div>
-  
-</div>
-
 
 
 <!-- 🌸 Pantalla Recordatorios -->
 <div id="pantallaRecordatorios" class="pantalla">
+
+
+<button class="btn-volver" onclick="mostrarPantalla('perfilPaciente')">← Volver</button>
 
 
   <img src="logo.png" alt="Logo" class="re-logo">
@@ -928,6 +970,9 @@
 <div id="pantallaVerRecordatorio" class="pantalla" style="display:none;">
 
 
+<button class="btn-volver" onclick="mostrarPantalla('pantallaVerRecordatorio')">← Volver</button>
+
+
 <img src="logo.png" alt="Logo" class="vr-logo">
 
   <h2>Ver Recordatorio</h2>
@@ -978,6 +1023,9 @@
 
 <!-- 🩺 SECCIÓN CONSULTAS -->
 <div id="pantallaConsultas" class="pantalla">
+
+
+<button class="btn-volver" onclick="mostrarPantalla('perfilPaciente')">← Volver</button>
 
  
 
@@ -1041,6 +1089,9 @@
 
 <!-- 📄 PANTALLA VER CONSULTA -->
 <div id="pantallaVerConsulta" class="pantalla">
+
+<button class="btn-volver" onclick="mostrarPantalla('pantallaVerConsulta')">← Volver</button>
+
   <div class="container">
 
    

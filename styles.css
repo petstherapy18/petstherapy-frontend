@@ -112,7 +112,7 @@ body {
 
 .logo {
     width: 180px;
-    margin-top: 250px;
+    margin-top: 0px;
 }
 
 /* Título */
@@ -328,31 +328,31 @@ button {
 /* Logo */
 .r-logo {
     width: 180px;
-    margin-top: 300px;
+    margin-top: 0px;
 }
 
 /* Logo */
 .rc-logo {
     width: 180px;
-    margin-top: 20px;
+    margin-top: 0px;
 }
 
 /* Logo */
 .mp-logo {
     width: 180px;
-    margin-top: 5px;
+    margin-top: 0px;
 }
 
 /* Logo */
 .p-logo {
     width: 180px;
-    margin-top: 400px;
+    margin-top: 0px;
 }
 
 /* Logo */
 .pp-logo {
     width: 180px;
-    margin-top: 150px;
+    margin-top: 0px;
     }
 
 
@@ -418,9 +418,11 @@ button {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 15px;
-  justify-items: center;
-  margin-top: 15px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 10px;
 }
+
 
 /* Botones de pacientes */
 .btn-paciente {
@@ -447,13 +449,13 @@ button {
 /* Logo */
 .ad-logo {
     width: 180px;
-    margin-top: 200px;
+    margin-top: 0px;
 }
 
 /* Logo */
 .pc-logo {
     width: 180px;
-    margin-top: 450px;
+    margin-top: 0px;
 }
 
 /* 🌸 Pacientes a cargo */
@@ -485,7 +487,7 @@ button {
 /* Logo */
 .hm-logo {
     width: 180px;
-    margin-top: 900px;
+    margin-top: 0px;
 }
 
 .pt-photo img {
@@ -500,12 +502,12 @@ button {
 
 .va-logo {
     width: 180px;
-    margin-top: 900px;
+    margin-top: 0px;
 }
 
 .v-logo {
     width: 180px;
-    margin-top: 400px;
+    margin-top: 0px;
 }
 
 /* Etiquetas de campos en Vacunas */
@@ -551,13 +553,13 @@ button {
 /* Logo */
 .d-logo {
     width: 180px;
-    margin-top: 900px;
+    margin-top: 0px;
 }
 
 /* Logo */
 .a-logo {
     width: 180px;
-    margin-top: 950px;
+    margin-top: 0px;
 }
 
 
@@ -619,7 +621,7 @@ button {
 /* Logo */
 .re-logo {
     width: 180px;
-    margin-top: 1100px;
+    margin-top: 0px;
 }
 
 .contenedor-botones {
@@ -700,7 +702,7 @@ button {
 /* Logo */
 .c-logo {
     width: 180px;
-    margin-top: 1700px;
+    margin-top: 0px;
 }
 
 /* Ajuste especial para input tipo hora */
@@ -725,7 +727,7 @@ button {
 /* Logo */
 .t-logo {
     width: 180px;
-    margin-top: 850px;
+    margin-top: 0px;
 }
 
 
@@ -771,7 +773,7 @@ button {
 /* Logo */
 .e-logo {
     width: 180px;
-    margin-top: 800px;
+    margin-top: 0px;
 }
 
 #listaArchivos {
@@ -826,7 +828,7 @@ button {
 /* Logo */
 .sa-logo {
     width: 180px;
-    margin-top: 100px;
+    margin-top: 0px;
 }
 
 /* 🌸 Estilo para los nombres de archivos clickeables */
@@ -840,43 +842,43 @@ button {
 /* Logo */
 .pf-logo {
     width: 180px;
-    margin-top: 550px;
+    margin-top: 0px;
 }
 
 .ie-logo {
     width: 180px;
-    margin-top: 250px;
+    margin-top: 0px;
 }
 
 .ip-logo {
     width: 180px;
-    margin-top: 50px;
+    margin-top: 0px;
 }
 
 .rr-logo {
     width: 180px;
-    margin-top: 80px;
+    margin-top: 0px;
 }
 
 .ra-logo {
     width: 180px;
-    margin-top: 50px;
+    margin-top: 0px;
 }
 
 .rm-logo {
     width: 180px;
-    margin-top: 50px;
+    margin-top: 0px;
 }
 
 .aa-logo {
     width: 180px;
-    margin-top: 50px;
+    margin-top: 0px;
 }
 
 
 .as-logo {
     width: 180px;
-    margin-top: 50px;
+    margin-top: 0px;
 }
 
 
@@ -935,22 +937,7 @@ button {
   color: #ff66c4;
 }
 
-/* Contenedor general de los pacientes */
-.lista-pacientes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  max-height: 150px; /* 🔹 Limita el alto del área de pacientes */
-  overflow-y: auto;  /* 🔹 Activa scroll vertical si hay muchos */
-  padding: 10px;
-  box-sizing: border-box;
-  scrollbar-width: thin;
-  min-height: 150px; /* reserva espacio para botones */
-  margin-bottom: 20px;
 
-
-}
 
 /* Botones individuales */
 .btn-paciente {
@@ -1070,7 +1057,6 @@ button {
 }
 
 #pantallaExamenesSubidos {
-  display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 130px;
@@ -1254,7 +1240,7 @@ max-width: 300px
 /* Logo */
 .sa-logo {
     width: 180px;
-    margin-top: 5px;
+    margin-top: 0px;
     
 }
 
@@ -1262,7 +1248,7 @@ max-width: 300px
 /* Logo */
 .ex-logo {
     width: 180px;
-    margin-top: 5px;
+    margin-top: 0px;
 }
 
 
@@ -1394,7 +1380,7 @@ input[type="text"], input[type="date"] {
 /* Logo */
 .dv-logo {
     width: 180px;
-    margin-top: 400px;
+    margin-top: 0px;
 }
 
 #pantallaVerDesparasitacion textarea, input{
@@ -1414,7 +1400,7 @@ display: block;
 /* Logo */
 .av-logo {
     width: 180px;
-    margin-top: 450px;
+    margin-top: 0px;
 }
 
 #pantallaAntipulgas h3{
@@ -1461,7 +1447,7 @@ display: block;
 /* Logo */
 .tv-logo {
     width: 180px;
-    margin-top: 500px;
+    margin-top: 0px;
 }
 
 #pantallaTratamiento h3{
@@ -1507,7 +1493,7 @@ display: block;
 /* Logo */
 .cv-logo {
     width: 180px;
-    margin-top: 1100px;
+    margin-top: 0px;
 }
 
 
@@ -1661,7 +1647,7 @@ max-width: 220px;
 .vr-logo {
 
  width: 180px;
-    margin-top: 750px;
+    margin-top: 0px;
 
 }
 
@@ -1683,7 +1669,7 @@ display: block;
 /* Logo */
 .rev-logo {
     width: 180px;
-    margin-top: 700px;
+    margin-top: 0px;
 }
 
 
@@ -1695,7 +1681,7 @@ max-width: 220px;
 
 .pr-logo {
     width: 180px;
-    margin-top: 250px;
+    margin-top: 0px;
 }
 
 #pantallaConsultas {
@@ -1770,4 +1756,7 @@ max-width: 220px;
 .sugerencias li:hover {
   background: #ffbce5;
 }
+
+
+
 

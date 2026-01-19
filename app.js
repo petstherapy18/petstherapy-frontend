@@ -15,6 +15,9 @@ let archivosExamenBase64 = [];
 let fotoBase64 = "";
 
 
+function volver() {
+  window.history.back();
+}
 
 
 
@@ -504,6 +507,10 @@ async function cargarPacientes() {
 }
 
 
+function irAPacientes() {
+  mostrarPantalla("pantallaPacientes");
+  cargarPacientes();
+}
 
 
 async function seleccionarPaciente(pacienteId) {
@@ -557,10 +564,10 @@ window.pacienteActivo = null;
 
 // --- Añadir nuevo paciente ---
 async function crearNuevoPaciente() {
-const nombre = document.getElementById("npNombre").value.trim();
+const nombre = document.getElementById("nombrePaciente").value.trim();
 const especie = document.getElementById("npEspecie").value.trim();
 const raza = document.getElementById("npRaza").value.trim();
-const edad = document.getElementById("edadPaciente").value.trim();
+const edad = document.getElementById("npEdad").value.trim();
 
 
   const propietarioCorreo = sessionStorage.getItem("usuarioActivoCorreo");
@@ -3282,8 +3289,8 @@ async function registrarTokenPush(token) {
 
 
 async function iniciarPushFCM() {
-  if (!Capacitor.isNativePlatform()) {
-    console.log("No es plataforma nativa, FCM no aplica");
+  if (!window.Capacitor || !Capacitor.isNativePlatform()) {
+    console.log("FCM solo disponible en APK");
     return;
   }
 
@@ -3302,7 +3309,6 @@ async function iniciarPushFCM() {
 
   PushNotifications.addListener('registration', token => {
     console.log('🔥 TOKEN FCM:', token.value);
-    alert("TOKEN FCM:\n" + token.value);
 
     // opcional: enviarlo al backend
     registrarTokenPush(token.value);
@@ -3348,44 +3354,23 @@ function mostrarPantalla(id) {
     nueva.classList.add('activa');
     pantallaActual = id;
   }
+
+  
 }
 
-function mostrarPantallaSinGuardar(id) {
-  document.querySelectorAll('.pantalla').forEach(p =>
-    p.classList.remove('activa')
-  );
-
-  const nueva = document.getElementById(id);
-  if (nueva) {
-    nueva.classList.add('activa');
-    pantallaActual = id;
-  }
-}
-
-/* 🔴 ESTO ES LO QUE FALTABA TODA ESTA VEZ */
-App.addListener('backButton', (event) => {
-  event.preventDefault(); // ⬅️ ESTA LÍNEA BLOQUEA EL CIERRE
-
-  if (historialPantallas.length > 0) {
-    const anterior = historialPantallas.pop();
-    mostrarPantallaSinGuardar(anterior);
-  }
-});
 
 
 
 
-const isNative = !!window.Capacitor?.isNativePlatform?.();
 
-if (isNative) {
-  console.log("Ejecutando en APK (Capacitor)");
 
-  const App = window.Capacitor.Plugins.App;
-  const PushNotifications = window.Capacitor.Plugins.PushNotifications;
 
-  // aquí va tu lógica nativa
-}
+// Selectores
+const especieSelect = document.getElementById("especie");
+const razaInput = document.getElementById("raza");
+const listaRazas = document.getElementById("listaRazas");
 
+// Razas por especie
 
 const RAZAS = {
   perro: [
@@ -3803,56 +3788,51 @@ const RAZAS = {
   ]
 };
 
+// Cuando cambia la especie
+if (especieSelect && razaInput && listaRazas) {
+  especieSelect.addEventListener("change", () => {
+    razaInput.value = "";
+    listaRazas.innerHTML = "";
 
+    const especie = especieSelect.value;
+    if (!especie) return;
 
-
-
-
-
-
-
-
-
-
-function activarAutocompletado(especieId, razaId, sugerenciasId) {
-  const especie = document.getElementById(especieId);
-  const raza = document.getElementById(razaId);
-  const lista = document.getElementById(sugerenciasId);
-
-  if (!especie || !raza || !lista) return;
-
-  raza.addEventListener("input", () => {
-    const texto = raza.value.toLowerCase();
-    const tipo = especie.value;
-
-    lista.innerHTML = "";
-    if (!tipo || !RAZAS[tipo] || texto.length < 2) return;
-
-    RAZAS[tipo]
-      .filter(r => r.toLowerCase().includes(texto))
-      .slice(0, 10)
-      .forEach(r => {
-        const li = document.createElement("li");
-        li.textContent = r;
-        li.onclick = () => {
-          raza.value = r;
-          lista.innerHTML = "";
-        };
-        lista.appendChild(li);
-      });
+    RAZAS[especie].forEach(raza => {
+      const option = document.createElement("option");
+      option.value = raza;
+      listaRazas.appendChild(option);
+    });
   });
 }
 
 
 
 
-document.addEventListener("DOMContentLoaded", () => {
-  // NUEVO PACIENTE
-  activarAutocompletado("especie", "razaPaciente", "sugerenciasRazaNuevo");
+function cargarRazas(especie, datalistId) {
+  const razas = {
+    perro: ["Labrador", "Pastor Alemán", "Pug", "Criollo"],
+    gato: ["Persa", "Siamés", "Maine Coon", "Criollo"]
+  };
 
-  // PERFIL PACIENTE
-  activarAutocompletado("especiePerfil", "razaPerfil", "sugerenciasRazaPerfil");
-});
+  const datalist = document.getElementById(datalistId);
+  datalist.innerHTML = "";
 
+  if (!razas[especie]) return;
+
+  razas[especie].forEach(r => {
+    const option = document.createElement("option");
+    option.value = r;
+    datalist.appendChild(option);
+  });
+}
+
+
+const npEspecie = document.getElementById("npEspecie");
+
+if (npEspecie) {
+  npEspecie.addEventListener("change", e => {
+    cargarRazas(e.target.value, "listaRazasNP");
+  });
+}
 
 
