@@ -3305,7 +3305,6 @@ async function iniciarPushFCM() {
 
   PushNotifications.addListener('registration', token => {
     console.log('🔥 TOKEN FCM:', token.value);
-    alert("TOKEN FCM:\n" + token.value);
 
     // opcional: enviarlo al backend
     registrarTokenPush(token.value);
@@ -3352,47 +3351,10 @@ function mostrarPantalla(id) {
     pantallaActual = id;
   }
 
-  setTimeout(() => {
-  inicializarAutocompletadosPantalla();
-}, 50);
-
+  
 }
 
-function mostrarPantallaSinGuardar(id) {
-  document.querySelectorAll('.pantalla').forEach(p =>
-    p.classList.remove('activa')
-  );
 
-  const nueva = document.getElementById(id);
-  if (nueva) {
-    nueva.classList.add('activa');
-    pantallaActual = id;
-  }
-}
-
-/* 🔴 ESTO ES LO QUE FALTABA TODA ESTA VEZ */
-App.addListener('backButton', (event) => {
-  event.preventDefault(); // ⬅️ ESTA LÍNEA BLOQUEA EL CIERRE
-
-  if (historialPantallas.length > 0) {
-    const anterior = historialPantallas.pop();
-    mostrarPantallaSinGuardar(anterior);
-  }
-});
-
-
-
-
-const isNative = !!window.Capacitor?.isNativePlatform?.();
-
-if (isNative) {
-  console.log("Ejecutando en APK (Capacitor)");
-
-  const App = window.Capacitor.Plugins.App;
-  const PushNotifications = window.Capacitor.Plugins.PushNotifications;
-
-  // aquí va tu lógica nativa
-}
 
 
 
