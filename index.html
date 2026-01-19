@@ -185,7 +185,7 @@
   autocomplete="off"
 />
 
-<ul id="sugerenciasRaza" class="sugerencias"></ul>
+<ul id="sugerenciasRazaPerfil" class="sugerencias"></ul>
 
     <div class="input-box">
   <label for="fechaNacimiento">Fecha de nacimiento:</label>
@@ -296,7 +296,7 @@
   autocomplete="off"
 />
 
-<ul id="sugerenciasRaza" class="sugerencias"></ul>  <input type="text" id="edadPaciente" placeholder="Edad (opcional)" required>
+<ul id="sugerenciasRazaNuevo" class="sugerencias"></ul>  <input type="text" id="edadPaciente" placeholder="Edad (opcional)" required>
 
 
 <button id="btnGuardarPaciente" class="btn-principal">Guardar</button>
@@ -315,8 +315,23 @@
 
     <form class="formulario" onsubmit="return false;">
       <input id="npNombre" placeholder="Nombre del paciente" required>
-      <input id="npEspecie" placeholder="Especie">
-      <input id="npRaza" placeholder="Raza">
+      <label>Especie</label>
+<select id="npEspecie">
+  <option value="">Seleccione especie</option>
+  <option value="perro">Perro</option>
+  <option value="gato">Gato</option>
+</select>
+
+<label>Raza</label>
+<input
+  type="text"
+  id="npRaza"
+  placeholder="Empiece a escribir la raza"
+  autocomplete="off"
+/>
+
+<ul id="sugerenciasRazaNP" class="sugerencias"></ul>
+
       <input id="npEdad" placeholder="Edad">
 
       <button type="button" class="btn-principal" onclick="crearNuevoPaciente()">

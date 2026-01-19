@@ -557,10 +557,11 @@ window.pacienteActivo = null;
 
 // --- Añadir nuevo paciente ---
 async function crearNuevoPaciente() {
-  const nombre = document.getElementById("npNombre").value.trim();
-  const especie = document.getElementById("npEspecie").value; // SELECT
-  const raza = document.getElementById("npRaza").value.trim(); // INPUT autocompletado
-  const edad = document.getElementById("npEdad").value.trim();
+const nombre = document.getElementById("npNombre").value.trim();
+const especie = document.getElementById("npEspecie").value.trim();
+const raza = document.getElementById("npRaza").value.trim();
+const edad = document.getElementById("edadPaciente").value.trim();
+
 
   const propietarioCorreo = sessionStorage.getItem("usuarioActivoCorreo");
 
@@ -3386,7 +3387,7 @@ if (isNative) {
 }
 
 
-const razas = {
+const RAZAS = {
   perro: [
     "Mestizo",
     "Affenpinscher",
@@ -3803,90 +3804,55 @@ const razas = {
 };
 
 
-const especiePerfil = document.getElementById("especiePerfil");
-const razaPerfil = document.getElementById("razaPerfil");
-const sugerenciasPerfil = document.getElementById("sugerenciasRazaPerfil");
-
-let razasActivas = [];
-
-especiePerfil.addEventListener("change", () => {
-  razasActivas = RAZAS[especiePerfil.value] || [];
-  razaPerfil.value = "";
-  sugerenciasPerfil.innerHTML = "";
-});
-
-razaPerfil.addEventListener("input", () => {
-  const texto = razaPerfil.value.toLowerCase();
-  sugerenciasPerfil.innerHTML = "";
-
-  if (!texto) return;
-
-  razasActivas
-    .filter(r => r.toLowerCase().includes(texto))
-    .forEach(raza => {
-      const li = document.createElement("li");
-      li.textContent = raza;
-      li.onclick = () => {
-        razaPerfil.value = raza;
-        sugerenciasPerfil.innerHTML = "";
-      };
-      sugerenciasPerfil.appendChild(li);
-    });
-});
-
-
-fetch(`/api/pacientes/${pacienteActivoId}`)
-  .then(res => res.json())
-  .then(paciente => {
-    if (document.getElementById("nombrePaciente")) {
-      document.getElementById("nombrePaciente").value = paciente.nombre;
-    }
-
-    if (document.getElementById("especie")) {
-      document.getElementById("especie").value = paciente.especie;
-      razasActuales = razas[paciente.especie];
-    }
-
-    if (document.getElementById("razaInput")) {
-      document.getElementById("razaInput").value = paciente.raza;
-    }
-  });
 
 
 
-  function activarAutocompletado(especieId, razaId, sugerenciasId) {
-  const especieSelect = document.getElementById(especieId);
-  const razaInput = document.getElementById(razaId);
-  const sugerencias = document.getElementById(sugerenciasId);
 
-  razaInput.addEventListener("input", () => {
-    const especie = especieSelect.value;
-    const texto = razaInput.value.toLowerCase();
 
-    sugerencias.innerHTML = "";
-    if (!especie || !texto) return;
 
-    razas[especie]
+
+
+
+
+function activarAutocompletado(especieId, razaId, sugerenciasId) {
+  const especie = document.getElementById(especieId);
+  const raza = document.getElementById(razaId);
+  const lista = document.getElementById(sugerenciasId);
+
+  if (!especie || !raza || !lista) return;
+
+  raza.addEventListener("input", () => {
+    const texto = raza.value.toLowerCase();
+    const tipo = especie.value;
+
+    lista.innerHTML = "";
+    if (!tipo || !RAZAS[tipo] || texto.length < 2) return;
+
+    RAZAS[tipo]
       .filter(r => r.toLowerCase().includes(texto))
+      .slice(0, 10)
       .forEach(r => {
         const li = document.createElement("li");
         li.textContent = r;
         li.onclick = () => {
-          razaInput.value = r;
-          sugerencias.innerHTML = "";
+          raza.value = r;
+          lista.innerHTML = "";
         };
-        sugerencias.appendChild(li);
+        lista.appendChild(li);
       });
-  });
-
-  document.addEventListener("click", e => {
-    if (!razaInput.contains(e.target)) {
-      sugerencias.innerHTML = "";
-    }
   });
 }
 
 
 
-activarAutocompletado("especie", "razaPaciente", "sugerenciasRaza");
-activarAutocompletado("especiePerfil", "razaPerfil", "sugerenciasRaza");
+
+document.addEventListener("DOMContentLoaded", () => {
+  // NUEVO PACIENTE
+  activarAutocompletado("especie", "razaPaciente", "sugerenciasRazaNuevo");
+
+  // PERFIL PACIENTE
+  activarAutocompletado("especiePerfil", "razaPerfil", "sugerenciasRazaPerfil");
+});
+
+
+
