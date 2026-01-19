@@ -3813,28 +3813,3 @@ console.log("Razas cargadas:", RAZAS[especie].length);
 
 
 
-
-
-
-const sugerencias = document.getElementById("sugerenciasRaza");
-
-razaInput.addEventListener("input", () => {
-  sugerencias.innerHTML = "";
-
-  const texto = razaInput.value.toLowerCase();
-  const especie = especieSelect.value;
-
-  if (!texto || !especie) return;
-
-  RAZAS[especie]
-    .filter(r => r.toLowerCase().includes(texto))
-    .forEach(r => {
-      const div = document.createElement("div");
-      div.textContent = r;
-      div.onclick = () => {
-        razaInput.value = r;
-        sugerencias.innerHTML = "";
-      };
-      sugerencias.appendChild(div);
-    });
-});
