@@ -1722,14 +1722,13 @@ max-width: 220px;
 }
 
 .sugerencias {
-  position: absolute;
   top: 100%;
   left: 0;
   width: 100%;
   background: #ffffff; /* color de tu app */
   border: 1px solid #f2a6c9; /* rosado suave (ajústalo) */
   border-radius: 8px;
-  max-height: 200px;
+  max-height: 50px;
   overflow-y: auto;
   z-index: 1000;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
