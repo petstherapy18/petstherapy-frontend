@@ -1747,12 +1747,12 @@ max-width: 220px;
   z-index: 10;
 }
 
-.sugerencias li {
+.sugerencias div {
   padding: 8px;
   cursor: pointer;
 }
 
-.sugerencias li:hover {
+.sugerencias div:hover {
   background: #ffbce5;
 }
 
