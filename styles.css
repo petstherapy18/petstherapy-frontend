@@ -1722,7 +1722,7 @@ max-width: 220px;
 }
 
 .sugerencias {
-  top: 100%;
+  position:absolute;
   left: 0;
   width: 50%;
   background: #ffbce5; /* color de tu app */
