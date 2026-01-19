@@ -15,6 +15,9 @@ let archivosExamenBase64 = [];
 let fotoBase64 = "";
 
 
+function volver() {
+  window.history.back();
+}
 
 
 
