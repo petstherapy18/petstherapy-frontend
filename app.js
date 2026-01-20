@@ -261,7 +261,9 @@ try {
   });
 
 
-const data = await res.json(); 
+const data = await res.json();
+console.log("LOGIN RESPONSE:", data);
+
 
 if (!res.ok) { 
 return mostrarBurbuja( 
@@ -462,6 +464,16 @@ async function cargarPacientes() {
   const correoActivo = sessionStorage.getItem("usuarioActivoCorreo");
   if (!correoActivo) return;
 
+
+ const token =
+    localStorage.getItem("token") ||
+    sessionStorage.getItem("token");
+
+  if (!token) {
+    mostrarBurbuja("Sesión expirada, inicia sesión de nuevo", "error");
+    return;
+  }
+
   try {
     const res = await fetch(
       `https://petstherapy-backend.onrender.com/api/pacientes/${encodeURIComponent(correoActivo)}`
@@ -514,6 +526,16 @@ function irAPacientes() {
 
 
 async function seleccionarPaciente(pacienteId) {
+  
+  const token =
+    localStorage.getItem("token") ||
+    sessionStorage.getItem("token");
+
+  if (!token) {
+    mostrarBurbuja("Sesión expirada", "error");
+    return;
+  }
+  
   try {
     const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/id/${pacienteId}`);
     if (!res.ok) throw new Error("Paciente no encontrado");
@@ -687,6 +709,15 @@ async function abrirPerfilPaciente(paciente) {
     return;
   }
 
+  const token =
+    localStorage.getItem("token") ||
+    sessionStorage.getItem("token");
+
+  if (!token) {
+    mostrarBurbuja("Sesión expirada", "error");
+    return;
+  }
+
   try {
     const res = await fetch(
       `https://petstherapy-backend.onrender.com/api/pacientes/id/${paciente._id}`
@@ -782,6 +813,16 @@ async function abrirPerfilPaciente(paciente) {
 
 document.getElementById("btnQuitarFoto").addEventListener("click", async () => {
   const paciente = JSON.parse(sessionStorage.getItem("pacienteSeleccionado"));
+  
+  const token =
+    localStorage.getItem("token") ||
+    sessionStorage.getItem("token");
+
+  if (!paciente?._id || !token) {
+    mostrarBurbuja("Paciente no válido", "error");
+    return;
+  }
+  
   if (!paciente?._id) {
     mostrarBurbuja("Paciente no válido", "error");
     return;
@@ -840,7 +881,10 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const res = await fetch(
           `https://petstherapy-backend.onrender.com/api/pacientes/${idPaciente}`,
-          { method: "DELETE" }
+          { method: "DELETE",
+            headers: {
+      "Authorization": `Bearer ${token}`}
+           }
         );
 
         const data = await res.json();
@@ -893,12 +937,16 @@ async function guardarPerfilPaciente() {
     datosActualizados.foto = fotoBase64;
   }
 
+  const token =
+  localStorage.getItem("token") ||
+  sessionStorage.getItem("token");
+
   try {
     const res = await fetch(
       `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}`,
       {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify(datosActualizados)
       }
     );
