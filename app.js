@@ -344,8 +344,6 @@ function cerrarSesion() {
   sessionStorage.removeItem("token");
   sessionStorage.removeItem("usuarioActivoCorreo");
 
-localStorage.removeItem("token_backup");
-
   // Mostrar burbuja
   mostrarBurbuja("Sesión cerrada correctamente 💖", "info");
 
@@ -623,24 +621,14 @@ if (!token) {
   // 📡 ENVÍO A BACKEND
   // ----------------------------
   try {
-    let token = sessionStorage.getItem("token");
-
-// 🩹 si sessionStorage se perdió (Live Server)
-if (!token) {
-  token = localStorage.getItem("token_backup");
-  if (token) {
-    // restaurar sesión en caliente
-    sessionStorage.setItem("token", token);
-  }
-}
-
-console.log("TOKEN:", token);
+    const token = sessionStorage.getItem("token");
 
 if (!token) {
   mostrarBurbuja("Sesión expirada, vuelve a iniciar sesión", "error");
   return;
 }
 
+console.log("TOKEN:", token);
 
 
 const res = await fetch(
@@ -704,7 +692,7 @@ async function abrirPerfilPaciente(paciente) {
 
   try {
     const res = await fetch(
-      `https:const token//petstherapy-backend.onrender.com/api/pacientes/id/${paciente._id}`
+      `https://petstherapy-backend.onrender.com/api/pacientes/id/${paciente._id}`
     );
     if (!res.ok) throw new Error("Error al obtener paciente");
 
