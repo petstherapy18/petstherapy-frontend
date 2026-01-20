@@ -111,10 +111,7 @@ body {
 
 
 
-.pantalla > * {
-  margin-left: auto;
-  margin-right: auto;
-}
+
 
 
 .pantalla {
@@ -398,7 +395,8 @@ text-align: left;
 
 
 
-#pantallaNuevoPaciente textarea, input{
+#pantallaNuevoPaciente textarea, 
+#pantallaNuevoPaciente input{
 
 display: block;
   max-width: 220px;
@@ -1428,7 +1426,7 @@ input[type="text"], input[type="date"] {
     margin-top: 0px;
 }
 
-#pantallaVerDesparasitacion textarea, input{
+#pantallaVerDesparasitacion textarea, #pantallaVerDesparasitacion input{
 
 display: block;
   max-width: 220px;
@@ -1472,7 +1470,7 @@ display: block;
     
 }
 
-#pantallaVerAntipulgas textarea, input{
+#pantallaVerAntipulgas textarea, #pantallaVerAntipulgas input{
 
 display: block;
   max-width: 220px;
@@ -1519,7 +1517,7 @@ display: block;
     
 }
 
-#pantallaVerTratamiento textarea, input{
+#pantallaVerTratamiento textarea, #pantallaVerTratamiento input{
 
 display: block;
   max-width: 220px;
@@ -1566,7 +1564,7 @@ display: block;
     
 }
 
-#pantallaVerConsulta textarea, input{
+#pantallaVerConsulta textarea, #pantallaVerConsulta input{
 
 display: block;
   max-width: 220px;
@@ -1636,7 +1634,7 @@ max-width: 220px;
 
 }
 
-#pantallaVerRecordatorio textarea, input, select{
+#pantallaVerRecordatorio textarea, #pantallaVerRecordatorio input, #pantallaVerRecordatorio select{
 
 display: block;
   max-width: 220px;
@@ -1696,7 +1694,7 @@ max-width: 220px;
 
 }
 
-#pantallaRecordatorios textarea, input, select{
+#pantallaRecordatorios textarea, #pantallaRecordatorios input, #pantallaRecordatorios select{
 
 display: block;
   max-width: 220px;
@@ -1722,6 +1720,8 @@ display: block;
 
 max-width: 220px;
 justify-content: center;
+align-items: center;
+
 
 }
 
