@@ -314,7 +314,6 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start; /* Para mantener orden vertical */
-  padding-top: 400px; /* <-- Esto baja todo el contenido */
 }
 
 .pantalla .container {
@@ -1103,7 +1102,6 @@ display: block;
 #pantallaExamenesSubidos {
   flex-direction: column;
   align-items: center;
-  padding-top: 130px;
   text-align: center;
 }
 
