@@ -40,11 +40,6 @@ function obtenerPacienteActivo() {
   return window.pacienteActivo || null;
 }
 
-sessionStorage.setItem("token", data.token);
-sessionStorage.setItem("usuarioActivoCorreo", correo);
-
-// 🔐 respaldo silencioso (NO rompe nada)
-localStorage.setItem("token_backup", data.token);
 
 
 function mostrarMensajeRecordatorio(texto) { 
@@ -574,14 +569,6 @@ const especie = document.getElementById("npEspecie").value.trim();
 const raza = document.getElementById("npRaza").value.trim();
 const edad = document.getElementById("npEdad").value.trim();
 
-const token = sessionStorage.getItem("token");
-console.log("TOKEN:", token);
-
-if (!token) {
-  mostrarBurbuja("Sesión expirada, vuelve a iniciar sesión", "error");
-  return;
-}
-
 
   const propietarioCorreo = sessionStorage.getItem("usuarioActivoCorreo");
 
@@ -621,36 +608,21 @@ if (!token) {
   // 📡 ENVÍO A BACKEND
   // ----------------------------
   try {
-    const token = sessionStorage.getItem("token");
-
-if (!token) {
-  mostrarBurbuja("Sesión expirada, vuelve a iniciar sesión", "error");
-  return;
-}
-
-console.log("TOKEN:", token);
-
-
-const res = await fetch(
-  "https://petstherapy-backend.onrender.com/api/pacientes/nuevo",
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    },
-    body: JSON.stringify({
-      nombre,
-      especie,
-      raza,
-      edad,
-      propietarioCorreo,
-      foto: ""
-    })
-  }
-);
-
-
+    const res = await fetch(
+      "https://petstherapy-backend.onrender.com/api/pacientes/nuevo",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre,
+          especie,
+          raza,
+          edad,
+          propietarioCorreo,
+          foto: ""
+        })
+      }
+    );
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Error al crear paciente");
