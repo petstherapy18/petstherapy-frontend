@@ -1765,6 +1765,7 @@ max-width: 220px;
   overflow-y: auto;
   z-index: 1000;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  color: #ff66c4;
 }
 
 
