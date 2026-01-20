@@ -366,7 +366,13 @@ button {
 }
 
 
-
+/* Contenedor */
+#pantallanuevopaciente .container {
+  text-align: center;
+  width: 90%;
+  max-width: 220px;
+  margin-top: 40px;
+}
 
 /* Título */
 
