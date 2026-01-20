@@ -608,21 +608,32 @@ const edad = document.getElementById("npEdad").value.trim();
   // 📡 ENVÍO A BACKEND
   // ----------------------------
   try {
-    const res = await fetch(
-      "https://petstherapy-backend.onrender.com/api/pacientes/nuevo",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nombre,
-          especie,
-          raza,
-          edad,
-          propietarioCorreo,
-          foto: ""
-        })
-      }
-    );
+    const token = sessionStorage.getItem("token");
+
+if (!token) {
+  mostrarBurbuja("Sesión expirada, inicia sesión nuevamente", "error");
+  return;
+}
+
+const res = await fetch(
+  "https://petstherapy-backend.onrender.com/api/pacientes/nuevo",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      nombre,
+      especie,
+      raza,
+      edad,
+      propietarioCorreo,
+      foto: ""
+    })
+  }
+);
+
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Error al crear paciente");
