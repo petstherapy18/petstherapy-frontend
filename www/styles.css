@@ -1114,7 +1114,7 @@ display: block;
   color: #ff66c4;
 }
 
-#pantallaExamenesSubidos button {
+#pantallaExamenesSubidos .btnSubirArchivo {
   background: #ffbce5;
   border: 2px solid #ff66c4;
   color: #ff66c4;
