@@ -564,7 +564,7 @@ window.pacienteActivo = null;
 
 // --- Añadir nuevo paciente ---
 async function crearNuevoPaciente() {
-const nombre = document.getElementById("nombrePaciente").value.trim();
+const nombre = document.getElementById("nombre").value.trim();
 const especie = document.getElementById("npEspecie").value.trim();
 const raza = document.getElementById("npRaza").value.trim();
 const edad = document.getElementById("npEdad").value.trim();

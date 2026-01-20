@@ -3811,6 +3811,11 @@ console.log("Razas cargadas:", RAZAS[especie].length);
   });
 }
 
+
+
+
+
+
 const sugerencias = document.getElementById("sugerenciasRaza");
 
 razaInput.addEventListener("input", () => {
@@ -3833,5 +3838,3 @@ razaInput.addEventListener("input", () => {
       sugerencias.appendChild(div);
     });
 });
-
-
