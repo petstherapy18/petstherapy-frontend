@@ -374,6 +374,11 @@ button {
   margin-top: 40px;
 }
 
+#pantallaNuevoPaciente input {
+  max-width: 220px;
+  min-width: 220px;
+}
+
 /* Título */
 
 /* Sección añadir nuevo paciente */
