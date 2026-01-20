@@ -1728,7 +1728,7 @@ max-width: 220px;
   background: #ffbce5; /* color de tu app */
   border: 2px solid #ff66c4; /* rosado suave (ajústalo) */
   border-radius: 8px;
-  max-height: 50px;
+  max-height: 100px;
   overflow-y: auto;
   z-index: 1000;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
