@@ -1723,7 +1723,7 @@ max-width: 220px;
 
 .sugerencias {
   position:absolute;
-  left: 0;
+  align-items: center;
   width: 50%;
   background: #ffbce5; /* color de tu app */
   border: 2px solid #ff66c4; /* rosado suave (ajústalo) */
