@@ -33,7 +33,7 @@ function mostrarFoto(event) {
   reader.readAsDataURL(file);
 }
 
-const correoActivo = sessionStorage.getItem("usuarioActivoCorreo");
+const correoActivo = localstorage.getItem("usuarioActivoCorreo");
 
 
 function obtenerPacienteActivo() {
@@ -273,8 +273,8 @@ data.message || "Correo o contraseña incorrectos 💔",
 mostrarBurbuja(data.message || "Inicio de sesión exitoso 💖", "exito"); 
 
 // después de login exitoso
-sessionStorage.setItem("token", data.token);
-sessionStorage.setItem("usuarioActivoCorreo", correo); // correo del login
+localstorage.setItem("token", data.token);
+localstorage.setItem("usuarioActivoCorreo", correo); // correo del login
 console.log("🔐 Sesión iniciada como:", correo);
 
 
@@ -305,7 +305,7 @@ const backend_url = `https://petstherapy-backend.onrender.com`
 // ✅ MANTENER SESIÓN CON BACKEND — NO ROMPE OTRAS PANTALLAS
 
 window.addEventListener("DOMContentLoaded", () => {
-  const token = sessionStorage.getItem("token");
+  const token = localstorage.getItem("token");
 
 if (window._noRedirigirPorExamen === true) return;
 
@@ -336,8 +336,8 @@ function salirDeExamen() {
 // 🌸 CERRAR SESIÓN (versión final)
 function cerrarSesion() {
   // Elimina todos los datos de sesión guardados
-  sessionStorage.removeItem("token");
-  sessionStorage.removeItem("usuarioActivoCorreo");
+  localstorage.removeItem("token");
+  localstorage.removeItem("usuarioActivoCorreo");
 
   // Mostrar burbuja
   mostrarBurbuja("Sesión cerrada correctamente 💖", "info");
@@ -369,7 +369,7 @@ return mostrarBurbuja("Las contraseñas no coinciden 💔", "error");
 } 
 
 // Obtener token guardado 
-const token = sessionStorage.getItem("resetToken");
+const token = localstorage.getItem("resetToken");
 if (!token) { 
 return mostrarBurbuja("Token no encontrado o inválido ❌", "error"); 
 } 
@@ -390,7 +390,7 @@ if (!res.ok) {
 
 // Éxito 💖 
 mostrarBurbuja("Contraseña actualizada con éxito 💖"); 
-formReset.reset(); sessionStorage.removeItem("resetToken");
+formReset.reset(); localstorage.removeItem("resetToken");
  
 
 // limpiar token usado 
@@ -408,7 +408,7 @@ const params = new URLSearchParams(window.location.search);
 const token = params.get("token"); 
 
 if (token) { console.log("🔐 Token detectado en URL:", token); 
-sessionStorage.setItem("resetToken", token);
+localstorage.setItem("resetToken", token);
 mostrarPantalla("pantalla-reset"); 
 } 
 }); 
@@ -459,7 +459,7 @@ console.warn("[DEBUG] No se encontró el formulario de recuperación ⚠️");
 
 
 async function cargarPacientes() {
-  const correoActivo = sessionStorage.getItem("usuarioActivoCorreo");
+  const correoActivo = localstorage.getItem("usuarioActivoCorreo");
   if (!correoActivo) return;
 
   try {
@@ -569,7 +569,7 @@ const especie = document.getElementById("npEspecie").value.trim();
 const raza = document.getElementById("npRaza").value.trim();
 const edad = document.getElementById("npEdad").value.trim();
 
-const token = sessionStorage.getItem("token");
+const token = localstorage.getItem("token");
 console.log("TOKEN:", token);
 
 if (!token) {
@@ -578,7 +578,7 @@ if (!token) {
 }
 
 
-  const propietarioCorreo = sessionStorage.getItem("usuarioActivoCorreo");
+  const propietarioCorreo = localstorage.getItem("usuarioActivoCorreo");
 
   // ----------------------------
   // ✅ VALIDACIONES OBLIGATORIAS
@@ -616,7 +616,7 @@ if (!token) {
   // 📡 ENVÍO A BACKEND
   // ----------------------------
   try {
-    const token = sessionStorage.getItem("token");
+    const token = localstorage.getItem("token");
 
 if (!token) {
   mostrarBurbuja("Sesión expirada, vuelve a iniciar sesión", "error");
@@ -653,7 +653,7 @@ const res = await fetch(
     // ----------------------------
     // 🔒 GUARDAR PACIENTE ACTIVO
     // ----------------------------
-    sessionStorage.setItem(
+    localstorage.setItem(
       "pacienteSeleccionado",
       JSON.stringify(data.paciente)
     );
@@ -696,8 +696,8 @@ async function abrirPerfilPaciente(paciente) {
     // 🔥 ESTADO GLOBAL (SE MANTIENE)
     window.pacienteActivo = pacienteCompleto;
 
-    // 🔒 Respaldo en sessionStorage (SE MANTIENE)
-    sessionStorage.setItem(
+    // 🔒 Respaldo en localstorage (SE MANTIENE)
+    localstorage.setItem(
       "pacienteSeleccionado",
       JSON.stringify(pacienteCompleto)
     );
@@ -779,7 +779,7 @@ async function abrirPerfilPaciente(paciente) {
 
 
 document.getElementById("btnQuitarFoto").addEventListener("click", async () => {
-  const paciente = JSON.parse(sessionStorage.getItem("pacienteSeleccionado"));
+  const paciente = JSON.parse(localstorage.getItem("pacienteSeleccionado"));
   if (!paciente?._id) {
     mostrarBurbuja("Paciente no válido", "error");
     return;
@@ -802,7 +802,7 @@ document.getElementById("btnQuitarFoto").addEventListener("click", async () => {
     document.getElementById("inputFoto").value = "";
 
     // actualizar paciente en memoria
-    sessionStorage.setItem(
+    sessionlocalstorageStorage.setItem(
       "pacienteSeleccionado",
       JSON.stringify(data.paciente)
     );
@@ -859,8 +859,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 async function guardarPerfilPaciente() {
-  const paciente = JSON.parse(sessionStorage.getItem("pacienteSeleccionado"));
-  const correoActivo = sessionStorage.getItem("usuarioActivoCorreo");
+  const paciente = JSON.parse(localstorage.getItem("pacienteSeleccionado"));
+  const correoActivo = localstorage.getItem("usuarioActivoCorreo");
 
   if (!paciente || !paciente._id || !correoActivo) {
     mostrarBurbuja("No se pudo identificar el paciente 💔", "error");
@@ -905,7 +905,7 @@ async function guardarPerfilPaciente() {
     if (!res.ok) throw new Error(data.message);
 
     // actualizar paciente en memoria
-    sessionStorage.setItem(
+    localstorage.setItem(
       "pacienteSeleccionado",
       JSON.stringify(data.paciente)
     );
