@@ -7,17 +7,26 @@ body {
     min-height: 100vh;
 }
 
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+input,
+select,
+textarea,
+button {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 
 body {
   padding-top: env(safe-area-inset-top);
 }
 
 
-/* Contenedor */
-.container {
-    text-align: center;
-    width: 100%;
-}
+
 .rcText{
   margin-top: 5px;
 }
@@ -100,15 +109,21 @@ body {
   padding: 0;
 }
 
-/* Contenedor centrado */
-.container {
-  display: flex;
-  flex-direction: column;  /* organiza en columna */
-  justify-content: center; /* centra vertical */
-  align-items: center;     /* centra horizontal */
-  min-height: 100vh;       /* ocupa toda la altura de la pantalla */
-  text-align: center;
+
+
+.pantalla > * {
+  margin-left: auto;
+  margin-right: auto;
 }
+
+
+.pantalla {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+
 
 .logo {
     width: 180px;
@@ -206,10 +221,7 @@ body {
   padding: 0;
 }
 
-.container {
-  text-align: center;
-  padding: 20px;
-}
+
 
 h1, h2, label, p {
   color: #ff66c4;
@@ -1125,8 +1137,8 @@ display: block;
 .pantalla {
   display: none;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
   min-height: 100vh;
   padding: 20px;
   background-color: #ffbce5;
@@ -1709,6 +1721,7 @@ display: block;
 #pantallaPropietario {
 
 max-width: 220px;
+justify-content: center;
 
 }
 
@@ -1782,3 +1795,13 @@ max-width: 220px;
 
 
 
+.container {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
