@@ -371,6 +371,7 @@ text-align: left;
 
 }
 
+
 .formulario input,
 .formulario select {
   width: 100%;
@@ -382,6 +383,7 @@ text-align: left;
   box-sizing: border-box;
   background-color: #fff;
 }
+
 
 
 #pantallaNuevoPaciente textarea, input{
@@ -1752,7 +1754,6 @@ max-width: 220px;
   color: #ff4da6;
 }
 
-
 .sugerencias {
   position:absolute;
   align-items: center;
@@ -1766,7 +1767,6 @@ max-width: 220px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   color: #ff66c4;
 }
-
 
 
 
