@@ -365,7 +365,7 @@ button {
   margin-top: 40px;
 }
 
-#pantallaNuevoPaciente {
+#pantallaNuevoPaciente .container{
 
 text-align: left;
 
