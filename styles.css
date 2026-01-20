@@ -368,16 +368,27 @@ button {
 
 /* Contenedor */
 #pantallaNuevoPaciente .container {
-  text-align: center;
+  text-align: left;
   max-width: 220px;
   min-width: 220px;
   margin-top: 40px;
   align-items: center;
 }
 
-#pantallaNuevoPaciente input {
+
+#pantallaNuevoPaciente textarea, input{
+
+display: block;
   max-width: 220px;
-  min-width: 220px;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #ff66c4;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #ff66c4;
+  width: 220px;
+  
 }
 
 /* Título */
