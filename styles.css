@@ -1592,6 +1592,28 @@ resize: none;
   
 }
 
+
+#pantallaConsultas {
+  width: 100%;
+  justify-content: center;
+}
+
+#pantallaConsultas .container {
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+/* Inputs correctamente centrados */
+#pantallaConsultas input,
+#pantallaConsultas textarea,
+#pantallaConsultas select {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
 #pantallaVerConsulta input[type="time"],
 #pantallaConsultas input[type="time"] {
   width: 100%;
@@ -1656,14 +1678,7 @@ display: block;
 }
 
 
-#pantallaRecordatorios .input-box
-#pantallaVerRecordatorio .input-box {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 12px;
-  font-size: 16px;
-  max-width: 220px;
-}
+
 
 
 #pantallaVerExamen form,
@@ -1688,10 +1703,17 @@ display: block;
 }
 
 #pantallaRecordatorios {
-
-max-width: 220px;
-
+  width: 100%;
+    justify-content: center;
 }
+
+#pantallaRecordatorios .container {
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
+  align-items: center;
+}
+
 
 .vr-logo {
 
@@ -1700,20 +1722,7 @@ max-width: 220px;
 
 }
 
-#pantallaRecordatorios textarea, #pantallaRecordatorios input, #pantallaRecordatorios select{
 
-display: block;
-  max-width: 220px;
-  padding: 12px;
-  margin: 10px 0;
-  border: 2px solid #ff66c4;
-  border-radius: 6px;
-  font-size: 16px;
-  background-color: #fff;
-  color: #ff66c4;
-  width: 100%;
-  
-}
 
 /* Logo */
 .rev-logo {
@@ -1723,24 +1732,25 @@ display: block;
 
 
 #pantallaPropietario {
-
-max-width: 220px;
-justify-content: center;
-align-items: center;
-
-
+  width: 100%;
+ justify-content: center;
 }
+
+#pantallaPropietario .container,
+#pantallaPropietario .form-propietario {
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
+  align-items: center;
+}
+
 
 .pr-logo {
     width: 180px;
     margin-top: 0px;
 }
 
-#pantallaConsultas {
 
-max-width: 220px;
-
-}
 
 #pantallaVerConsulta {
 
