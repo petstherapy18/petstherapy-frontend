@@ -357,18 +357,16 @@ button {
 
 
 
-
-
-
-
 /* Contenedor */
-#pantallaNuevoPaciente .container {
-  text-align: left;
-  max-width: 220px;
-  min-width: 220px;
+#pantallaPacientes .container {
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
   margin-top: 40px;
-  align-items: center;
 }
+
+
+
 
 
 #pantallaNuevoPaciente textarea, input{
