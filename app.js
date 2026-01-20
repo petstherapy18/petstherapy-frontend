@@ -569,6 +569,8 @@ const especie = document.getElementById("npEspecie").value.trim();
 const raza = document.getElementById("npRaza").value.trim();
 const edad = document.getElementById("npEdad").value.trim();
 
+const token = sessionStorage.getItem("token");
+console.log("TOKEN:", token);
 
   const propietarioCorreo = sessionStorage.getItem("usuarioActivoCorreo");
 
