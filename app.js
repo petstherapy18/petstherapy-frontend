@@ -608,12 +608,17 @@ const edad = document.getElementById("npEdad").value.trim();
   // 📡 ENVÍO A BACKEND
   // ----------------------------
   try {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token"); // o sessionStorage
 
-if (!token) {
-  mostrarBurbuja("Sesión expirada, inicia sesión nuevamente", "error");
-  return;
-}
+fetch("https://petstherapy-backend.onrender.com/api/pacientes/nuevo", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`
+  },
+  body: JSON.stringify(datosPaciente)
+});
+
 
 const res = await fetch(
   "https://petstherapy-backend.onrender.com/api/pacientes/nuevo",
