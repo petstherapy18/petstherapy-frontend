@@ -572,6 +572,12 @@ const edad = document.getElementById("npEdad").value.trim();
 const token = sessionStorage.getItem("token");
 console.log("TOKEN:", token);
 
+if (!token) {
+  mostrarBurbuja("Sesión expirada, vuelve a iniciar sesión", "error");
+  return;
+}
+
+
   const propietarioCorreo = sessionStorage.getItem("usuarioActivoCorreo");
 
   // ----------------------------
@@ -638,6 +644,7 @@ const res = await fetch(
     })
   }
 );
+
 
 
     const data = await res.json();
