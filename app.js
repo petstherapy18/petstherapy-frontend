@@ -604,6 +604,15 @@ const edad = document.getElementById("npEdad").value.trim();
     return;
   }
 
+  
+  const datosPaciente = {
+    nombre,
+    especie,
+    raza,
+    edad,
+    propietarioCorreo
+  }
+
   // ----------------------------
   // 📡 ENVÍO A BACKEND
   // ----------------------------
