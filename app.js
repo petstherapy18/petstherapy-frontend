@@ -20,6 +20,22 @@ function volver() {
 }
 
 
+// 🔐 Helper global para headers con token
+function getAuthHeaders(extra = {}) {
+  const token = sessionStorage.getItem("token");
+
+  if (!token) {
+    console.warn("⚠️ No hay token en sesión");
+  }
+
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...extra
+  };
+}
+
+
 
 function mostrarFoto(event) {
   const file = event.target.files[0];
@@ -212,7 +228,7 @@ const payload = { nombre, cedula, correo, telefono, contrasena };
 try {
 const res = await fetch(`${API_BASE}/registro`, {
       method: "POST",
-    headers: { "Content-Type": "application/json" },
+headers: getAuthHeaders(),
     body: JSON.stringify(payload),
   });
 
@@ -256,7 +272,7 @@ return mostrarBurbuja("Por favor ingresa correo y contraseña", "error");
 try {
   const res = await fetch(`${API_BASE}/login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders(),
     body: JSON.stringify({ correo, contrasena }),
   });
 
@@ -379,7 +395,7 @@ return mostrarBurbuja("Token no encontrado o inválido ❌", "error");
 try {
   const res = await fetch(`https://petstherapy-backend.onrender.com/api/password/reset/${token}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders(),
     body: JSON.stringify({ nuevaContrasena }),
   });
 
@@ -436,7 +452,7 @@ return;
 try { 
 const res = await fetch("https://petstherapy-backend.onrender.com/api/password/forgot", { 
 method: "POST", 
-headers: { "Content-Type": "application/json" }, 
+headers: getAuthHeaders(),
 body: JSON.stringify({ correo }), }); 
 
 console.log("[DEBUG] Respuesta del servidor:", res.status); 
@@ -1158,7 +1174,12 @@ window.cargarPropietario = async (pacienteActivo = window.pacienteActivo) => {
 
   // 2️⃣ Actualizar desde el backend en segundo plano
   try {
-    const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/id/${pacienteActivo._id}`);
+const res = await fetch(
+  `https://petstherapy-backend.onrender.com/api/pacientes/id/${pacienteActivo._id}`,
+  {
+    headers: getAuthHeaders()
+  }
+);
 
     if (!res.ok) throw new Error("Error al refrescar datos desde servidor");
 
@@ -1216,7 +1237,7 @@ async function guardarPropietario() {
       `https://petstherapy-backend.onrender.com/api/pacientes/${pacienteActivo._id}/propietario`,
       {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: getAuthHeaders(),
         body: JSON.stringify(propietario),
       }
     );
@@ -1403,7 +1424,7 @@ async function guardarExamen(archivosExistentes = null) {
   try {
     const res = await fetch(`${API_PACIENTES}/${pacienteActivo._id}/examenes`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ nombreExamen, tipoExamen, fecha, resultado, archivos: archivosParaEnviar })
     });
 
@@ -1900,7 +1921,12 @@ window.cargarHistorialMedico = async () => {
 
   // 2️⃣ Refrescar datos desde el backend en segundo plano
   try {
-    const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/id/${pacienteActivo._id}`);
+const res = await fetch(
+  `https://petstherapy-backend.onrender.com/api/pacientes/id/${pacienteActivo._id}`,
+  {
+    headers: getAuthHeaders()
+  }
+);
     if (!res.ok) throw new Error("Error al cargar paciente desde servidor");
 
     pacienteActivo = await res.json();
@@ -1948,7 +1974,7 @@ async function guardarHistorial() {
     // Enviar actualización al backend
     const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${pacienteActivo._id}/historial`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify(historial)
     });
 
@@ -2037,7 +2063,7 @@ async function guardarVacuna() {
   try {
     const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/vacunas`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify(nueva)
     });
 
@@ -2199,7 +2225,7 @@ async function guardarDesparasitacion() {
   try {
     const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/desparasitaciones`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify(nueva)
     });
 
@@ -2233,7 +2259,12 @@ async function guardarDesparasitacion() {
 
 
 async function cargarDesparasitaciones(id) {
-  const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${id}/desparasitaciones`);
+const res = await fetch(
+  `https://petstherapy-backend.onrender.com/api/pacientes/${id}/desparasitaciones`,
+  {
+    headers: getAuthHeaders()
+  }
+);
   const lista = await res.json();
   mostrarDesparasitaciones(lista);
 }
@@ -2300,9 +2331,14 @@ async function eliminarDesparasitacion(depId) {
   if (!confirmar) return;
 
   try {
-    const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/desparasitaciones/${depId}`, {
-      method: "DELETE"
-    });
+   const res = await fetch(
+  `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/desparasitaciones/${depId}`,
+  {
+    method: "DELETE",
+    headers: getAuthHeaders()
+  }
+);
+
 
     const data = await res.json();
 
@@ -2366,7 +2402,7 @@ async function guardarAntipulgas() {
   try {
     const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/antipulgas`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify(nueva)
     });
 
@@ -2399,7 +2435,12 @@ async function guardarAntipulgas() {
 
 
 async function cargarAntipulgas(id) {
-  const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${id}/antipulgas`);
+const res = await fetch(
+  `https://petstherapy-backend.onrender.com/api/pacientes/${id}/antipulgas`,
+  {
+    headers: getAuthHeaders()
+  }
+);
   const lista = await res.json();
   mostrarAntipulgas(lista);
 }
@@ -2464,9 +2505,13 @@ async function eliminarAntipulgas(aid) {
   if (!confirmar) return;
 
   try {
-    const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/antipulgas/${aid}`, {
-      method: "DELETE"
-    });
+   const res = await fetch(
+  `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/antipulgas/${aid}`,
+  {
+    method: "DELETE",
+    headers: getAuthHeaders()
+  }
+);
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Error al eliminar antipulgas");
@@ -2529,7 +2574,7 @@ async function guardarTratamiento() {
   try {
     const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/tratamientos`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify(nuevo)
     });
 
@@ -2566,7 +2611,12 @@ async function guardarTratamiento() {
 
 async function cargarTratamientos(id) {
   try {
-    const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${id}/tratamientos`);
+const res = await fetch(
+  `https://petstherapy-backend.onrender.com/api/pacientes/${id}/tratamientos`,
+  {
+    headers: getAuthHeaders()
+  }
+);
     if (!res.ok) throw new Error("No se pudo obtener la lista");
 
     const lista = await res.json();
@@ -2608,7 +2658,12 @@ function mostrarTratamientos(lista = []) {
 }
 
 async function verTratamiento(tId) {
-  const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/tratamientos/${tId}`);
+const res = await fetch(
+  `https://petstherapy-backend.onrender.com/api/pacientes/tratamientos/${tId}`,
+  {
+    headers: getAuthHeaders()
+  }
+);
 
   if (!res.ok) return mostrarBurbuja("No se pudo obtener el tratamiento");
   
@@ -2635,9 +2690,14 @@ async function eliminarTratamiento(tId) {
 
   if (!confirm("¿Seguro que quieres eliminar este tratamiento?")) return;
 
-  const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/tratamientos/${tId}`, {
-    method: "DELETE"
-  });
+  const res = await fetch(
+  `https://petstherapy-backend.onrender.com/api/pacientes/tratamientos/${tId}`,
+  {
+    method: "DELETE",
+    headers: getAuthHeaders()
+  }
+);
+
 
   const { paciente } = await res.json();
   mostrarTratamientos(paciente.tratamientos);
@@ -2699,7 +2759,7 @@ async function guardarConsulta() {
 
     const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/consultas`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify(consulta)
     });
 
@@ -2725,7 +2785,12 @@ async function cargarConsultas(id) {
   try {
     if (!id) return console.error("❌ No se recibió el ID del paciente");
 
-    const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${id}/consultas`);
+const res = await fetch(
+  `https://petstherapy-backend.onrender.com/api/pacientes/${id}/consultas`,
+  {
+    headers: getAuthHeaders()
+  }
+);
     if (!res.ok) throw new Error("Error obteniendo consultas del backend");
 
     const lista = await res.json();
@@ -2770,7 +2835,12 @@ async function verConsulta(consultaId) {
   const paciente = window.pacienteActivo;
   if (!paciente) return mostrarBurbuja("❌ No hay paciente seleccionado");
 
-  const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/consultas/${consultaId}`);
+const res = await fetch(
+  `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/consultas/${consultaId}`,
+  {
+    headers: getAuthHeaders()
+  }
+);
   if (!res.ok) return mostrarBurbuja("❌ Error cargando consulta");
 
   const c = await res.json();
@@ -2811,9 +2881,14 @@ async function eliminarConsulta(id) {
 
   if (!confirm("¿Seguro que deseas eliminar esta consulta?")) return;
 
-  const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/consultas/${id}`, {
-    method: "DELETE"
-  });
+  await fetch(
+  `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/consultas/${id}`,
+  {
+    method: "DELETE",
+    headers: getAuthHeaders()
+  }
+);
+
 
   const data = await res.json();
   if (data.error) return mostrarBurbuja("❌ Error eliminando consulta");
@@ -2890,7 +2965,7 @@ async function guardarRecordatorio() {
       `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/recordatorios`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: getAuthHeaders(),
         body: JSON.stringify(recordatorio)
       }
     );
@@ -2989,7 +3064,7 @@ const paciente = obtenerPacienteActivo();
 
   const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/recordatorios/${rec._id}/confirmarYEnviar`, {
   method:"PATCH",
-  headers:{"Content-Type":"application/json"}
+  headers: getAuthHeaders(),
   });
 
   const data = await res.json();
@@ -3058,7 +3133,7 @@ async function cambiarFechaRecordatorio(recId, nuevaFechaIso, nuevoDiasAntesVet 
     `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/recordatorios/${recId}`,
     {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify(body)
     }
   );
@@ -3353,7 +3428,7 @@ function limpiarFormularioRecordatorio() {
 async function registrarTokenPush(token) {
   await fetch("https://petstherapy-backend.onrender.com/api/push/token", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders(),
     body: JSON.stringify({ token })
   });
 }
