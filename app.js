@@ -2283,29 +2283,40 @@ function mostrarDesparasitaciones(lista) {
 
 async function verDesparasitacion(depId) {
   const paciente = window.pacienteActivo;
-  if (!paciente) return mostrarBurbuja("❌ No hay paciente seleccionado", "error");
+  if (!paciente || !paciente._id) {
+    return mostrarBurbuja("❌ No hay paciente seleccionado", "error");
+  }
 
-  const lista = paciente.desparasitaciones || [];
-const d = lista.find(x => String(x._id) === String(depId));
+  try {
+    const res = await fetch(
+      `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/desparasitaciones/${depId}`,
+      { headers: getAuthHeaders() }
+    );
 
-  if (!d) return mostrarBurbuja("❌ Desparasitación no encontrada", "error");
+    if (!res.ok) throw new Error("Error cargando desparasitación");
 
-  document.getElementById("nombrePacienteD_r").value = paciente.nombre || "";
-  document.getElementById("especieD_r").value = paciente.especie || "";
-  document.getElementById("razaD_r").value = paciente.raza || "";
+    const d = await res.json();
 
-  document.getElementById("productoD_r").value = d.producto || "";
-  document.getElementById("dosisD_r").value = d.dosis || "";
-  document.getElementById("viaAdministracionD_r").value = d.viaAdministracion || "";
-  document.getElementById("frecuenciaD_r").value = d.frecuencia || "";
+    document.getElementById("nombrePacienteD_r").value = paciente.nombre || "";
+    document.getElementById("especieD_r").value = paciente.especie || "";
+    document.getElementById("razaD_r").value = paciente.raza || "";
 
-  document.getElementById("fechaAplicacionD_r").value = d.fechaAplicacion?.split("T")[0] || "";
-  document.getElementById("proximaFechaD_r").value = d.proximaFecha?.split("T")[0] || "";
+    document.getElementById("productoD_r").value = d.producto || "";
+    document.getElementById("dosisD_r").value = d.dosis || "";
+    document.getElementById("viaAdministracionD_r").value = d.viaAdministracion || "";
+    document.getElementById("frecuenciaD_r").value = d.frecuencia || "";
+    document.getElementById("fechaAplicacionD_r").value = d.fechaAplicacion?.split("T")[0] || "";
+    document.getElementById("proximaFechaD_r").value = d.proximaFecha?.split("T")[0] || "";
+    document.getElementById("observacionesD_r").value = d.observaciones || "";
 
-  document.getElementById("observacionesD_r").value = d.observaciones || "";
+    mostrarPantalla("pantallaVerDesparasitacion");
 
-  mostrarPantalla("pantallaVerDesparasitacion");
+  } catch (err) {
+    console.error(err);
+    mostrarBurbuja("❌ No se pudo cargar la desparasitación", "error");
+  }
 }
+
 
 
 
@@ -2457,33 +2468,42 @@ function mostrarAntipulgas(lista) {
   });
 }
 
-function verAntipulgas(aid) {
+async function verAntipulgas(aid) {
   const paciente = window.pacienteActivo;
   if (!paciente || !paciente._id) {
     return mostrarBurbuja("❌ No hay paciente seleccionado", "error");
   }
 
-  const a = paciente.antipulgas.find(
-  x => String(x._id) === String(aid)
-);
+  try {
+    const res = await fetch(
+      `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/antipulgas/${aid}`,
+      { headers: getAuthHeaders() }
+    );
 
+    if (!res.ok) throw new Error("Error cargando antipulgas");
 
-  document.getElementById("nombrePacienteA_r").value = paciente.nombre || "";
-  document.getElementById("especieA_r").value = paciente.especie || "";
-  document.getElementById("razaA_r").value = paciente.raza || "";
+    const a = await res.json();
 
-  document.getElementById("productoA_r").value = a.producto || "";
-  document.getElementById("dosisA_r").value = a.dosis || "";
-  document.getElementById("viaAdministracionA_r").value = a.viaAdministracion || "";
-  document.getElementById("frecuenciaA_r").value = a.frecuencia || "";
+    document.getElementById("nombrePacienteA_r").value = paciente.nombre || "";
+    document.getElementById("especieA_r").value = paciente.especie || "";
+    document.getElementById("razaA_r").value = paciente.raza || "";
 
-  document.getElementById("fechaAplicacionA_r").value = a.fechaAplicacion?.split("T")[0] || "";
-  document.getElementById("proximaFechaA_r").value = a.proximaFecha?.split("T")[0] || "";
+    document.getElementById("productoA_r").value = a.producto || "";
+    document.getElementById("dosisA_r").value = a.dosis || "";
+    document.getElementById("viaAdministracionA_r").value = a.viaAdministracion || "";
+    document.getElementById("frecuenciaA_r").value = a.frecuencia || "";
+    document.getElementById("fechaAplicacionA_r").value = a.fechaAplicacion?.split("T")[0] || "";
+    document.getElementById("proximaFechaA_r").value = a.proximaFecha?.split("T")[0] || "";
+    document.getElementById("observacionesA_r").value = a.observaciones || "";
 
-  document.getElementById("observacionesA_r").value = a.observaciones || "";
+    mostrarPantalla("pantallaVerAntipulgas");
 
-  mostrarPantalla("pantallaVerAntipulgas");
+  } catch (err) {
+    console.error(err);
+    mostrarBurbuja("❌ No se pudo cargar el antipulgas", "error");
+  }
 }
+
 
 async function eliminarAntipulgas(aid) {
   const paciente = window.pacienteActivo;
@@ -2632,34 +2652,41 @@ function mostrarTratamientos(lista = []) {
 }
 
 async function verTratamiento(tId) {
+  const paciente = window.pacienteActivo;
+  if (!paciente || !paciente._id) {
+    return mostrarBurbuja("❌ No hay paciente seleccionado", "error");
+  }
+
   try {
     const res = await fetch(
-      `https://petstherapy-backend.onrender.com/api/pacientes/tratamientos/${tId}`,
+      `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/tratamientos/${tId}`,
       { headers: getAuthHeaders() }
     );
 
-    if (!res.ok) throw new Error();
+    if (!res.ok) throw new Error("Error cargando tratamiento");
 
-    const { tratamiento, paciente } = await res.json();
+    const t = await res.json();
 
     document.getElementById("nombrePacienteT_r").value = paciente.nombre || "";
     document.getElementById("especieT_r").value = paciente.especie || "";
     document.getElementById("razaT_r").value = paciente.raza || "";
 
-    document.getElementById("medicamentoT_r").value = tratamiento.medicamento || "";
-    document.getElementById("dosisT_r").value = tratamiento.dosis || "";
-    document.getElementById("frecuenciaT_r").value = tratamiento.frecuencia || "";
-    document.getElementById("viaAdministracionT_r").value = tratamiento.viaAdministracion || "";
-    document.getElementById("duracionT_r").value = tratamiento.duracion || "";
-    document.getElementById("costoT_r").value = tratamiento.costo || "";
-    document.getElementById("observacionesT_r").value = tratamiento.observaciones || "";
+    document.getElementById("medicamentoT_r").value = t.medicamento || "";
+    document.getElementById("dosisT_r").value = t.dosis || "";
+    document.getElementById("frecuenciaT_r").value = t.frecuencia || "";
+    document.getElementById("viaAdministracionT_r").value = t.viaAdministracion || "";
+    document.getElementById("duracionT_r").value = t.duracion || "";
+    document.getElementById("costoT_r").value = t.costo || "";
+    document.getElementById("observacionesT_r").value = t.observaciones || "";
 
     mostrarPantalla("pantallaVerTratamiento");
 
-  } catch {
+  } catch (err) {
+    console.error(err);
     mostrarBurbuja("❌ No se pudo cargar el tratamiento", "error");
   }
 }
+
 
 
 
