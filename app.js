@@ -2611,15 +2611,18 @@ async function cargarTratamientos(id) {
       { headers: getAuthHeaders() }
     );
 
-    if (!res.ok) throw new Error();
+    const data = await res.json();
 
-    const lista = await res.json();
-    mostrarTratamientos(lista || []);
+    console.log("📦 RESPUESTA TRATAMIENTOS:", data);
 
-  } catch {
+    mostrarTratamientos(data);
+
+  } catch (error) {
+    console.error("Error cargando tratamientos:", error);
     mostrarTratamientos([]);
   }
 }
+
 
 
 
