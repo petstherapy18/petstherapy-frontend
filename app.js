@@ -2296,7 +2296,12 @@ async function verDesparasitacion(depId) {
     if (!res.ok) throw new Error("Error cargando desparasitación");
 
     const d = await res.json();
+    console.log("🪱 DESPARASITACIÓN:", d);
 
+    // 🔥 PRIMERO mostrar pantalla
+    mostrarPantalla("pantallaVerDesparasitacion");
+
+    // 🔥 LUEGO llenar inputs
     document.getElementById("nombrePacienteD_r").value = paciente.nombre || "";
     document.getElementById("especieD_r").value = paciente.especie || "";
     document.getElementById("razaD_r").value = paciente.raza || "";
@@ -2309,13 +2314,12 @@ async function verDesparasitacion(depId) {
     document.getElementById("proximaFechaD_r").value = d.proximaFecha?.split("T")[0] || "";
     document.getElementById("observacionesD_r").value = d.observaciones || "";
 
-    mostrarPantalla("pantallaVerDesparasitacion");
-
   } catch (err) {
     console.error(err);
     mostrarBurbuja("❌ No se pudo cargar la desparasitación", "error");
   }
 }
+
 
 
 
