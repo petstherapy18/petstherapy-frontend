@@ -2655,32 +2655,27 @@ function mostrarTratamientos(lista = []) {
 }
 
 async function verTratamiento(tId) {
-  const paciente = window.pacienteActivo;
-  if (!paciente || !paciente._id) {
-    return mostrarBurbuja("❌ No hay paciente seleccionado", "error");
-  }
-
   try {
     const res = await fetch(
-      `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/tratamientos/${tId}`,
+      `https://petstherapy-backend.onrender.com/api/pacientes/tratamientos/${tId}`,
       { headers: getAuthHeaders() }
     );
 
     if (!res.ok) throw new Error("Error cargando tratamiento");
 
-    const t = await res.json();
+    const { tratamiento, paciente } = await res.json();
 
     document.getElementById("nombrePacienteT_r").value = paciente.nombre || "";
     document.getElementById("especieT_r").value = paciente.especie || "";
     document.getElementById("razaT_r").value = paciente.raza || "";
 
-    document.getElementById("medicamentoT_r").value = t.medicamento || "";
-    document.getElementById("dosisT_r").value = t.dosis || "";
-    document.getElementById("frecuenciaT_r").value = t.frecuencia || "";
-    document.getElementById("viaAdministracionT_r").value = t.viaAdministracion || "";
-    document.getElementById("duracionT_r").value = t.duracion || "";
-    document.getElementById("costoT_r").value = t.costo || "";
-    document.getElementById("observacionesT_r").value = t.observaciones || "";
+    document.getElementById("medicamentoT_r").value = tratamiento.medicamento || "";
+    document.getElementById("dosisT_r").value = tratamiento.dosis || "";
+    document.getElementById("frecuenciaT_r").value = tratamiento.frecuencia || "";
+    document.getElementById("viaAdministracionT_r").value = tratamiento.viaAdministracion || "";
+    document.getElementById("duracionT_r").value = tratamiento.duracion || "";
+    document.getElementById("costoT_r").value = tratamiento.costo || "";
+    document.getElementById("observacionesT_r").value = tratamiento.observaciones || "";
 
     mostrarPantalla("pantallaVerTratamiento");
 
@@ -2689,6 +2684,7 @@ async function verTratamiento(tId) {
     mostrarBurbuja("❌ No se pudo cargar el tratamiento", "error");
   }
 }
+
 
 
 
