@@ -2261,7 +2261,13 @@ function mostrarDesparasitaciones(lista) {
   const cont = document.getElementById("listaDesparasitaciones");
   cont.innerHTML = "";
 
-  if (!lista.length) {
+  if (!Array.isArray(lista)) {
+    cont.innerHTML = "<p>Error cargando desparasitaciones.</p>";
+    console.error("Respuesta inválida:", lista);
+    return;
+  }
+
+  if (lista.length === 0) {
     cont.innerHTML = "<p>No hay desparasitaciones registradas.</p>";
     return;
   }
@@ -2279,6 +2285,7 @@ function mostrarDesparasitaciones(lista) {
     cont.appendChild(div);
   });
 }
+
 
 
 async function verDesparasitacion(depId) {
