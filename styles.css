@@ -1714,6 +1714,18 @@ display: block;
 }
 
 
+#pantallaVerConsulta {
+  width: 100%;
+    justify-content: center;
+}
+
+#pantallaVerConsulta .container {
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
+  align-items: center;
+}
+
 .vr-logo {
 
  width: 180px;
@@ -1751,11 +1763,6 @@ display: block;
 
 
 
-#pantallaVerConsulta {
-
-max-width: 220px;
-
-}
 
 .estado-pendiente {
   color: #ff9800;
