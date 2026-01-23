@@ -1411,6 +1411,7 @@ input[type="text"], input[type="date"] {
   overflow-y: auto;
   padding-right: 5px;
   background-color: #ffbce5;
+  max-width: 220px;
 }
 
 
