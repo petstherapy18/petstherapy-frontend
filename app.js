@@ -2171,6 +2171,7 @@ async function eliminarVacuna(vacId) {
 
 
 async function irADesparasitaciones() {
+  console.log("🪱 irADesparasitaciones ejecutada");
   const paciente = window.pacienteActivo;
   if (!paciente || !paciente._id) {
     return mostrarBurbuja("❌ No hay paciente seleccionado", "error");
