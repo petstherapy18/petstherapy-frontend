@@ -1655,12 +1655,7 @@ resize: none;
     
 }
 
-#pantallaVerRecordatorio {
 
-
-max-width: 220px;
-
-}
 
 #pantallaVerRecordatorio textarea, #pantallaVerRecordatorio input, #pantallaVerRecordatorio select{
 
@@ -1708,6 +1703,18 @@ display: block;
 }
 
 #pantallaRecordatorios .container {
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+#pantallaVerRecordatorio {
+  width: 100%;
+    justify-content: center;
+}
+
+#pantallaVerRecordatorio .container {
   width: 100%;
   max-width: 220px;
   margin: 0 auto;
