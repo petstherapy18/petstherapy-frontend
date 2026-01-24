@@ -1411,7 +1411,6 @@ input[type="text"], input[type="date"] {
   overflow-y: auto;
   padding-right: 5px;
   background-color: #ffbce5;
-  max-width: 220px;
 }
 
 
@@ -1554,10 +1553,11 @@ display: block;
 
 #listaConsultas {
   margin-top: 20px;
-  max-height: 350px;
+  max-height: 250px;
   overflow-y: auto;
   padding-right: 5px;
   background-color: #ffbce5;
+  max-width: 220px;
 }
 
 /* Contenedor que no crece más allá del espacio asignado */
