@@ -1553,10 +1553,11 @@ display: block;
 
 #listaConsultas {
   margin-top: 20px;
-  max-height: 350px;
+  max-height: 250px;
   overflow-y: auto;
   padding-right: 5px;
   background-color: #ffbce5;
+  max-width: 220px;
 }
 
 /* Contenedor que no crece más allá del espacio asignado */
@@ -1654,12 +1655,7 @@ resize: none;
     
 }
 
-#pantallaVerRecordatorio {
 
-
-max-width: 220px;
-
-}
 
 #pantallaVerRecordatorio textarea, #pantallaVerRecordatorio input, #pantallaVerRecordatorio select{
 
@@ -1713,6 +1709,30 @@ display: block;
   align-items: center;
 }
 
+#pantallaVerRecordatorio {
+  width: 100%;
+    justify-content: center;
+}
+
+#pantallaVerRecordatorio .container {
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+
+#pantallaVerConsulta {
+  width: 100%;
+    justify-content: center;
+}
+
+#pantallaVerConsulta .container {
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
+  align-items: center;
+}
 
 .vr-logo {
 
@@ -1751,11 +1771,6 @@ display: block;
 
 
 
-#pantallaVerConsulta {
-
-max-width: 220px;
-
-}
 
 .estado-pendiente {
   color: #ff9800;

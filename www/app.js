@@ -492,8 +492,9 @@ async function cargarPacientes() {
 
   try {
     const res = await fetch(
-      `https://petstherapy-backend.onrender.com/api/pacientes/${encodeURIComponent(correoActivo)}`
-    );
+  `https://petstherapy-backend.onrender.com/api/pacientes/correo/${encodeURIComponent(correoActivo)}`
+);
+
 
     if (!res.ok) throw new Error(res.status);
 
@@ -714,6 +715,10 @@ const res = await fetch(
 
 
 
+function abrirConsultas() {
+  mostrarPantalla("pantallaConsultas");
+  cargarConsultas();
+}
 
 
 
@@ -1098,7 +1103,7 @@ async function mostrarPacientesCargo() {
 
   try {
     // fetch al backend con encodeURIComponent
-    const url = `https://petstherapy-backend.onrender.com/api/pacientes/${encodeURIComponent(propietarioCorreo)}`;
+    const url = `https://petstherapy-backend.onrender.com/api/pacientes/correo/${encodeURIComponent(propietarioCorreo)}`;
     console.log("🔗 Fetch a:", url);
     const res = await fetch(url);
 
@@ -1139,7 +1144,6 @@ async function mostrarPacientesCargo() {
     contenedor.innerHTML = "<p style='text-align:center;color:##ff4da6;'>❌ Error al cargar los pacientes</p>";
   }
 }
-
 
 
 // -----------------------------------------------------------------------------
@@ -1277,41 +1281,25 @@ if (btnGuardarPropietario) {
 
 
 
+
 // 🌸 --- NAVEGACIÓN SEGURA ENTRE PANTALLAS ---
 window._viendoExamen = false; // bandera global
 
 
 
-
-
-
-
-function descargarBase64(base64, nombreArchivo) {
-  const partes = base64.split(",");
-  const mime = partes[0].match(/:(.*?);/)[1];
-  const binario = atob(partes[1]);
-
-  let length = binario.length;
-  const buffer = new Uint8Array(length);
-
-  for (let i = 0; i < length; i++) {
-    buffer[i] = binario.charCodeAt(i);
-  }
-
-  const blob = new Blob([buffer], { type: mime });
-  const url = URL.createObjectURL(blob);
-
+function descargarArchivo(nombre, base64) {
   const a = document.createElement("a");
-  a.href = url;
-  a.download = nombreArchivo;
+  a.href = base64;
+  a.download = nombre;
   document.body.appendChild(a);
   a.click();
-
-  setTimeout(() => {
-    URL.revokeObjectURL(url);
-    document.body.removeChild(a);
-  }, 100);
+  document.body.removeChild(a);
 }
+
+
+
+
+
 
 
 
@@ -2012,7 +2000,6 @@ async function guardarHistorial() {
 
 
 
-
 async function irAVacunas() {
   // Tomar paciente directamente de la variable global en memoria
   const paciente = window.pacienteActivo;
@@ -2182,7 +2169,9 @@ async function eliminarVacuna(vacId) {
 
 
 
+
 async function irADesparasitaciones() {
+  console.log("🪱 irADesparasitaciones ejecutada");
   const paciente = window.pacienteActivo;
   if (!paciente || !paciente._id) {
     return mostrarBurbuja("❌ No hay paciente seleccionado", "error");
@@ -2273,7 +2262,13 @@ function mostrarDesparasitaciones(lista) {
   const cont = document.getElementById("listaDesparasitaciones");
   cont.innerHTML = "";
 
-  if (!lista.length) {
+  if (!Array.isArray(lista)) {
+    cont.innerHTML = "<p>Error cargando desparasitaciones.</p>";
+    console.error("Respuesta inválida:", lista);
+    return;
+  }
+
+  if (lista.length === 0) {
     cont.innerHTML = "<p>No hay desparasitaciones registradas.</p>";
     return;
   }
@@ -2293,31 +2288,47 @@ function mostrarDesparasitaciones(lista) {
 }
 
 
+
 async function verDesparasitacion(depId) {
   const paciente = window.pacienteActivo;
-  if (!paciente) return mostrarBurbuja("❌ No hay paciente seleccionado", "error");
+  if (!paciente || !paciente._id) {
+    return mostrarBurbuja("❌ No hay paciente seleccionado", "error");
+  }
 
-  const lista = paciente.desparasitaciones || [];
-  const d = lista.find(x => x._id === depId);
+  try {
+    const res = await fetch(
+      `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/desparasitaciones/${depId}`,
+      { headers: getAuthHeaders() }
+    );
 
-  if (!d) return mostrarBurbuja("❌ Desparasitación no encontrada", "error");
+    if (!res.ok) throw new Error("Error cargando desparasitación");
 
-  document.getElementById("nombrePacienteD_r").value = paciente.nombre || "";
-  document.getElementById("especieD_r").value = paciente.especie || "";
-  document.getElementById("razaD_r").value = paciente.raza || "";
+    const d = await res.json();
+    console.log("🪱 DESPARASITACIÓN:", d);
 
-  document.getElementById("productoD_r").value = d.producto || "";
-  document.getElementById("dosisD_r").value = d.dosis || "";
-  document.getElementById("viaAdministracionD_r").value = d.viaAdministracion || "";
-  document.getElementById("frecuenciaD_r").value = d.frecuencia || "";
+    // 🔥 PRIMERO mostrar pantalla
+    mostrarPantalla("pantallaVerDesparasitacion");
 
-  document.getElementById("fechaAplicacionD_r").value = d.fechaAplicacion?.split("T")[0] || "";
-  document.getElementById("proximaFechaD_r").value = d.proximaFecha?.split("T")[0] || "";
+    // 🔥 LUEGO llenar inputs
+    document.getElementById("nombrePacienteD_r").value = paciente.nombre || "";
+    document.getElementById("especieD_r").value = paciente.especie || "";
+    document.getElementById("razaD_r").value = paciente.raza || "";
 
-  document.getElementById("observacionesD_r").value = d.observaciones || "";
+    document.getElementById("productoD_r").value = d.producto || "";
+    document.getElementById("dosisD_r").value = d.dosis || "";
+    document.getElementById("viaAdministracionD_r").value = d.viaAdministracion || "";
+    document.getElementById("frecuenciaD_r").value = d.frecuencia || "";
+    document.getElementById("fechaAplicacionD_r").value = d.fechaAplicacion?.split("T")[0] || "";
+    document.getElementById("proximaFechaD_r").value = d.proximaFecha?.split("T")[0] || "";
+    document.getElementById("observacionesD_r").value = d.observaciones || "";
 
-  mostrarPantalla("pantallaVerDesparasitacion");
+  } catch (err) {
+    console.error(err);
+    mostrarBurbuja("❌ No se pudo cargar la desparasitación", "error");
+  }
 }
+
+
 
 
 
@@ -2469,31 +2480,42 @@ function mostrarAntipulgas(lista) {
   });
 }
 
-function verAntipulgas(aid) {
+async function verAntipulgas(aid) {
   const paciente = window.pacienteActivo;
   if (!paciente || !paciente._id) {
     return mostrarBurbuja("❌ No hay paciente seleccionado", "error");
   }
 
-  const a = paciente.antipulgas.find(x => x._id === aid);
-  if (!a) return mostrarBurbuja("Antipulgas no encontrada", "error");
+  try {
+    const res = await fetch(
+      `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/antipulgas/${aid}`,
+      { headers: getAuthHeaders() }
+    );
 
-  document.getElementById("nombrePacienteA_r").value = paciente.nombre || "";
-  document.getElementById("especieA_r").value = paciente.especie || "";
-  document.getElementById("razaA_r").value = paciente.raza || "";
+    if (!res.ok) throw new Error("Error cargando antipulgas");
 
-  document.getElementById("productoA_r").value = a.producto || "";
-  document.getElementById("dosisA_r").value = a.dosis || "";
-  document.getElementById("viaAdministracionA_r").value = a.viaAdministracion || "";
-  document.getElementById("frecuenciaA_r").value = a.frecuencia || "";
+    const a = await res.json();
 
-  document.getElementById("fechaAplicacionA_r").value = a.fechaAplicacion?.split("T")[0] || "";
-  document.getElementById("proximaFechaA_r").value = a.proximaFecha?.split("T")[0] || "";
+    document.getElementById("nombrePacienteA_r").value = paciente.nombre || "";
+    document.getElementById("especieA_r").value = paciente.especie || "";
+    document.getElementById("razaA_r").value = paciente.raza || "";
 
-  document.getElementById("observacionesA_r").value = a.observaciones || "";
+    document.getElementById("productoA_r").value = a.producto || "";
+    document.getElementById("dosisA_r").value = a.dosis || "";
+    document.getElementById("viaAdministracionA_r").value = a.viaAdministracion || "";
+    document.getElementById("frecuenciaA_r").value = a.frecuencia || "";
+    document.getElementById("fechaAplicacionA_r").value = a.fechaAplicacion?.split("T")[0] || "";
+    document.getElementById("proximaFechaA_r").value = a.proximaFecha?.split("T")[0] || "";
+    document.getElementById("observacionesA_r").value = a.observaciones || "";
 
-  mostrarPantalla("pantallaVerAntipulgas");
+    mostrarPantalla("pantallaVerAntipulgas");
+
+  } catch (err) {
+    console.error(err);
+    mostrarBurbuja("❌ No se pudo cargar el antipulgas", "error");
+  }
 }
+
 
 async function eliminarAntipulgas(aid) {
   const paciente = window.pacienteActivo;
@@ -2532,7 +2554,7 @@ async function eliminarAntipulgas(aid) {
 
 
 async function irATratamiento() {
-  const paciente = window.pacienteActivo;   // ← Usamos la variable global
+  const paciente = window.pacienteActivo;
 
   if (!paciente || !paciente._id) {
     return mostrarBurbuja("❌ No hay paciente seleccionado", "error");
@@ -2540,22 +2562,17 @@ async function irATratamiento() {
 
   mostrarPantalla("pantallaTratamiento");
 
-  // Llenar los campos del encabezado
   document.getElementById("nombrePacienteT").value = paciente.nombre || "";
   document.getElementById("especieT").value = paciente.especie || "";
   document.getElementById("razaT").value = paciente.raza || "";
 
-  try {
-    await cargarTratamientos(paciente._id);   // 🔥 Cargar desde la BD
-  } catch (error) {
-    console.error("Error cargando tratamientos:", error);
-    mostrarBurbuja("❌ No se pudieron cargar los tratamientos", "error");
-  }
+  await cargarTratamientos(paciente._id); // 🔥 fuente única
 }
 
 
+
 async function guardarTratamiento() {
-  const paciente = window.pacienteActivo;   // <--- usamos el global
+  const paciente = window.pacienteActivo;
 
   if (!paciente || !paciente._id) {
     return mostrarBurbuja("❌ No hay paciente seleccionado", "error");
@@ -2572,61 +2589,53 @@ async function guardarTratamiento() {
   };
 
   try {
-    const res = await fetch(`https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/tratamientos`, {
-      method: "POST",
-      headers: getAuthHeaders(),
-      body: JSON.stringify(nuevo)
-    });
+    const res = await fetch(
+      `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/tratamientos`,
+      {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(nuevo)
+      }
+    );
 
-    if (!res.ok) {
-      const errData = await res.json();
-      throw new Error(errData.message || "Error al guardar tratamiento");
-    }
+    if (!res.ok) throw new Error("Error al guardar tratamiento");
 
-    const data = await res.json();
-
-    // 🔥 actualizamos la variable global
-    window.pacienteActivo = data.paciente;
-
-    // 🔥 refrescar lista
-    mostrarTratamientos(data.paciente.tratamientos);
+    // 🔥 NO usamos data.paciente.tratamientos
+    await cargarTratamientos(paciente._id);
 
     mostrarBurbuja("💊 Tratamiento guardado con éxito", "exito");
 
     // limpiar
-    document.getElementById("medicamentoT").value = "";
-    document.getElementById("dosisT").value = "";
-    document.getElementById("frecuenciaT").value = "";
-    document.getElementById("viaAdministracionT").value = "";
-    document.getElementById("duracionT").value = "";
-    document.getElementById("costoT").value = "";
-    document.getElementById("observacionesT").value = "";
+    ["medicamentoT","dosisT","frecuenciaT","viaAdministracionT","duracionT","costoT","observacionesT"]
+      .forEach(id => document.getElementById(id).value = "");
 
   } catch (error) {
-    console.error("Error guardando tratamiento:", error);
-    mostrarBurbuja(`❌ No se pudo guardar el tratamiento: ${error.message}`, "error");
+    mostrarBurbuja("❌ No se pudo guardar el tratamiento", "error");
   }
 }
+
 
 
 async function cargarTratamientos(id) {
   try {
-const res = await fetch(
-  `https://petstherapy-backend.onrender.com/api/pacientes/${id}/tratamientos`,
-  {
-    headers: getAuthHeaders()
-  }
-);
-    if (!res.ok) throw new Error("No se pudo obtener la lista");
+    const res = await fetch(
+      `https://petstherapy-backend.onrender.com/api/pacientes/${id}/tratamientos`,
+      { headers: getAuthHeaders() }
+    );
 
-    const lista = await res.json();
-    mostrarTratamientos(Array.isArray(lista) ? lista : []);
+    const data = await res.json();
+
+    console.log("📦 RESPUESTA TRATAMIENTOS:", data);
+
+    mostrarTratamientos(data);
 
   } catch (error) {
     console.error("Error cargando tratamientos:", error);
-    mostrarTratamientos([]); // <- evita caída total
+    mostrarTratamientos([]);
   }
 }
+
+
 
 
 
@@ -2658,52 +2667,60 @@ function mostrarTratamientos(lista = []) {
 }
 
 async function verTratamiento(tId) {
-const res = await fetch(
-  `https://petstherapy-backend.onrender.com/api/pacientes/tratamientos/${tId}`,
-  {
-    headers: getAuthHeaders()
+  try {
+    const res = await fetch(
+      `https://petstherapy-backend.onrender.com/api/pacientes/tratamientos/${tId}`,
+      { headers: getAuthHeaders() }
+    );
+
+    if (!res.ok) throw new Error("Error cargando tratamiento");
+
+    const { tratamiento, paciente } = await res.json();
+
+    document.getElementById("nombrePacienteT_r").value = paciente.nombre || "";
+    document.getElementById("especieT_r").value = paciente.especie || "";
+    document.getElementById("razaT_r").value = paciente.raza || "";
+
+    document.getElementById("medicamentoT_r").value = tratamiento.medicamento || "";
+    document.getElementById("dosisT_r").value = tratamiento.dosis || "";
+    document.getElementById("frecuenciaT_r").value = tratamiento.frecuencia || "";
+    document.getElementById("viaAdministracionT_r").value = tratamiento.viaAdministracion || "";
+    document.getElementById("duracionT_r").value = tratamiento.duracion || "";
+    document.getElementById("costoT_r").value = tratamiento.costo || "";
+    document.getElementById("observacionesT_r").value = tratamiento.observaciones || "";
+
+    mostrarPantalla("pantallaVerTratamiento");
+
+  } catch (err) {
+    console.error(err);
+    mostrarBurbuja("❌ No se pudo cargar el tratamiento", "error");
   }
-);
-
-  if (!res.ok) return mostrarBurbuja("No se pudo obtener el tratamiento");
-  
-  const { paciente, tratamiento } = await res.json();
-
-  document.getElementById("nombrePacienteT_r").value = paciente.nombre || "";
-  document.getElementById("especieT_r").value = paciente.especie || "";
-  document.getElementById("razaT_r").value = paciente.raza || "";
-
-  document.getElementById("medicamentoT_r").value = tratamiento.medicamento || "";
-  document.getElementById("dosisT_r").value = tratamiento.dosis || "";
-  document.getElementById("frecuenciaT_r").value = tratamiento.frecuencia || "";
-  document.getElementById("viaAdministracionT_r").value = tratamiento.viaAdministracion || "";
-  document.getElementById("duracionT_r").value = tratamiento.duracion || "";
-  document.getElementById("costoT_r").value = tratamiento.costo || "";
-  document.getElementById("observacionesT_r").value = tratamiento.observaciones || "";
-
-  mostrarPantalla("pantallaVerTratamiento");
 }
+
+
+
+
 
 
 
 async function eliminarTratamiento(tId) {
-
   if (!confirm("¿Seguro que quieres eliminar este tratamiento?")) return;
 
-  const res = await fetch(
-  `https://petstherapy-backend.onrender.com/api/pacientes/tratamientos/${tId}`,
-  {
-    method: "DELETE",
-    headers: getAuthHeaders()
-  }
-);
+  const paciente = window.pacienteActivo;
 
+  await fetch(
+    `https://petstherapy-backend.onrender.com/api/pacientes/tratamientos/${tId}`,
+    {
+      method: "DELETE",
+      headers: getAuthHeaders()
+    }
+  );
 
-  const { paciente } = await res.json();
-  mostrarTratamientos(paciente.tratamientos);
+  await cargarTratamientos(paciente._id);
 
-  mostrarBurbuja("Tratamiento eliminado con éxito 🗑");
+  mostrarBurbuja("🗑 Tratamiento eliminado con éxito");
 }
+
 
 
 
@@ -2881,25 +2898,24 @@ async function eliminarConsulta(id) {
 
   if (!confirm("¿Seguro que deseas eliminar esta consulta?")) return;
 
-  await fetch(
-  `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/consultas/${id}`,
-  {
-    method: "DELETE",
-    headers: getAuthHeaders()
-  }
-);
-
+  const res = await fetch(
+    `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}/consultas/${id}`,
+    {
+      method: "DELETE",
+      headers: getAuthHeaders()
+    }
+  );
 
   const data = await res.json();
-  if (data.error) return mostrarBurbuja("❌ Error eliminando consulta");
+  if (!res.ok) {
+    return mostrarBurbuja("❌ Error eliminando consulta");
+  }
 
-  // Actualizamos paciente global
   window.pacienteActivo = data.paciente;
-
-  await cargarConsultas(paciente._id);
-
+  mostrarConsultas(data.paciente.consultas);
   mostrarBurbuja("✅ Consulta eliminada correctamente");
 }
+
 
 
 
@@ -3087,27 +3103,27 @@ function verRecordatorio(recordatorioId) {
 
   window.recordatorioSeleccionado = r;
 
-  document.getElementById("recNombre_r").value = paciente.nombre;
-  document.getElementById("recEspecie_r").value = paciente.especie;
-  document.getElementById("recRaza_r").value = paciente.raza;
+  // 🔥 PRIMERO mostrar la pantalla
+  mostrarPantalla("pantallaVerRecordatorio");
+
+  // 🔥 LUEGO llenar inputs
+  document.getElementById("recNombre_r").value = paciente.nombre || "";
+  document.getElementById("recEspecie_r").value = paciente.especie || "";
+  document.getElementById("recRaza_r").value = paciente.raza || "";
 
   document.getElementById("tipoEvento_r").value = r.tipo || "";
-
-  // ✅ Fecha y hora del evento
-  document.getElementById("fechaEvento_r").value = r.fechaEvento ? r.fechaEvento.split("T")[0] : "";
+  document.getElementById("fechaEvento_r").value = r.fechaEvento?.split("T")[0] || "";
   document.getElementById("horaEvento_r").value = r.horaEvento || "";
 
-  // ✅ Fecha y hora de envío sugerida
-  document.getElementById("fechaEnvio_r").value = r.fechaAvisoProp ? r.fechaAvisoProp.split("T")[0] : "";
+  document.getElementById("fechaEnvio_r").value = r.fechaAvisoProp?.split("T")[0] || "";
   document.getElementById("horaEnvio_r").value = r.horaAvisoProp || "";
 
   document.getElementById("mensaje_r").value = r.mensaje || "";
 
-  document.getElementById("enviarWA_btn").dataset.recId = r._id;
-
-
-  mostrarPantalla("pantallaVerRecordatorio");
+  const btn = document.getElementById("enviarWA_btn");
+  if (btn) btn.dataset.recId = r._id;
 }
+
 
 
 
