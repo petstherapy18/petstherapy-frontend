@@ -3103,27 +3103,27 @@ function verRecordatorio(recordatorioId) {
 
   window.recordatorioSeleccionado = r;
 
-  document.getElementById("recNombre_r").value = paciente.nombre;
-  document.getElementById("recEspecie_r").value = paciente.especie;
-  document.getElementById("recRaza_r").value = paciente.raza;
+  // 🔥 PRIMERO mostrar la pantalla
+  mostrarPantalla("pantallaVerRecordatorio");
+
+  // 🔥 LUEGO llenar inputs
+  document.getElementById("recNombre_r").value = paciente.nombre || "";
+  document.getElementById("recEspecie_r").value = paciente.especie || "";
+  document.getElementById("recRaza_r").value = paciente.raza || "";
 
   document.getElementById("tipoEvento_r").value = r.tipo || "";
-
-  // ✅ Fecha y hora del evento
-  document.getElementById("fechaEvento_r").value = r.fechaEvento ? r.fechaEvento.split("T")[0] : "";
+  document.getElementById("fechaEvento_r").value = r.fechaEvento?.split("T")[0] || "";
   document.getElementById("horaEvento_r").value = r.horaEvento || "";
 
-  // ✅ Fecha y hora de envío sugerida
-  document.getElementById("fechaEnvio_r").value = r.fechaAvisoProp ? r.fechaAvisoProp.split("T")[0] : "";
+  document.getElementById("fechaEnvio_r").value = r.fechaAvisoProp?.split("T")[0] || "";
   document.getElementById("horaEnvio_r").value = r.horaAvisoProp || "";
 
   document.getElementById("mensaje_r").value = r.mensaje || "";
 
-  document.getElementById("enviarWA_btn").dataset.recId = r._id;
-
-
-  mostrarPantalla("pantallaVerRecordatorio");
+  const btn = document.getElementById("enviarWA_btn");
+  if (btn) btn.dataset.recId = r._id;
 }
+
 
 
 
