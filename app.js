@@ -1337,6 +1337,18 @@ function salirDeExamen() {
 // 🌸 ==== MANEJO DE EXÁMENES INDEPENDIENTE (no interfiere con sesión) ====
 
 
+function irAExamenes() {
+  const paciente = window.pacienteActivo;
+  if (!paciente) {
+    return mostrarBurbuja("❌ No hay paciente seleccionado");
+  }
+
+  mostrarPantalla("pantallaExamenes");
+
+  document.getElementById("nombrePacienteExamen").value = paciente.nombre || "";
+  document.getElementById("especieExamen").value = paciente.especie || "";
+  document.getElementById("razaExamen").value = paciente.raza || "";
+}
 
 
 
@@ -1657,14 +1669,11 @@ function verExamen(idExamen) {
   }
 
   const examen = paciente.examenes.find(e =>
-    String(e._id || e.id) === String(idExamen)
+    String(e._id) === String(idExamen)
   );
 
-  if (!examen) {
-    return mostrarBurbuja("Examen no encontrado 💔");
-  }
+  if (!examen) return mostrarBurbuja("Examen no encontrado 💔");
 
-  window._viendoExamen = true;
   window.examenActivo = examen;
 
   document.getElementById("verNombrePaciente").value = paciente.nombre || "";
@@ -1678,15 +1687,15 @@ function verExamen(idExamen) {
   const archivosDiv = document.getElementById("archivosAdjuntosVer");
   archivosDiv.innerHTML = "";
 
-  if (Array.isArray(examen.archivos)) {
+  if (!Array.isArray(examen.archivos) || examen.archivos.length === 0) {
+    archivosDiv.innerHTML = "<p>No hay archivos adjuntos</p>";
+  } else {
     examen.archivos.forEach((archivo, i) => {
       if (!archivo.base64) return;
 
       const btn = document.createElement("button");
-      btn.type = "button";
       btn.textContent = archivo.nombre || `Archivo ${i + 1}`;
-      btn.onclick = () =>
-        descargarBase64(archivo.base64, archivo.nombre);
+      btn.onclick = () => descargarBase64(archivo.base64, archivo.nombre);
 
       archivosDiv.appendChild(btn);
     });
@@ -1694,6 +1703,7 @@ function verExamen(idExamen) {
 
   mostrarPantalla("pantallaVerExamen");
 }
+
 
 
 
