@@ -694,10 +694,8 @@ const res = await fetch(
     // ----------------------------
     // 🔒 GUARDAR PACIENTE ACTIVO
     // ----------------------------
-    sessionStorage.setItem(
-      "pacienteSeleccionado",
-      JSON.stringify(data.paciente)
-    );
+    window.pacienteActivo = data.paciente;
+
 
     // ----------------------------
     // 🎉 ÉXITO
@@ -730,15 +728,6 @@ async function abrirPerfilPaciente(paciente) {
     return;
   }
 
-  const token =
-    localStorage.getItem("token") ||
-    sessionStorage.getItem("token");
-
-  if (!token) {
-    mostrarBurbuja("Sesión expirada", "error");
-    return;
-  }
-
   try {
     const res = await fetch(
       `https://petstherapy-backend.onrender.com/api/pacientes/id/${paciente._id}`
@@ -747,79 +736,31 @@ async function abrirPerfilPaciente(paciente) {
 
     const pacienteCompleto = await res.json();
 
-    // 🔥 ESTADO GLOBAL (SE MANTIENE)
+    // ✅ SOLO EN MEMORIA
     window.pacienteActivo = pacienteCompleto;
-
-    // 🔒 Respaldo en sessionStorage (SE MANTIENE)
-    sessionStorage.setItem(
-      "pacienteSeleccionado",
-      JSON.stringify(pacienteCompleto)
-    );
 
     // ----------------------------
     // 🧾 Cargar datos del paciente
     // ----------------------------
+    document.getElementById("nombrePerfil").value = pacienteCompleto.nombre || "";
+    document.getElementById("nombrePerfil").dataset.pacienteId = pacienteCompleto._id;
 
-    // Nombre
-    const nombrePerfil = document.getElementById("nombrePerfil");
-    if (nombrePerfil) {
-      nombrePerfil.value = pacienteCompleto.nombre || "";
-      nombrePerfil.dataset.pacienteId = pacienteCompleto._id;
-    }
+    document.getElementById("especiePerfil").value = pacienteCompleto.especie || "";
+    document.getElementById("razaPerfil").value = pacienteCompleto.raza || "";
+    document.getElementById("pesoPerfil").value = pacienteCompleto.peso || "";
+    document.getElementById("fechaAplicacionPF").value =
+      pacienteCompleto.fechaNacimiento || "";
 
-    // Especie (SELECT)
-    const especiePerfil = document.getElementById("especiePerfil");
-    if (especiePerfil) {
-      especiePerfil.value = pacienteCompleto.especie || "";
-
-      // 🔑 CLAVE: activar razas según especie
-      if (pacienteCompleto.especie && RAZAS[pacienteCompleto.especie]) {
-        razasActivas = RAZAS[pacienteCompleto.especie];
-      } else {
-        razasActivas = [];
-      }
-    }
-
-    // Raza (INPUT con autocompletado)
-    const razaPerfil = document.getElementById("razaPerfil");
-    if (razaPerfil) {
-      razaPerfil.value = pacienteCompleto.raza || "";
-    }
-
-    // Peso
-    const pesoPerfil = document.getElementById("pesoPerfil");
-    if (pesoPerfil) {
-      pesoPerfil.value = pacienteCompleto.peso || "";
-    }
-
-    // Fecha nacimiento / aplicación
-    const fechaPerfil = document.getElementById("fechaAplicacionPF");
-    if (fechaPerfil) {
-      fechaPerfil.value = pacienteCompleto.fechaNacimiento || "";
-    }
-
-    // ----------------------------
-    // 🖼️ Cargar foto (SE MANTIENE)
-    // ----------------------------
+    // Foto
     const preview = document.getElementById("previewFoto");
-
-    if (
-      pacienteCompleto.foto &&
-      typeof pacienteCompleto.foto === "string" &&
-      pacienteCompleto.foto.startsWith("data:image")
-    ) {
+    if (pacienteCompleto.foto?.startsWith("data:image")) {
       fotoBase64 = pacienteCompleto.foto;
-      fotoEliminada = false;
       preview.src = fotoBase64;
     } else {
       fotoBase64 = "";
-      fotoEliminada = false;
       preview.src = "img/default.png";
     }
 
-    // ----------------------------
-    // 📺 Mostrar pantalla
-    // ----------------------------
     mostrarPantalla("perfilPaciente");
 
   } catch (error) {
@@ -832,8 +773,9 @@ async function abrirPerfilPaciente(paciente) {
 
 
 
+
 document.getElementById("btnQuitarFoto").addEventListener("click", async () => {
-  const paciente = JSON.parse(sessionStorage.getItem("pacienteSeleccionado"));
+  const paciente = window.pacienteActivo;
   
   const token =
     localStorage.getItem("token") ||
@@ -866,10 +808,8 @@ document.getElementById("btnQuitarFoto").addEventListener("click", async () => {
     document.getElementById("inputFoto").value = "";
 
     // actualizar paciente en memoria
-    sessionStorage.setItem(
-      "pacienteSeleccionado",
-      JSON.stringify(data.paciente)
-    );
+    window.pacienteActivo = data.paciente;
+
 
     mostrarBurbuja("Foto eliminada 🐾", "exito");
   } catch (err) {
@@ -926,7 +866,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 async function guardarPerfilPaciente() {
-  const paciente = JSON.parse(sessionStorage.getItem("pacienteSeleccionado"));
+  const paciente = window.pacienteActivo;
+
   const correoActivo = sessionStorage.getItem("usuarioActivoCorreo");
 
   if (!paciente || !paciente._id || !correoActivo) {
@@ -976,10 +917,8 @@ async function guardarPerfilPaciente() {
     if (!res.ok) throw new Error(data.message);
 
     // actualizar paciente en memoria
-    sessionStorage.setItem(
-      "pacienteSeleccionado",
-      JSON.stringify(data.paciente)
-    );
+    window.pacienteActivo = data.paciente;
+
 
     mostrarBurbuja("Perfil actualizado 💖", "exito");
 
