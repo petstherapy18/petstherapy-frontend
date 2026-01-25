@@ -1294,20 +1294,7 @@ function irAExamenes() {
 
 
 
-// 🌸 Volver a lista de exámenes
-function volverAListaExamenes() {
-  console.log("↩️ Volviendo a la lista de exámenes");
-  window._viendoExamen = false;
 
-  document.querySelectorAll(".pantalla").forEach(p => {
-    p.style.display = "none";
-    p.classList.remove("activa");
-  });
-
-  const pantalla = document.getElementById("pantallaExamenes");
-  pantalla.style.display = "block";
-  pantalla.classList.add("activa");
-}
 
 
 
@@ -1371,6 +1358,12 @@ async function guardarExamen(archivosExistentes = null) {
     if (res.ok) {
       mostrarBurbuja("💖 Examen guardado exitosamente");
       window.archivosExamenTemp = [];
+
+      const inputArchivo = document.getElementById("archivosExamen");
+const listaArchivosPantalla = document.getElementById("listaArchivosPantalla");
+
+if (inputArchivo) inputArchivo.value = "";
+if (listaArchivosPantalla) listaArchivosPantalla.innerHTML = "";
 
       // Actualizar paciente en memoria
       const pacienteActualizado = await fetchPacienteById(pacienteActivo._id).catch(() => pacienteActivo);
