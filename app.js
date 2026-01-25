@@ -1856,23 +1856,28 @@ function descargarBase64(base64, nombreArchivo = "archivo") {
     const blob = new Blob([buffer], { type: mime });
     const url = URL.createObjectURL(blob);
 
+    // 🚫 NO usar navegación
     const a = document.createElement("a");
-    a.style.display = "none";
     a.href = url;
     a.download = nombreArchivo;
+    a.rel = "noopener";
+    a.style.display = "none";
 
     document.body.appendChild(a);
-    a.click();
 
+    // 🔥 Evita que la app cambie de pantalla
     setTimeout(() => {
-      URL.revokeObjectURL(url);
+      a.click();
       document.body.removeChild(a);
-    }, 100);
+      URL.revokeObjectURL(url);
+    }, 50);
+
   } catch (e) {
     console.error(e);
     mostrarBurbuja("No se pudo descargar el archivo 💔");
   }
 }
+
 
 
 
