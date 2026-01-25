@@ -1847,41 +1847,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-function descargarBase64(base64, nombreArchivo = "archivo") {
-  try {
-    const [meta, data] = base64.split(",");
-    const mime = meta.match(/:(.*?);/)[1];
-    const bin = atob(data);
-
-    const buffer = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) {
-      buffer[i] = bin.charCodeAt(i);
-    }
-
-    const blob = new Blob([buffer], { type: mime });
-    const url = URL.createObjectURL(blob);
-
-    // 🚫 NO usar navegación
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = nombreArchivo;
-    a.rel = "noopener";
-    a.style.display = "none";
-
-    document.body.appendChild(a);
-
-    // 🔥 Evita que la app cambie de pantalla
-    setTimeout(() => {
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }, 50);
-
-  } catch (e) {
-    console.error(e);
-    mostrarBurbuja("No se pudo descargar el archivo 💔");
+function descargarBase64(base64, nombre) {
+  if (!base64) {
+    mostrarBurbuja("❌ Archivo inválido", "error");
+    return;
   }
+
+  // 🔥 LIMPIAR prefijo data:...base64,
+  const base64Limpio = base64.includes(",")
+    ? base64.split(",")[1]
+    : base64;
+
+  const byteCharacters = atob(base64Limpio);
+  const byteNumbers = new Array(byteCharacters.length);
+
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray]);
+
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = nombre || "archivo";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+
+
 
 
 
