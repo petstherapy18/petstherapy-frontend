@@ -1380,6 +1380,9 @@ document.getElementById("tipoExamen").value = "";
 document.getElementById("fechaExamenes").value = "";
 document.getElementById("resultadoExamen").value = "";
 
+// 🧹 limpiar archivos temporales
+limpiarArchivosTemporales();
+
     document.getElementById("listaArchivosPantalla").innerHTML = "";
 
   } catch (err) {
