@@ -1364,6 +1364,28 @@ async function guardarExamen(archivosExistentes = null) {
       mostrarBurbuja("💖 Examen guardado exitosamente");
       window.archivosExamenTemp = [];
 
+      // 🟢 CREAR EXAMEN LOCAL (optimista)
+const nuevoExamen = {
+  _id: data.examen?._id || Date.now().toString(),
+  nombreExamen,
+  tipoExamen,
+  fecha,
+  resultado,
+  archivos: archivosParaEnviar || []
+};
+
+// 🟢 Insertar inmediatamente en memoria
+window.pacienteActivo.examenes = window.pacienteActivo.examenes || [];
+window.pacienteActivo.examenes.unshift(nuevoExamen);
+
+// 🟢 Refrescar lista INMEDIATO
+mostrarExamenesRegistrados(window.pacienteActivo);
+
+fetchPacienteById(pacienteActivo._id)
+  .then(p => window.pacienteActivo = p)
+  .catch(() => {});
+
+
       const inputArchivo = document.getElementById("archivosExamen");
 const listaArchivosPantalla = document.getElementById("listaArchivosPantalla");
 
@@ -1371,10 +1393,7 @@ if (inputArchivo) inputArchivo.value = "";
 if (listaArchivosPantalla) listaArchivosPantalla.innerHTML = "";
 
       // Actualizar paciente en memoria
-      const pacienteActualizado = await fetchPacienteById(pacienteActivo._id).catch(() => pacienteActivo);
-      window.pacienteActivo = pacienteActualizado;
-
-      mostrarExamenesRegistrados(pacienteActualizado);
+     
       document.getElementById("formExamen").reset();
     } else {
       mostrarBurbuja("❌ Error al guardar examen: " + (data.message || res.status));
@@ -1668,9 +1687,19 @@ async function eliminarExamen(idExamen) {
     mostrarBurbuja("Examen eliminado correctamente ❤️", "exito");
 
     // 🔄 Recargar los exámenes desde la base de datos
-    const pacienteActualizado = await fetchPacienteById(paciente._id);
-    window.pacienteActivo = pacienteActualizado; // actualizar paciente activo
-    mostrarExamenesRegistrados(pacienteActualizado);
+   // 🟢 Eliminar localmente de inmediato
+window.pacienteActivo.examenes =
+  window.pacienteActivo.examenes.filter(e =>
+    String(e._id) !== String(idExamen)
+  );
+
+// 🟢 Refrescar lista sin esperar backend
+mostrarExamenesRegistrados(window.pacienteActivo);
+
+fetchPacienteById(paciente._id)
+  .then(p => window.pacienteActivo = p)
+  .catch(() => {});
+
 
   } catch (error) {
     console.error("Error de red al eliminar examen:", error);
