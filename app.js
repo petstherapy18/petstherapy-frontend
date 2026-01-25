@@ -14,6 +14,8 @@ let archivosExamenBase64 = [];
 
 let fotoBase64 = "";
 
+window._examenesCargando = false;
+
 
 function volver() {
   window.history.back();
@@ -1287,7 +1289,10 @@ function irAExamenes() {
   document.getElementById("nombrePacienteExamen").value = paciente.nombre || "";
   document.getElementById("especieExamen").value = paciente.especie || "";
   document.getElementById("razaExamen").value = paciente.raza || "";
+
+  mostrarExamenesRegistrados(paciente); // 👈 AÑADIR ESTA LÍNEA
 }
+
 
 
 
@@ -1411,39 +1416,7 @@ function volverAListaExamenes() {
 }
 
 
-// 🌸 Mostrar exámenes automáticamente al abrir pantallaExamenes (versión segura)
-document.addEventListener("DOMContentLoaded", () => {
-  let pantallaActual = null;
 
-  const observer = new MutationObserver(() => {
-    const pantallaExamenes = document.getElementById("pantallaExamenes");
-
-    // Detectar cambio real de pantalla y evitar recargas infinitas
-    if (
-      pantallaExamenes &&
-      pantallaExamenes.classList.contains("activa") &&
-      pantallaActual !== "pantallaExamenes"
-    ) {
-      pantallaActual = "pantallaExamenes";
-
-      const pacienteActivo = window.pacienteActivo;
-      if (pacienteActivo) {
-        console.log("📋 Cargando exámenes de:", pacienteActivo.nombre);
-        mostrarExamenesRegistrados(pacienteActivo);
-      }
-    } else if (
-      pantallaExamenes &&
-      !pantallaExamenes.classList.contains("activa") &&
-      pantallaActual === "pantallaExamenes"
-    ) {
-      // Cuando salimos de la pantalla de exámenes
-      pantallaActual = null;
-    }
-  });
-
-  // Observar cambios en el body (o contenedor principal) para detectar cambios de pantalla
-  observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ["class"] });
-});
 
 
 
@@ -1482,6 +1455,12 @@ async function fetchPacienteById(id) {
 
 // ✅ Volver robusto mostrarExamenesRegistrados
 async function mostrarExamenesRegistrados(paciente) {
+  if (window._examenesCargando) {
+    console.log("⏳ Exámenes ya se están cargando, se ignora");
+    return;
+  }
+
+  window._examenesCargando = true;
   const lista = document.getElementById("listaExamenes");
   if (!lista) {
     console.error("No existe el elemento #listaExamenes en el DOM");
@@ -1506,17 +1485,8 @@ async function mostrarExamenesRegistrados(paciente) {
     }
 
     // Obtener versión más reciente del servidor
-    let pacienteActualizado;
-    try {
-      const url = `https://petstherapy-backend.onrender.com/api/pacientes/id/${encodeURIComponent(id)}`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Fetch paciente no ok " + res.status);
-      pacienteActualizado = await res.json();
-      window.pacienteActivo = pacienteActualizado; // <-- actualizar global
-    } catch (fetchErr) {
-      console.warn("No se pudo actualizar paciente desde servidor:", fetchErr);
-      pacienteActualizado = pacienteLocal;
-    }
+    const pacienteActualizado = pacienteLocal;
+
 
     const examenes = Array.isArray(pacienteActualizado.examenes) ? pacienteActualizado.examenes : [];
 
@@ -1589,7 +1559,10 @@ async function mostrarExamenesRegistrados(paciente) {
   } catch (error) {
     console.error("Error al cargar exámenes:", error);
     lista.innerHTML = "<p style='text-align:center;color:##ff4da6;'>Error al cargar exámenes.</p>";
-  }
+  } finally {
+  window._examenesCargando = false;
+}
+
 }
 
 
