@@ -1694,8 +1694,13 @@ function verExamen(idExamen) {
       if (!archivo.base64) return;
 
       const btn = document.createElement("button");
-      btn.textContent = archivo.nombre || `Archivo ${i + 1}`;
-      btn.onclick = () => descargarBase64(archivo.base64, archivo.nombre);
+btn.type = "button"; // 👈 CLAVE ABSOLUTA
+btn.textContent = archivo.nombre || `Archivo ${i + 1}`;
+btn.addEventListener("click", (e) => {
+  e.preventDefault(); // doble seguro
+  e.stopPropagation();
+  descargarBase64(archivo.base64, archivo.nombre);
+});
 
       archivosDiv.appendChild(btn);
     });
