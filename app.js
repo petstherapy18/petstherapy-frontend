@@ -1280,6 +1280,7 @@ function salirDeExamen() {
 
 function irAExamenes() {
   const paciente = window.pacienteActivo;
+  limpiarArchivosTemporales();
   if (!paciente) {
     return mostrarBurbuja("❌ No hay paciente seleccionado");
   }
@@ -1373,7 +1374,12 @@ async function guardarExamen(archivosExistentes = null) {
 
     // limpiar
     window.archivosExamenTemp = [];
-    document.getElementById("formExamen").reset();
+    // Limpiar SOLO campos del examen
+document.getElementById("nombreExamen").value = "";
+document.getElementById("tipoExamen").value = "";
+document.getElementById("fechaExamenes").value = "";
+document.getElementById("resultadoExamen").value = "";
+
     document.getElementById("listaArchivosPantalla").innerHTML = "";
 
   } catch (err) {
@@ -1482,7 +1488,7 @@ function mostrarExamenesRegistrados(paciente) {
       <strong>${examen.nombreExamen}</strong><br>
       <small>${examen.tipoExamen || ""}</small><br>
       <button type="button" class="btn-principal">Ver examen</button>
-      <button type="button">🗑 Eliminar</button>
+      <button type="button"class="btn-principal">🗑 Eliminar</button>
     `;
 
     div.querySelector(".btn-principal").onclick = () =>
@@ -1704,6 +1710,14 @@ function descargarBase64(base64, nombre) {
 }
 
 
+function limpiarArchivosTemporales() {
+  window.archivosExamenTemp = [];
+  const input = document.getElementById("archivosExamen");
+  const lista = document.getElementById("listaArchivosPantalla");
+
+  if (input) input.value = "";
+  if (lista) lista.innerHTML = "";
+}
 
 
 
