@@ -1337,6 +1337,18 @@ function salirDeExamen() {
 // 🌸 ==== MANEJO DE EXÁMENES INDEPENDIENTE (no interfiere con sesión) ====
 
 
+function irAExamenes() {
+  const paciente = window.pacienteActivo;
+  if (!paciente) {
+    return mostrarBurbuja("❌ No hay paciente seleccionado");
+  }
+
+  mostrarPantalla("pantallaExamenes");
+
+  document.getElementById("nombrePacienteExamen").value = paciente.nombre || "";
+  document.getElementById("especieExamen").value = paciente.especie || "";
+  document.getElementById("razaExamen").value = paciente.raza || "";
+}
 
 
 
@@ -1657,14 +1669,11 @@ function verExamen(idExamen) {
   }
 
   const examen = paciente.examenes.find(e =>
-    String(e._id || e.id) === String(idExamen)
+    String(e._id) === String(idExamen)
   );
 
-  if (!examen) {
-    return mostrarBurbuja("Examen no encontrado 💔");
-  }
+  if (!examen) return mostrarBurbuja("Examen no encontrado 💔");
 
-  window._viendoExamen = true;
   window.examenActivo = examen;
 
   document.getElementById("verNombrePaciente").value = paciente.nombre || "";
@@ -1678,15 +1687,20 @@ function verExamen(idExamen) {
   const archivosDiv = document.getElementById("archivosAdjuntosVer");
   archivosDiv.innerHTML = "";
 
-  if (Array.isArray(examen.archivos)) {
+  if (!Array.isArray(examen.archivos) || examen.archivos.length === 0) {
+    archivosDiv.innerHTML = "<p>No hay archivos adjuntos</p>";
+  } else {
     examen.archivos.forEach((archivo, i) => {
       if (!archivo.base64) return;
 
       const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = archivo.nombre || `Archivo ${i + 1}`;
-      btn.onclick = () =>
-        descargarBase64(archivo.base64, archivo.nombre);
+btn.type = "button"; // 👈 CLAVE ABSOLUTA
+btn.textContent = archivo.nombre || `Archivo ${i + 1}`;
+btn.addEventListener("click", (e) => {
+  e.preventDefault(); // doble seguro
+  e.stopPropagation();
+  descargarBase64(archivo.base64, archivo.nombre);
+});
 
       archivosDiv.appendChild(btn);
     });
@@ -1694,6 +1708,7 @@ function verExamen(idExamen) {
 
   mostrarPantalla("pantallaVerExamen");
 }
+
 
 
 
@@ -1832,37 +1847,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-function descargarBase64(base64, nombreArchivo = "archivo") {
-  try {
-    const [meta, data] = base64.split(",");
-    const mime = meta.match(/:(.*?);/)[1];
-    const bin = atob(data);
-
-    const buffer = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) {
-      buffer[i] = bin.charCodeAt(i);
-    }
-
-    const blob = new Blob([buffer], { type: mime });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.style.display = "none";
-    a.href = url;
-    a.download = nombreArchivo;
-
-    document.body.appendChild(a);
-    a.click();
-
-    setTimeout(() => {
-      URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    }, 100);
-  } catch (e) {
-    console.error(e);
-    mostrarBurbuja("No se pudo descargar el archivo 💔");
+function descargarBase64(base64, nombre) {
+  if (!base64) {
+    mostrarBurbuja("❌ Archivo inválido", "error");
+    return;
   }
+
+  // 🔥 LIMPIAR prefijo data:...base64,
+  const base64Limpio = base64.includes(",")
+    ? base64.split(",")[1]
+    : base64;
+
+  const byteCharacters = atob(base64Limpio);
+  const byteNumbers = new Array(byteCharacters.length);
+
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray]);
+
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = nombre || "archivo";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+
+
+
 
 
 
