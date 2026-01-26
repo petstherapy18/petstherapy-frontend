@@ -496,22 +496,25 @@ async function cargarPacientes() {
   const contenedor = document.getElementById("listaPacientes");
   if (!contenedor) return;
 
-  // ⚡ feedback inmediato
+  // Feedback inmediato
+  contenedor.innerHTML = "<p style='text-align:center;'>Cargando pacientes...</p>";
 
   try {
     const res = await fetch(
-      `https://petstherapy-backend.onrender.com/api/pacientes/correo/${encodeURIComponent(correoActivo)}`,
-      { headers: { "Authorization": `Bearer ${token}` } }
+      `https://petstherapy-backend.onrender.com/api/pacientes/correo/${encodeURIComponent(correoActivo)}/lista`,
+      {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      }
     );
 
     if (!res.ok) throw new Error(res.status);
 
     const pacientes = await res.json();
-    // 🔑 guardar copia base en memoria
-window.pacientesCache = pacientes;
 
-// pintar normalmente
-renderizarPacientes(pacientes);
+    // 🔑 Guardar copia base para buscador y filtros
+    window.pacientesCache = pacientes;
 
     contenedor.innerHTML = "";
 
@@ -521,14 +524,14 @@ renderizarPacientes(pacientes);
       return;
     }
 
-    // ⚡ pintar rápido
+    // ⚡ Pintado rápido
     requestAnimationFrame(() => {
       pacientes.forEach(p => {
         const btn = document.createElement("button");
         btn.className = "btn-paciente";
         btn.textContent = p.nombre;
 
-        // 🔑 USAR EL PACIENTE YA RECIBIDO
+        // Abrir perfil con el paciente ligero
         btn.onclick = () => abrirPerfilPaciente(p);
 
         contenedor.appendChild(btn);
@@ -538,8 +541,10 @@ renderizarPacientes(pacientes);
   } catch (err) {
     console.error(err);
     mostrarBurbuja("❌ Error al cargar pacientes", "error");
+    contenedor.innerHTML = "";
   }
 }
+
 
 
 
@@ -1144,41 +1149,36 @@ const pantallaPropietario = document.getElementById("pantallaPropietario");
 window.cargarPropietario = async (pacienteActivo = window.pacienteActivo) => {
   if (!pacienteActivo || !pacienteActivo._id) return;
 
-  // 1️⃣ Mostrar de inmediato lo que haya guardado en memoria
-  const p = pacienteActivo.propietario || {};
-  nombreInput.value = p.nombre || "";
-  direccionInput.value = p.direccion || "";
-  barrioInput.value = p.barrio || "";
-  localidadInput.value = p.localidad || "";
-  telefonoInput.value = p.telefono || "";
-  correoInput.value = p.correo || "";
+  const cargarEnInputs = (prop) => {
+    if (!nombreInput.value) nombreInput.value = prop.nombre || "";
+    if (!direccionInput.value) direccionInput.value = prop.direccion || "";
+    if (!barrioInput.value) barrioInput.value = prop.barrio || "";
+    if (!localidadInput.value) localidadInput.value = prop.localidad || "";
+    if (!telefonoInput.value) telefonoInput.value = prop.telefono || "";
+    if (!correoInput.value) correoInput.value = prop.correo || "";
+  };
 
-  // 2️⃣ Actualizar desde el backend en segundo plano
+  // 1️⃣ Pintar lo que haya en memoria
+  cargarEnInputs(pacienteActivo.propietario || {});
+
+  // 2️⃣ Refrescar desde backend SIN pisar
   try {
-const res = await fetch(
-  `https://petstherapy-backend.onrender.com/api/pacientes/id/${pacienteActivo._id}`,
-  {
-    headers: getAuthHeaders()
-  }
-);
+    const res = await fetch(
+      `https://petstherapy-backend.onrender.com/api/pacientes/id/${pacienteActivo._id}`,
+      { headers: getAuthHeaders() }
+    );
 
-    if (!res.ok) throw new Error("Error al refrescar datos desde servidor");
+    if (!res.ok) throw new Error("Error refrescando propietario");
 
-    pacienteActivo = await res.json();
-    // Guardar en memoria global
-    window.pacienteActivo = pacienteActivo;
+    const pacienteActualizado = await res.json();
+    window.pacienteActivo = pacienteActualizado;
 
-    const p2 = pacienteActivo.propietario || {};
-    nombreInput.value = p2.nombre || "";
-    direccionInput.value = p2.direccion || "";
-    barrioInput.value = p2.barrio || "";
-    localidadInput.value = p2.localidad || "";
-    telefonoInput.value = p2.telefono || "";
-    correoInput.value = p2.correo || "";
+    cargarEnInputs(pacienteActualizado.propietario || {});
   } catch (err) {
     console.error("Error refrescando propietario:", err);
   }
 };
+
 
 
 
@@ -1203,17 +1203,18 @@ async function guardarPropietario() {
     return;
   }
 
-  try {
-    const propietario = {
-      nombre: nombreInput.value.trim(),
-      direccion: direccionInput.value.trim(),
-      barrio: barrioInput.value.trim(),
-      localidad: localidadInput.value.trim(),
-      telefono: telefonoInput.value.trim(),
-      correo: correoInput.value.trim(),
-    };
+  const previo = pacienteActivo.propietario || {};
 
-    // --- Enviar al backend ---
+  const propietario = {
+    nombre: nombreInput.value.trim() || previo.nombre || "",
+    direccion: direccionInput.value.trim() || previo.direccion || "",
+    barrio: barrioInput.value.trim() || previo.barrio || "",
+    localidad: localidadInput.value.trim() || previo.localidad || "",
+    telefono: telefonoInput.value.trim() || previo.telefono || "",
+    correo: correoInput.value.trim() || previo.correo || "",
+  };
+
+  try {
     const res = await fetch(
       `https://petstherapy-backend.onrender.com/api/pacientes/${pacienteActivo._id}/propietario`,
       {
@@ -1228,16 +1229,16 @@ async function guardarPropietario() {
       throw new Error(errData.message || "Error al guardar propietario");
     }
 
-    // --- Actualizar paciente en memoria global ---
-    pacienteActivo = await res.json();
-    window.pacienteActivo = pacienteActivo;
+    const actualizado = await res.json();
+    window.pacienteActivo = actualizado;
 
     mostrarBurbuja("💖 Propietario guardado correctamente");
   } catch (err) {
     console.error("Error guardando propietario:", err);
-    mostrarBurbuja(`❌ No se pudo guardar propietario: ${err.message}`);
+    mostrarBurbuja(`❌ No se pudo guardar propietario`);
   }
 }
+
 
 
 
