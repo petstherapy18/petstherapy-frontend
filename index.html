@@ -273,19 +273,23 @@
     
 <!-- 🔍 BUSCADOR Y FILTROS -->
 <div class="filtros-pacientes">
-  <input 
-    type="text" 
-    id="buscadorPacientes"
-    placeholder="Buscar paciente por nombre…"
-  >
+  <div class="buscador-box">
+    <span class="icono">🔍</span>
+    <input
+      type="text"
+      id="buscadorPacientes"
+      placeholder="Buscar paciente por nombre..."
+    >
+  </div>
 
-  <select id="ordenPacientes">
-    <option value="nombre_asc">Nombre A–Z</option>
-    <option value="nombre_desc">Nombre Z–A</option>
-    <option value="recientes">Más recientes</option>
+  <select id="ordenPacientes" class="select-orden">
     <option value="antiguos">Más antiguos</option>
+    <option value="recientes">Más recientes</option>
+    <option value="nombre_asc">A – Z</option>
+    <option value="nombre_desc">Z – A</option>
   </select>
 </div>
+
 
     <div id="listaPacientes" class="lista-pacientes">
       

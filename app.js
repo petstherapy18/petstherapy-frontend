@@ -17,6 +17,8 @@ let fotoBase64 = "";
 window._examenesCargando = false;
 
 
+window.pacientesCache = [];
+
 function volver() {
   window.history.back();
 }
@@ -505,6 +507,12 @@ async function cargarPacientes() {
     if (!res.ok) throw new Error(res.status);
 
     const pacientes = await res.json();
+    // 🔑 guardar copia base en memoria
+window.pacientesCache = pacientes;
+
+// pintar normalmente
+renderizarPacientes(pacientes);
+
     contenedor.innerHTML = "";
 
     if (!Array.isArray(pacientes) || pacientes.length === 0) {
@@ -573,6 +581,35 @@ window.addEventListener("DOMContentLoaded", () => {
   window.pacienteActivo = null;
 });
 
+function renderizarPacientes(lista) {
+  const contenedor = document.getElementById("listaPacientes");
+  if (!contenedor) return;
+
+  contenedor.innerHTML = "";
+
+  if (lista.length === 0) {
+    contenedor.innerHTML =
+      "<p style='text-align:center;color:#ff4da6;'>No hay pacientes</p>";
+    return;
+  }
+
+  lista.forEach(p => {
+    const btn = document.createElement("button");
+    btn.className = "btn-paciente";
+    btn.textContent = p.nombre;
+
+    btn.onclick = () => {
+      abrirPerfilPaciente({
+        _id: p._id,
+        nombre: p.nombre,
+        especie: p.especie,
+        raza: p.raza
+      });
+    };
+
+    contenedor.appendChild(btn);
+  });
+}
 
 
 
@@ -3893,4 +3930,46 @@ function aplicarFiltrosPacientes() {
 }
 
 
-window.pacientesCache = [];
+
+const buscador = document.getElementById("buscadorPacientes");
+
+if (buscador) {
+  buscador.addEventListener("input", () => {
+    const texto = buscador.value.toLowerCase();
+
+    const filtrados = window.pacientesCache.filter(p =>
+      p.nombre.toLowerCase().includes(texto)
+    );
+
+    renderizarPacientes(filtrados);
+  });
+}
+
+
+const ordenSelect = document.getElementById("ordenPacientes");
+
+if (ordenSelect) {
+  ordenSelect.addEventListener("change", () => {
+    let lista = [...window.pacientesCache];
+
+    switch (ordenSelect.value) {
+      case "nombre_asc":
+        lista.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        break;
+
+      case "nombre_desc":
+        lista.sort((a, b) => b.nombre.localeCompare(a.nombre));
+        break;
+
+      case "recientes":
+        lista.reverse(); // asumiendo que llegan en orden de creación
+        break;
+
+      case "antiguos":
+        // sin cambios
+        break;
+    }
+
+    renderizarPacientes(lista);
+  });
+}

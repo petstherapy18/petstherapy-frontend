@@ -1664,6 +1664,56 @@ resize: none;
   cursor: pointer;
 }
 
+/* 🌸 Contenedor filtros */
+.filtros-pacientes {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  align-items: center;
+}
+
+/* 🔍 Buscador */
+.buscador-box {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1.5px solid #ff9acb;
+  border-radius: 20px;
+  padding: 6px 12px;
+  flex: 1;
+  box-shadow: 0 3px 6px rgba(255, 154, 203, 0.15);
+}
+
+.buscador-box .icono {
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+.buscador-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+}
+
+/* 🎛️ Select bonito */
+.select-orden {
+  border-radius: 20px;
+  border: 1.5px solid #ff9acb;
+  padding: 6px 12px;
+  font-size: 14px;
+  background-color: #fff;
+  color: #ff4da6;
+  box-shadow: 0 3px 6px rgba(255, 154, 203, 0.15);
+  cursor: pointer;
+}
+
+/* Quitar borde azul feo en Android */
+.select-orden:focus {
+  outline: none;
+  border-color: #ff4da6;
+}
+
 
 #pantallaVerRecordatorio textarea, #pantallaVerRecordatorio input, #pantallaVerRecordatorio select{
 
