@@ -1676,12 +1676,14 @@ resize: none;
 .buscador-box {
   display: flex;
   align-items: center;
-  background: #fff;
-  border: 1.5px solid #ff9acb;
+  background: #ffbce5;
+  border: 1.5px solid #e42983;
   border-radius: 20px;
   padding: 6px 12px;
   flex: 1;
   box-shadow: 0 3px 6px rgba(255, 154, 203, 0.15);
+  max-width: 150px;
+  max-height: 30px;
 }
 
 .buscador-box .icono {
@@ -1694,18 +1696,20 @@ resize: none;
   outline: none;
   width: 100%;
   font-size: 14px;
+  background-color: #ffbce5;
 }
 
 /* 🎛️ Select bonito */
 .select-orden {
   border-radius: 20px;
-  border: 1.5px solid #ff9acb;
+  border: 1.5px solid #e42983;
   padding: 6px 12px;
   font-size: 14px;
-  background-color: #fff;
+  background-color: #ffbce5;
   color: #ff4da6;
   box-shadow: 0 3px 6px rgba(255, 154, 203, 0.15);
   cursor: pointer;
+  max-width: 80px;
 }
 
 /* Quitar borde azul feo en Android */
