@@ -496,22 +496,25 @@ async function cargarPacientes() {
   const contenedor = document.getElementById("listaPacientes");
   if (!contenedor) return;
 
-  // ⚡ feedback inmediato
+  // Feedback inmediato
+  contenedor.innerHTML = "<p style='text-align:center;'>Cargando pacientes...</p>";
 
   try {
     const res = await fetch(
-      `https://petstherapy-backend.onrender.com/api/pacientes/correo/${encodeURIComponent(correoActivo)}`,
-      { headers: { "Authorization": `Bearer ${token}` } }
+      `https://petstherapy-backend.onrender.com/api/pacientes/correo/${encodeURIComponent(correoActivo)}/lista`,
+      {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      }
     );
 
     if (!res.ok) throw new Error(res.status);
 
     const pacientes = await res.json();
-    // 🔑 guardar copia base en memoria
-window.pacientesCache = pacientes;
 
-// pintar normalmente
-renderizarPacientes(pacientes);
+    // 🔑 Guardar copia base para buscador y filtros
+    window.pacientesCache = pacientes;
 
     contenedor.innerHTML = "";
 
@@ -521,14 +524,14 @@ renderizarPacientes(pacientes);
       return;
     }
 
-    // ⚡ pintar rápido
+    // ⚡ Pintado rápido
     requestAnimationFrame(() => {
       pacientes.forEach(p => {
         const btn = document.createElement("button");
         btn.className = "btn-paciente";
         btn.textContent = p.nombre;
 
-        // 🔑 USAR EL PACIENTE YA RECIBIDO
+        // Abrir perfil con el paciente ligero
         btn.onclick = () => abrirPerfilPaciente(p);
 
         contenedor.appendChild(btn);
@@ -538,8 +541,10 @@ renderizarPacientes(pacientes);
   } catch (err) {
     console.error(err);
     mostrarBurbuja("❌ Error al cargar pacientes", "error");
+    contenedor.innerHTML = "";
   }
 }
+
 
 
 

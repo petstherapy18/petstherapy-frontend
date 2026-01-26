@@ -17,6 +17,8 @@ let fotoBase64 = "";
 window._examenesCargando = false;
 
 
+window.pacientesCache = [];
+
 function volver() {
   window.history.back();
 }
@@ -482,8 +484,7 @@ async function cargarPacientes() {
   const correoActivo = sessionStorage.getItem("usuarioActivoCorreo");
   if (!correoActivo) return;
 
-
- const token =
+  const token =
     localStorage.getItem("token") ||
     sessionStorage.getItem("token");
 
@@ -492,43 +493,46 @@ async function cargarPacientes() {
     return;
   }
 
+  const contenedor = document.getElementById("listaPacientes");
+  if (!contenedor) return;
+
+  // ⚡ feedback inmediato
+
   try {
     const res = await fetch(
-  `https://petstherapy-backend.onrender.com/api/pacientes/correo/${encodeURIComponent(correoActivo)}`
-);
-
+      `https://petstherapy-backend.onrender.com/api/pacientes/correo/${encodeURIComponent(correoActivo)}`,
+      { headers: { "Authorization": `Bearer ${token}` } }
+    );
 
     if (!res.ok) throw new Error(res.status);
 
     const pacientes = await res.json();
+    // 🔑 guardar copia base en memoria
+window.pacientesCache = pacientes;
 
-    const contenedor = document.getElementById("listaPacientes");
-    if (!contenedor) return;
+// pintar normalmente
+renderizarPacientes(pacientes);
 
     contenedor.innerHTML = "";
 
-    if (pacientes.length === 0) {
+    if (!Array.isArray(pacientes) || pacientes.length === 0) {
       contenedor.innerHTML =
         "<p style='text-align:center;color:#ff4da6;'>No hay pacientes registrados</p>";
       return;
     }
 
-    pacientes.forEach(p => {
-      const btn = document.createElement("button");
-      btn.className = "btn-paciente";
-      btn.textContent = p.nombre;
+    // ⚡ pintar rápido
+    requestAnimationFrame(() => {
+      pacientes.forEach(p => {
+        const btn = document.createElement("button");
+        btn.className = "btn-paciente";
+        btn.textContent = p.nombre;
 
-      // 🔑 AQUÍ está la diferencia importante
-      btn.onclick = () => {
-        abrirPerfilPaciente({
-          _id: p._id,
-          nombre: p.nombre,
-          especie: p.especie,
-          raza: p.raza
-        });
-      };
+        // 🔑 USAR EL PACIENTE YA RECIBIDO
+        btn.onclick = () => abrirPerfilPaciente(p);
 
-      contenedor.appendChild(btn);
+        contenedor.appendChild(btn);
+      });
     });
 
   } catch (err) {
@@ -536,6 +540,7 @@ async function cargarPacientes() {
     mostrarBurbuja("❌ Error al cargar pacientes", "error");
   }
 }
+
 
 
 function irAPacientes() {
@@ -576,6 +581,35 @@ window.addEventListener("DOMContentLoaded", () => {
   window.pacienteActivo = null;
 });
 
+function renderizarPacientes(lista) {
+  const contenedor = document.getElementById("listaPacientes");
+  if (!contenedor) return;
+
+  contenedor.innerHTML = "";
+
+  if (lista.length === 0) {
+    contenedor.innerHTML =
+      "<p style='text-align:center;color:#ff4da6;'>No hay pacientes</p>";
+    return;
+  }
+
+  lista.forEach(p => {
+    const btn = document.createElement("button");
+    btn.className = "btn-paciente";
+    btn.textContent = p.nombre;
+
+    btn.onclick = () => {
+      abrirPerfilPaciente({
+        _id: p._id,
+        nombre: p.nombre,
+        especie: p.especie,
+        raza: p.raza
+      });
+    };
+
+    contenedor.appendChild(btn);
+  });
+}
 
 
 
@@ -730,20 +764,22 @@ async function abrirPerfilPaciente(paciente) {
     return;
   }
 
+  let pacienteCompleto = paciente;
+
   try {
-    const res = await fetch(
-      `https://petstherapy-backend.onrender.com/api/pacientes/id/${paciente._id}`
-    );
-    if (!res.ok) throw new Error("Error al obtener paciente");
+    // 🔍 SOLO pedir backend si faltan datos clave
+    if (!paciente.propietario || paciente.peso === undefined) {
+      const res = await fetch(
+        `https://petstherapy-backend.onrender.com/api/pacientes/id/${paciente._id}`
+      );
+      if (!res.ok) throw new Error("Error al obtener paciente");
+      pacienteCompleto = await res.json();
+    }
 
-    const pacienteCompleto = await res.json();
-
-    // ✅ SOLO EN MEMORIA
+    // ✅ guardar en memoria
     window.pacienteActivo = pacienteCompleto;
 
-    // ----------------------------
-    // 🧾 Cargar datos del paciente
-    // ----------------------------
+    // 🧾 cargar UI
     document.getElementById("nombrePerfil").value = pacienteCompleto.nombre || "";
     document.getElementById("nombrePerfil").dataset.pacienteId = pacienteCompleto._id;
 
@@ -753,7 +789,7 @@ async function abrirPerfilPaciente(paciente) {
     document.getElementById("fechaAplicacionPF").value =
       pacienteCompleto.fechaNacimiento || "";
 
-    // Foto
+    // 📸 Foto
     const preview = document.getElementById("previewFoto");
     if (pacienteCompleto.foto?.startsWith("data:image")) {
       fotoBase64 = pacienteCompleto.foto;
@@ -770,6 +806,7 @@ async function abrirPerfilPaciente(paciente) {
     mostrarBurbuja("❌ Error al abrir paciente", "error");
   }
 }
+
 
 
 
@@ -1040,7 +1077,6 @@ async function mostrarPacientesCargo() {
     return;
   }
 
-  contenedor.innerHTML = "<p style='text-align:center;color:##ff4da6;'>Cargando pacientes...</p>";
 
   try {
     // fetch al backend con encodeURIComponent
@@ -1280,6 +1316,7 @@ function salirDeExamen() {
 
 function irAExamenes() {
   const paciente = window.pacienteActivo;
+  limpiarArchivosTemporales();
   if (!paciente) {
     return mostrarBurbuja("❌ No hay paciente seleccionado");
   }
@@ -1340,52 +1377,69 @@ document.addEventListener("DOMContentLoaded", () => {
 /* 🌸 ---- EXÁMENES ---- */
 
 async function guardarExamen(archivosExistentes = null) {
-  const pacienteActivo = window.pacienteActivo;
-  if (!pacienteActivo) return mostrarBurbuja("No hay paciente seleccionado.");
+  const paciente = window.pacienteActivo;
+  if (!paciente) return mostrarBurbuja("No hay paciente seleccionado");
 
   const nombreExamen = document.getElementById("nombreExamen").value.trim();
   const tipoExamen = document.getElementById("tipoExamen").value.trim();
-  const fecha = document.getElementById("fechaExamenes").value.trim();
+  const fecha = document.getElementById("fechaExamenes").value;
   const resultado = document.getElementById("resultadoExamen").value.trim();
 
-  // Usar los archivos que vienen del botón o los existentes en memoria
-  let archivosParaEnviar = archivosExistentes || window.archivosExamenTemp || [];
-  if (!archivosParaEnviar) archivosParaEnviar = [];
+  const archivos = archivosExistentes || window.archivosExamenTemp || [];
 
   try {
-    const res = await fetch(`${API_PACIENTES}/${pacienteActivo._id}/examenes`, {
+    const res = await fetch(`${API_PACIENTES}/${paciente._id}/examenes`, {
       method: "POST",
       headers: getAuthHeaders(),
-      body: JSON.stringify({ nombreExamen, tipoExamen, fecha, resultado, archivos: archivosParaEnviar })
+      body: JSON.stringify({
+        nombreExamen,
+        tipoExamen,
+        fecha,
+        resultado,
+        archivos
+      })
     });
 
     const data = await res.json();
-    if (res.ok) {
-      mostrarBurbuja("💖 Examen guardado exitosamente");
-      window.archivosExamenTemp = [];
+    if (!res.ok) throw new Error(data.message || "Error al guardar");
 
-      const inputArchivo = document.getElementById("archivosExamen");
-const listaArchivosPantalla = document.getElementById("listaArchivosPantalla");
+    mostrarBurbuja("💖 Examen guardado correctamente");
 
-if (inputArchivo) inputArchivo.value = "";
-if (listaArchivosPantalla) listaArchivosPantalla.innerHTML = "";
+    // 🔄 RECARGAR SOLO EXÁMENES (ID REAL)
+    await cargarExamenes(paciente._id);
 
-      // Actualizar paciente en memoria
-      const pacienteActualizado = await fetchPacienteById(pacienteActivo._id).catch(() => pacienteActivo);
-      window.pacienteActivo = pacienteActualizado;
+    // limpiar
+    window.archivosExamenTemp = [];
+    // Limpiar SOLO campos del examen
+document.getElementById("nombreExamen").value = "";
+document.getElementById("tipoExamen").value = "";
+document.getElementById("fechaExamenes").value = "";
+document.getElementById("resultadoExamen").value = "";
 
-      mostrarExamenesRegistrados(pacienteActualizado);
-      document.getElementById("formExamen").reset();
-    } else {
-      mostrarBurbuja("❌ Error al guardar examen: " + (data.message || res.status));
-    }
-  } catch (error) {
-    console.error("Error guardando examen:", error);
-    mostrarBurbuja("Ocurrió un error al guardar el examen.");
+// 🧹 limpiar archivos temporales
+limpiarArchivosTemporales();
+
+    document.getElementById("listaArchivosPantalla").innerHTML = "";
+
+  } catch (err) {
+    console.error(err);
+    mostrarBurbuja("❌ No se pudo guardar el examen");
   }
 }
 
 
+
+async function cargarExamenes(pacienteId) {
+  const res = await fetch(
+    `${API_PACIENTES}/${pacienteId}/examenes`,
+    { headers: getAuthHeaders() }
+  );
+
+  const examenes = await res.json();
+
+  window.pacienteActivo.examenes = examenes;
+  mostrarExamenesRegistrados(window.pacienteActivo);
+}
 
 
 
@@ -1454,132 +1508,59 @@ async function fetchPacienteById(id) {
 }
 
 // ✅ Volver robusto mostrarExamenesRegistrados
-async function mostrarExamenesRegistrados(paciente) {
-  if (window._examenesCargando) {
-    console.log("⏳ Exámenes ya se están cargando, se ignora");
-    return;
-  }
-
-  window._examenesCargando = true;
+function mostrarExamenesRegistrados(paciente) {
   const lista = document.getElementById("listaExamenes");
-  if (!lista) {
-    console.error("No existe el elemento #listaExamenes en el DOM");
+  lista.innerHTML = "";
+
+  const examenes = paciente.examenes || [];
+
+  if (!examenes.length) {
+    lista.innerHTML = "<p style='text-align:center;color:#ff4da6;'>No hay exámenes registrados</p>";
     return;
   }
-  lista.innerHTML = "<p style='text-align:center;color:#ff4da6;'>Cargando exámenes...</p>";
 
-  try {
-    // Usar paciente pasado como argumento o el global window.pacienteActivo
-    let pacienteLocal = paciente || window.pacienteActivo;
+  examenes.forEach(examen => {
+    const div = document.createElement("div");
+    div.classList.add("examen-card");
 
-    if (!pacienteLocal) {
-      lista.innerHTML = "<p style='text-align:center;color:##ff4da6;'>No hay paciente seleccionado.</p>";
-      return;
-    }
+    div.innerHTML = `
+      <strong>${examen.nombreExamen}</strong><br>
+      <small>${examen.tipoExamen || ""}</small><br>
+      <button type="button" class="btn-principal">Ver examen</button>
+      <button type="button"class="btn-principal">🗑 Eliminar</button>
+    `;
 
-    const id = pacienteLocal._id || pacienteLocal.id || pacienteLocal;
-    if (!id) {
-      console.warn("Paciente sin id:", pacienteLocal);
-      lista.innerHTML = "<p style='text-align:center;color:##ff4da6;'>Paciente inválido. No se puede cargar exámenes.</p>";
-      return;
-    }
+    div.querySelector(".btn-principal").onclick = () =>
+      verExamen(examen._id);
 
-    // Obtener versión más reciente del servidor
-    const pacienteActualizado = pacienteLocal;
+    div.querySelector("button:last-child").onclick = () =>
+      eliminarExamen(examen._id);
 
-
-    const examenes = Array.isArray(pacienteActualizado.examenes) ? pacienteActualizado.examenes : [];
-
-    if (!examenes.length) {
-      lista.innerHTML = "<p style='text-align:center;color:##ff4da6;'>No hay exámenes registrados.</p>";
-      return;
-    }
-
-    lista.innerHTML = "";
-
-    examenes.forEach((examen) => {
-      console.log("🩺 Examen detectado en el sistema:", examen);
-
-      const examenId =
-        examen._id?.toString?.() ||
-        examen.id?.toString?.() ||
-        examen.examenId?.toString?.() ||
-        examen.uuid?.toString?.() ||
-        examen.codigo?.toString?.() ||
-        "";
-
-      if (!examenId) {
-        console.warn("Examen sin ID, se omite", examen);
-        return;
-      }
-
-      const div = document.createElement("div");
-      div.classList.add("examen-card");
-
-      const titulo = document.createElement("strong");
-      titulo.textContent = examen.nombreExamen || "Sin nombre";
-
-      const tipo = document.createElement("small");
-      tipo.textContent = examen.tipoExamen || "";
-
-      const btnVer = document.createElement("button");
-      btnVer.type = "button";
-      btnVer.textContent = "Ver examen";
-      btnVer.dataset.examenId = examenId;
-      btnVer.addEventListener("click", (e) => {
-        e.preventDefault();
-        console.log("👆 Clic en examen ID:", examenId);
-        verExamen(examenId);
-      });
-
-      const btnEliminar = document.createElement("button");
-      btnEliminar.type = "button";
-      btnEliminar.textContent = "🗑 Eliminar";
-      btnEliminar.classList.add("btn-eliminar-examen");
-      btnEliminar.addEventListener("click", (e) => {
-        e.preventDefault();
-        eliminarExamen(examen._id);
-      });
-
-      div.appendChild(titulo);
-      div.appendChild(document.createElement("br"));
-      div.appendChild(tipo);
-      div.appendChild(document.createElement("br"));
-      div.appendChild(btnVer);
-      div.appendChild(btnEliminar);
-
-   
-
-      lista.appendChild(div);
-    });
-
-    window.examenesCargados = examenes;
-    console.log("💾 Exámenes guardados en memoria:", window.examenesCargados);
-
-  } catch (error) {
-    console.error("Error al cargar exámenes:", error);
-    lista.innerHTML = "<p style='text-align:center;color:##ff4da6;'>Error al cargar exámenes.</p>";
-  } finally {
-  window._examenesCargando = false;
+    lista.appendChild(div);
+  });
 }
 
-}
+
 
 
 // Reemplazo robusto de verExamen
 function verExamen(idExamen) {
   const paciente = window.pacienteActivo;
-  if (!paciente || !Array.isArray(paciente.examenes)) {
-    return mostrarBurbuja("Paciente o exámenes no disponibles 💔");
+  if (!paciente || !paciente.examenes) {
+    return mostrarBurbuja("Paciente no disponible");
   }
 
-  const examen = paciente.examenes.find(e =>
-    String(e._id) === String(idExamen)
+  const examen = paciente.examenes.find(
+    e => String(e._id) === String(idExamen)
   );
 
-  if (!examen) return mostrarBurbuja("Examen no encontrado 💔");
+  if (!examen) {
+    console.warn("ID buscado:", idExamen);
+    console.warn("Exámenes:", paciente.examenes);
+    return mostrarBurbuja("❌ Examen no encontrado");
+  }
 
-  window.examenActivo = examen;
+  window._viendoExamen = true;
 
   document.getElementById("verNombrePaciente").value = paciente.nombre || "";
   document.getElementById("verEspecie").value = paciente.especie || "";
@@ -1589,30 +1570,24 @@ function verExamen(idExamen) {
   document.getElementById("verFechaExamen").value = examen.fecha || "";
   document.getElementById("verResultado").value = examen.resultado || "";
 
-  const archivosDiv = document.getElementById("archivosAdjuntosVer");
-  archivosDiv.innerHTML = "";
+  const cont = document.getElementById("archivosAdjuntosVer");
+  cont.innerHTML = "";
 
-  if (!Array.isArray(examen.archivos) || examen.archivos.length === 0) {
-    archivosDiv.innerHTML = "<p>No hay archivos adjuntos</p>";
+  if (!examen.archivos?.length) {
+    cont.innerHTML = "<p>No hay archivos adjuntos</p>";
   } else {
-    examen.archivos.forEach((archivo, i) => {
-      if (!archivo.base64) return;
-
+    examen.archivos.forEach(a => {
       const btn = document.createElement("button");
-btn.type = "button"; // 👈 CLAVE ABSOLUTA
-btn.textContent = archivo.nombre || `Archivo ${i + 1}`;
-btn.addEventListener("click", (e) => {
-  e.preventDefault(); // doble seguro
-  e.stopPropagation();
-  descargarBase64(archivo.base64, archivo.nombre);
-});
-
-      archivosDiv.appendChild(btn);
+      btn.type = "button";
+      btn.textContent = a.nombre;
+      btn.onclick = () => descargarBase64(a.base64, a.nombre);
+      cont.appendChild(btn);
     });
   }
 
   mostrarPantalla("pantallaVerExamen");
 }
+
 
 
 
@@ -1640,43 +1615,31 @@ archivosDiv.classList.add("archivos-examen");
 
 // Función para eliminar un examen
 async function eliminarExamen(idExamen) {
-  // Obtener paciente activo de la variable global
   const paciente = window.pacienteActivo;
-  if (!paciente || !paciente._id) {
-    return mostrarBurbuja("No se puede eliminar: paciente no encontrado 💔", "error");
-  }
+  if (!paciente) return;
 
-  // Confirmación del usuario
-  const confirmar = confirm("¿Seguro que deseas eliminar este examen?");
-  if (!confirmar) return;
+  if (!confirm("¿Eliminar este examen?")) return;
 
   try {
-    // Llamada al backend para eliminar examen
-    const respuesta = await fetch(
+    const res = await fetch(
       `${API_PACIENTES}/${paciente._id}/examenes/${idExamen}`,
-      { method: "DELETE" }
+      { method: "DELETE", headers: getAuthHeaders() }
     );
 
-    const data = await respuesta.json();
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
 
-    if (!respuesta.ok) {
-      console.error("Error al eliminar examen:", data.message);
-      return mostrarBurbuja(data.message || "Ocurrió un error al eliminar el examen 💔", "error");
-    }
+    mostrarBurbuja("🗑 Examen eliminado");
 
-    // Éxito
-    mostrarBurbuja("Examen eliminado correctamente ❤️", "exito");
+    // 🔄 recargar desde backend
+    await cargarExamenes(paciente._id);
 
-    // 🔄 Recargar los exámenes desde la base de datos
-    const pacienteActualizado = await fetchPacienteById(paciente._id);
-    window.pacienteActivo = pacienteActualizado; // actualizar paciente activo
-    mostrarExamenesRegistrados(pacienteActualizado);
-
-  } catch (error) {
-    console.error("Error de red al eliminar examen:", error);
-    mostrarBurbuja("No se pudo eliminar. Verifica tu conexión 🕸️", "error");
+  } catch (err) {
+    console.error(err);
+    mostrarBurbuja("❌ No se pudo eliminar");
   }
 }
+
 
 
 
@@ -1786,6 +1749,14 @@ function descargarBase64(base64, nombre) {
 }
 
 
+function limpiarArchivosTemporales() {
+  window.archivosExamenTemp = [];
+  const input = document.getElementById("archivosExamen");
+  const lista = document.getElementById("listaArchivosPantalla");
+
+  if (input) input.value = "";
+  if (lista) lista.innerHTML = "";
+}
 
 
 
@@ -3926,3 +3897,79 @@ razaInput.addEventListener("input", () => {
       sugerencias.appendChild(div);
     });
 });
+
+
+function aplicarFiltrosPacientes() {
+  const texto = document.getElementById("buscadorPacientes").value.toLowerCase();
+  const orden = document.getElementById("ordenPacientes").value;
+
+  let lista = [...window.pacientesCache];
+
+  if (texto) {
+    lista = lista.filter(p =>
+      p.nombre.toLowerCase().includes(texto)
+    );
+  }
+
+  switch (orden) {
+    case "az":
+      lista.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      break;
+    case "za":
+      lista.sort((a, b) => b.nombre.localeCompare(a.nombre));
+      break;
+    case "recientes":
+      lista.reverse();
+      break;
+    case "antiguos":
+      // ya viene así
+      break;
+  }
+
+  pintarPacientes(lista);
+}
+
+
+
+const buscador = document.getElementById("buscadorPacientes");
+
+if (buscador) {
+  buscador.addEventListener("input", () => {
+    const texto = buscador.value.toLowerCase();
+
+    const filtrados = window.pacientesCache.filter(p =>
+      p.nombre.toLowerCase().includes(texto)
+    );
+
+    renderizarPacientes(filtrados);
+  });
+}
+
+
+const ordenSelect = document.getElementById("ordenPacientes");
+
+if (ordenSelect) {
+  ordenSelect.addEventListener("change", () => {
+    let lista = [...window.pacientesCache];
+
+    switch (ordenSelect.value) {
+      case "nombre_asc":
+        lista.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        break;
+
+      case "nombre_desc":
+        lista.sort((a, b) => b.nombre.localeCompare(a.nombre));
+        break;
+
+      case "recientes":
+        lista.reverse(); // asumiendo que llegan en orden de creación
+        break;
+
+      case "antiguos":
+        // sin cambios
+        break;
+    }
+
+    renderizarPacientes(lista);
+  });
+}
