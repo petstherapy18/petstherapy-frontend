@@ -270,6 +270,23 @@
     <!-- Lista de pacientes -->
     <h3 class="pt-subtitle">Pacientes</h3>
 
+    
+<!-- 🔍 BUSCADOR Y FILTROS -->
+<div class="filtros-pacientes">
+  <input 
+    type="text" 
+    id="buscadorPacientes"
+    placeholder="Buscar paciente por nombre…"
+  >
+
+  <select id="ordenPacientes">
+    <option value="nombre_asc">Nombre A–Z</option>
+    <option value="nombre_desc">Nombre Z–A</option>
+    <option value="recientes">Más recientes</option>
+    <option value="antiguos">Más antiguos</option>
+  </select>
+</div>
+
     <div id="listaPacientes" class="lista-pacientes">
       
     </div>

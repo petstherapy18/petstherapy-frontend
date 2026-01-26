@@ -495,7 +495,6 @@ async function cargarPacientes() {
   if (!contenedor) return;
 
   // ⚡ feedback inmediato
-  contenedor.innerHTML = "<p style='text-align:center;'>Cargando pacientes...</p>";
 
   try {
     const res = await fetch(
@@ -1041,7 +1040,6 @@ async function mostrarPacientesCargo() {
     return;
   }
 
-  contenedor.innerHTML = "<p style='text-align:center;color:##ff4da6;'>Cargando pacientes...</p>";
 
   try {
     // fetch al backend con encodeURIComponent
@@ -3862,3 +3860,37 @@ razaInput.addEventListener("input", () => {
       sugerencias.appendChild(div);
     });
 });
+
+
+function aplicarFiltrosPacientes() {
+  const texto = document.getElementById("buscadorPacientes").value.toLowerCase();
+  const orden = document.getElementById("ordenPacientes").value;
+
+  let lista = [...window.pacientesCache];
+
+  if (texto) {
+    lista = lista.filter(p =>
+      p.nombre.toLowerCase().includes(texto)
+    );
+  }
+
+  switch (orden) {
+    case "az":
+      lista.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      break;
+    case "za":
+      lista.sort((a, b) => b.nombre.localeCompare(a.nombre));
+      break;
+    case "recientes":
+      lista.reverse();
+      break;
+    case "antiguos":
+      // ya viene así
+      break;
+  }
+
+  pintarPacientes(lista);
+}
+
+
+window.pacientesCache = [];
