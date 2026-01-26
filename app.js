@@ -482,8 +482,7 @@ async function cargarPacientes() {
   const correoActivo = sessionStorage.getItem("usuarioActivoCorreo");
   if (!correoActivo) return;
 
-
- const token =
+  const token =
     localStorage.getItem("token") ||
     sessionStorage.getItem("token");
 
@@ -492,43 +491,41 @@ async function cargarPacientes() {
     return;
   }
 
+  const contenedor = document.getElementById("listaPacientes");
+  if (!contenedor) return;
+
+  // ⚡ feedback inmediato
+  contenedor.innerHTML = "<p style='text-align:center;'>Cargando pacientes...</p>";
+
   try {
     const res = await fetch(
-  `https://petstherapy-backend.onrender.com/api/pacientes/correo/${encodeURIComponent(correoActivo)}`
-);
-
+      `https://petstherapy-backend.onrender.com/api/pacientes/correo/${encodeURIComponent(correoActivo)}`,
+      { headers: { "Authorization": `Bearer ${token}` } }
+    );
 
     if (!res.ok) throw new Error(res.status);
 
     const pacientes = await res.json();
-
-    const contenedor = document.getElementById("listaPacientes");
-    if (!contenedor) return;
-
     contenedor.innerHTML = "";
 
-    if (pacientes.length === 0) {
+    if (!Array.isArray(pacientes) || pacientes.length === 0) {
       contenedor.innerHTML =
         "<p style='text-align:center;color:#ff4da6;'>No hay pacientes registrados</p>";
       return;
     }
 
-    pacientes.forEach(p => {
-      const btn = document.createElement("button");
-      btn.className = "btn-paciente";
-      btn.textContent = p.nombre;
+    // ⚡ pintar rápido
+    requestAnimationFrame(() => {
+      pacientes.forEach(p => {
+        const btn = document.createElement("button");
+        btn.className = "btn-paciente";
+        btn.textContent = p.nombre;
 
-      // 🔑 AQUÍ está la diferencia importante
-      btn.onclick = () => {
-        abrirPerfilPaciente({
-          _id: p._id,
-          nombre: p.nombre,
-          especie: p.especie,
-          raza: p.raza
-        });
-      };
+        // 🔑 USAR EL PACIENTE YA RECIBIDO
+        btn.onclick = () => abrirPerfilPaciente(p);
 
-      contenedor.appendChild(btn);
+        contenedor.appendChild(btn);
+      });
     });
 
   } catch (err) {
@@ -536,6 +533,7 @@ async function cargarPacientes() {
     mostrarBurbuja("❌ Error al cargar pacientes", "error");
   }
 }
+
 
 
 function irAPacientes() {
@@ -730,20 +728,22 @@ async function abrirPerfilPaciente(paciente) {
     return;
   }
 
+  let pacienteCompleto = paciente;
+
   try {
-    const res = await fetch(
-      `https://petstherapy-backend.onrender.com/api/pacientes/id/${paciente._id}`
-    );
-    if (!res.ok) throw new Error("Error al obtener paciente");
+    // 🔍 SOLO pedir backend si faltan datos clave
+    if (!paciente.propietario || paciente.peso === undefined) {
+      const res = await fetch(
+        `https://petstherapy-backend.onrender.com/api/pacientes/id/${paciente._id}`
+      );
+      if (!res.ok) throw new Error("Error al obtener paciente");
+      pacienteCompleto = await res.json();
+    }
 
-    const pacienteCompleto = await res.json();
-
-    // ✅ SOLO EN MEMORIA
+    // ✅ guardar en memoria
     window.pacienteActivo = pacienteCompleto;
 
-    // ----------------------------
-    // 🧾 Cargar datos del paciente
-    // ----------------------------
+    // 🧾 cargar UI
     document.getElementById("nombrePerfil").value = pacienteCompleto.nombre || "";
     document.getElementById("nombrePerfil").dataset.pacienteId = pacienteCompleto._id;
 
@@ -753,7 +753,7 @@ async function abrirPerfilPaciente(paciente) {
     document.getElementById("fechaAplicacionPF").value =
       pacienteCompleto.fechaNacimiento || "";
 
-    // Foto
+    // 📸 Foto
     const preview = document.getElementById("previewFoto");
     if (pacienteCompleto.foto?.startsWith("data:image")) {
       fotoBase64 = pacienteCompleto.foto;
@@ -770,6 +770,7 @@ async function abrirPerfilPaciente(paciente) {
     mostrarBurbuja("❌ Error al abrir paciente", "error");
   }
 }
+
 
 
 
