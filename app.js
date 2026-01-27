@@ -867,50 +867,61 @@ document.getElementById("btnQuitarFoto").addEventListener("click", async () => {
 
 
 // 🌸 Eliminar paciente desde perfil 
-btnEliminar.addEventListener("click", async () => {
-  const nombreInput = document.getElementById("nombrePerfil");
-  const idPaciente = nombreInput?.dataset.pacienteId;
-  const nombrePaciente = nombreInput?.value || "Paciente";
+document.addEventListener("DOMContentLoaded", () => {
+  const btnEliminar = document.getElementById("btnEliminarPaciente");
 
-  if (!idPaciente) {
-    mostrarBurbuja("No se pudo identificar el paciente 💔", "error");
-    return;
-  }
+  if (!btnEliminar) return;
 
-  if (!confirm(`¿Seguro que deseas eliminar a ${nombrePaciente}?`)) return;
+  btnEliminar.addEventListener("click", async () => {
+    const nombreInput = document.getElementById("nombrePerfil");
+    const idPaciente = nombreInput?.dataset.pacienteId;
+    const nombrePaciente = nombreInput?.value || "Paciente";
 
-  // 🔑 OBTENER TOKEN AQUÍ
-  const token =
-    localStorage.getItem("token") ||
-    sessionStorage.getItem("token");
+    if (!idPaciente) {
+      mostrarBurbuja("No se pudo identificar el paciente 💔", "error");
+      return;
+    }
 
-  if (!token) {
-    mostrarBurbuja("Sesión expirada", "error");
-    return;
-  }
+    if (!confirm(`¿Seguro que deseas eliminar a ${nombrePaciente}?`)) return;
 
-  try {
-    const res = await fetch(
-      `https://petstherapy-backend.onrender.com/api/pacientes/${idPaciente}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`
+    // 🔑 OBTENER TOKEN AQUÍ (ESTE ERA EL PROBLEMA)
+    const token =
+      localStorage.getItem("token") ||
+      sessionStorage.getItem("token");
+
+    if (!token) {
+      mostrarBurbuja("Sesión expirada", "error");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `https://petstherapy-backend.onrender.com/api/pacientes/${idPaciente}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
         }
-      }
-    );
+      );
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Error al eliminar");
 
-    mostrarBurbuja(`Paciente eliminado 💔`, "exito");
-    mostrarPantalla("pantallaPacientes");
-    cargarPacientes();
+      mostrarBurbuja(`Paciente eliminado 💔`, "exito");
 
-  } catch (error) {
-    console.error(error);
-    mostrarBurbuja("Error al eliminar 🕸️", "error");
-  }
+      // limpiar paciente activo
+      window.pacienteActivo = null;
+
+      // volver a la lista
+      mostrarPantalla("pantallaPacientes");
+      cargarPacientes();
+
+    } catch (error) {
+      console.error("Error eliminando paciente:", error);
+      mostrarBurbuja("Error al eliminar 🕸️", "error");
+    }
+  });
 });
 
 
