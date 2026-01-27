@@ -1137,7 +1137,7 @@ display: block;
   align-items: center;
   justify-content: flex-start;
   min-height: 100vh;
-  padding: 20px;
+  padding: 0px;
   background-color: #ffbce5;
   text-align: center;
 }
