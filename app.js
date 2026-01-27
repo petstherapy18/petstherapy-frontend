@@ -925,14 +925,6 @@ async function guardarPerfilPaciente() {
     peso: document.getElementById("pesoPerfil").value.trim(),
     fechaNacimiento: document.getElementById("fechaAplicacionPF").value,
 
-    propietario: {
-      nombre: document.getElementById("propNombre")?.value.trim() || "",
-      direccion: document.getElementById("propDireccion")?.value.trim() || "",
-      barrio: document.getElementById("propBarrio")?.value.trim() || "",
-      localidad: document.getElementById("propLocalidad")?.value.trim() || "",
-      telefono: document.getElementById("propTelefono")?.value.trim() || "",
-      correo: document.getElementById("propCorreo")?.value.trim() || ""
-    },
 
     propietarioCorreo: correoActivo
   };
