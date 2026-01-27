@@ -497,7 +497,7 @@ async function cargarPacientes() {
   if (!contenedor) return;
 
   // Feedback inmediato
-  contenedor.innerHTML = "<p style='text-align:center;'>Cargando pacientes...</p>";
+  
 
   try {
     const res = await fetch(
