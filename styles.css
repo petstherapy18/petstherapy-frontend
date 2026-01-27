@@ -1684,7 +1684,8 @@ resize: none;
   flex: 1;
   box-shadow: 0 3px 6px rgba(255, 154, 203, 0.15);
   max-width: 150px;
-  max-height: 30px;
+  max-height: 40px;
+  margin-top: 20px;
 }
 
 .buscador-box .icono {
@@ -1711,6 +1712,7 @@ resize: none;
   box-shadow: 0 3px 6px rgba(255, 154, 203, 0.15);
   cursor: pointer;
   max-width: 80px;
+  margin-top: 20px;
 }
 
 /* Quitar borde azul feo en Android */
@@ -1821,7 +1823,7 @@ display: block;
 #pantallaPropietario .container,
 #pantallaPropietario .form-propietario {
   width: 100%;
-  max-width: 220px;
+  max-width: 250px;
   margin: 0 auto;
   align-items: center;
 }

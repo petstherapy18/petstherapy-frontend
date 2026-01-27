@@ -118,6 +118,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  max-width: 100%;
 }
 
 
@@ -1896,4 +1897,11 @@ display: block;
   flex-direction: column;
   align-items: center;
   text-align: center;
+}
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
