@@ -911,7 +911,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function guardarPerfilPaciente() {
   const paciente = window.pacienteActivo;
-
   const correoActivo = sessionStorage.getItem("usuarioActivoCorreo");
 
   if (!paciente || !paciente._id || !correoActivo) {
@@ -938,21 +937,23 @@ async function guardarPerfilPaciente() {
     propietarioCorreo: correoActivo
   };
 
-  // ✅ SOLO subir foto si hay una nueva
   if (fotoBase64) {
     datosActualizados.foto = fotoBase64;
   }
 
   const token =
-  localStorage.getItem("token") ||
-  sessionStorage.getItem("token");
+    localStorage.getItem("token") ||
+    sessionStorage.getItem("token");
 
   try {
     const res = await fetch(
       `https://petstherapy-backend.onrender.com/api/pacientes/${paciente._id}`,
       {
         method: "PUT",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify(datosActualizados)
       }
     );
@@ -960,24 +961,23 @@ async function guardarPerfilPaciente() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
 
-    // actualizar paciente en memoria
+    // 🔑 actualizar paciente en memoria
     window.pacienteActivo = data.paciente;
-
-
-    mostrarBurbuja("Perfil actualizado 💖", "exito");
 
     // limpiar estado de foto
     fotoBase64 = "";
 
-    // volver a lista
-    mostrarPantalla("pantallaPacientes");
-    cargarPacientes();
+    // ✅ feedback sin salir de la pantalla
+    mostrarBurbuja("Perfil actualizado 💖", "exito");
+
+    // ❌ YA NO CAMBIAMOS DE PANTALLA
 
   } catch (error) {
     console.error(error);
     mostrarBurbuja("Error al guardar perfil 🕸️", "error");
   }
 }
+
 
 
 

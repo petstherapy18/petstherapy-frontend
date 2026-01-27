@@ -29,7 +29,7 @@ public class MainActivity extends BridgeActivity {
         getWindow().getDecorView().setBackgroundColor(
                 android.graphics.Color.parseColor("#ffbce5"));
 
-        Toast.makeText(this, "APP INICIADA", Toast.LENGTH_SHORT).show();
+
 
         // 🔔 PERMISO NOTIFICACIONES (Android 13+)
         if (Build.VERSION.SDK_INT >= 33) {
@@ -48,7 +48,6 @@ public class MainActivity extends BridgeActivity {
 
         FirebaseMessaging.getInstance().getToken()
                 .addOnSuccessListener(token -> {
-                    Toast.makeText(this, "TOKEN GENERADO", Toast.LENGTH_SHORT).show();
                     enviarTokenAlBackend(token);
                 });
 
