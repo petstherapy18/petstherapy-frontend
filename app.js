@@ -867,45 +867,52 @@ document.getElementById("btnQuitarFoto").addEventListener("click", async () => {
 
 
 // 🌸 Eliminar paciente desde perfil 
-document.addEventListener("DOMContentLoaded", () => {
-  const btnEliminar = document.getElementById("btnEliminarPaciente");
+btnEliminar.addEventListener("click", async () => {
+  const nombreInput = document.getElementById("nombrePerfil");
+  const idPaciente = nombreInput?.dataset.pacienteId;
+  const nombrePaciente = nombreInput?.value || "Paciente";
 
-  if (btnEliminar) {
-    btnEliminar.addEventListener("click", async () => {
-      const nombreInput = document.getElementById("nombrePerfil");
-      const idPaciente = nombreInput?.dataset.pacienteId;
-      const nombrePaciente = nombreInput?.value || "Paciente";
+  if (!idPaciente) {
+    mostrarBurbuja("No se pudo identificar el paciente 💔", "error");
+    return;
+  }
 
-      if (!idPaciente) {
-        mostrarBurbuja("No se pudo identificar el paciente 💔", "error");
-        return;
+  if (!confirm(`¿Seguro que deseas eliminar a ${nombrePaciente}?`)) return;
+
+  // 🔑 OBTENER TOKEN AQUÍ
+  const token =
+    localStorage.getItem("token") ||
+    sessionStorage.getItem("token");
+
+  if (!token) {
+    mostrarBurbuja("Sesión expirada", "error");
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      `https://petstherapy-backend.onrender.com/api/pacientes/${idPaciente}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
       }
+    );
 
-      if (!confirm(`¿Seguro que deseas eliminar a ${nombrePaciente}?`)) return;
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
 
-      try {
-        const res = await fetch(
-          `https://petstherapy-backend.onrender.com/api/pacientes/${idPaciente}`,
-          { method: "DELETE",
-            headers: {
-      "Authorization": `Bearer ${token}`}
-           }
-        );
+    mostrarBurbuja(`Paciente eliminado 💔`, "exito");
+    mostrarPantalla("pantallaPacientes");
+    cargarPacientes();
 
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message);
-
-        mostrarBurbuja(`Paciente eliminado 💔`, "exito");
-        mostrarPantalla("pantallaPacientes");
-        cargarPacientes();
-
-      } catch (error) {
-        console.error(error);
-        mostrarBurbuja("Error al eliminar 🕸️", "error");
-      }
-    });
+  } catch (error) {
+    console.error(error);
+    mostrarBurbuja("Error al eliminar 🕸️", "error");
   }
 });
+
 
 
 
