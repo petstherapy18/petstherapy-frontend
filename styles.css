@@ -219,7 +219,11 @@ body {
   padding: 0;
 }
 
+h2 {
 
+  margin-bottom: 10px;
+
+}
 
 h1, h2, label, p {
   color: #ff66c4;
@@ -1315,7 +1319,7 @@ max-width: 300px
 
 #pantallaVerVacuna .container{
 
-max-width: 280px;
+max-width: 320px;
 
 }
 
@@ -1794,7 +1798,7 @@ display: block;
 
 #pantallaVerConsulta .container {
   width: 100%;
-  max-width: 220px;
+  max-width: 280px;
   margin: 0 auto;
   align-items: center;
 }
