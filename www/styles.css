@@ -393,10 +393,9 @@ button {
 }
 
 #pantallaNuevoPaciente .container{
-
-text-align: left;
-
+  text-align: center;
 }
+
 
 
 .formulario input,
@@ -414,9 +413,10 @@ text-align: left;
 
 
 #pantallaNuevoPaciente textarea, 
-#pantallaNuevoPaciente input{
+#pantallaNuevoPaciente input,
+#pantallaNuevoPaciente select {
 
-display: block;
+  display: block;
   max-width: 220px;
   padding: 12px;
   margin: 10px 0;
@@ -426,8 +426,9 @@ display: block;
   background-color: #fff;
   color: #ff66c4;
   width: 220px;
-  
+
 }
+
 
 /* Título */
 

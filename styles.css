@@ -396,6 +396,14 @@ button {
   text-align: center;
 }
 
+#pantallaNuevoPaciente label {
+  display: block;
+  text-align: left;
+  width: 100%;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #ff66c4;
+}
 
 
 .formulario input,
