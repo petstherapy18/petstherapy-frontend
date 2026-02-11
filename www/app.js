@@ -1,3 +1,4 @@
+import { Filesystem, Directory } from '@capacitor/filesystem';
 
 
 
@@ -1727,56 +1728,66 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-function descargarBase64(base64, nombre) {
+async function descargarBase64(base64, nombre) {
   if (!base64) {
     mostrarBurbuja("❌ Archivo inválido", "error");
     return;
   }
 
   try {
+
     const base64Limpio = base64.includes(",")
       ? base64.split(",")[1]
       : base64;
 
-    const byteCharacters = atob(base64Limpio);
-    const byteNumbers = new Array(byteCharacters.length);
+    // ⚡ Detectar si es app Android (Capacitor)
+    const esApp = Capacitor.isNativePlatform();
 
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
+    if (esApp) {
 
-    const byteArray = new Uint8Array(byteNumbers);
+      // Guardar archivo en Documentos
+      await Filesystem.writeFile({
+        path: nombre || "archivo",
+        data: base64Limpio,
+        directory: Directory.Documents
+      });
 
-    // ⚡ Detectar tipo MIME desde base64
-    const mimeMatch = base64.match(/data:(.*?);base64/);
-    const mimeType = mimeMatch ? mimeMatch[1] : "application/octet-stream";
+      mostrarBurbuja("✅ Archivo guardado en Documentos");
 
-    const blob = new Blob([byteArray], { type: mimeType });
-    const url = URL.createObjectURL(blob);
-
-    // 📱 Detectar si es Android / móvil
-    const esMovil = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    if (esMovil) {
-      // 👉 En móvil abrir en nueva pestaña
-      window.open(url, "_blank");
     } else {
-      // 👉 En computador descargar normal
+
+      // 👉 Navegador normal (lo que ya tenías)
+      const byteCharacters = atob(base64Limpio);
+      const byteNumbers = new Array(byteCharacters.length);
+
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+
+      const mimeMatch = base64.match(/data:(.*?);base64/);
+      const mimeType = mimeMatch ? mimeMatch[1] : "application/octet-stream";
+
+      const blob = new Blob([byteArray], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+
       const a = document.createElement("a");
       a.href = url;
       a.download = nombre || "archivo";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-    }
 
-    setTimeout(() => URL.revokeObjectURL(url), 2000);
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }
 
   } catch (error) {
     console.error(error);
-    mostrarBurbuja("❌ No se pudo descargar el archivo", "error");
+    mostrarBurbuja("❌ No se pudo guardar el archivo", "error");
   }
 }
+
 
 
 
