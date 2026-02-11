@@ -1160,13 +1160,14 @@ window.cargarPropietario = async (pacienteActivo = window.pacienteActivo) => {
   if (!pacienteActivo || !pacienteActivo._id) return;
 
   const cargarEnInputs = (prop) => {
-    if (!nombreInput.value) nombreInput.value = prop.nombre || "";
-    if (!direccionInput.value) direccionInput.value = prop.direccion || "";
-    if (!barrioInput.value) barrioInput.value = prop.barrio || "";
-    if (!localidadInput.value) localidadInput.value = prop.localidad || "";
-    if (!telefonoInput.value) telefonoInput.value = prop.telefono || "";
-    if (!correoInput.value) correoInput.value = prop.correo || "";
-  };
+  nombreInput.value = prop.nombre || "";
+  direccionInput.value = prop.direccion || "";
+  barrioInput.value = prop.barrio || "";
+  localidadInput.value = prop.localidad || "";
+  telefonoInput.value = prop.telefono || "";
+  correoInput.value = prop.correo || "";
+};
+
 
   // 1️⃣ Pintar lo que haya en memoria
   cargarEnInputs(pacienteActivo.propietario || {});
