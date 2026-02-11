@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/petstherapy18/petstherapy-frontend#readme",
   "dependencies": {
+    "@capacitor-community/file-opener": "^8.0.0",
     "@capacitor/android": "^8.0.0",
     "@capacitor/cli": "^8.0.0",
     "@capacitor/core": "^8.0.0",

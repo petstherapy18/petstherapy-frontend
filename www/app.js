@@ -1726,10 +1726,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-
 async function descargarBase64(base64, nombre) {
   if (!base64) {
-    mostrarBurbuja("❌ Archivo inválido", "error");
+    mostrarBurbuja("❌ Archivo inválido");
     return;
   }
 
@@ -1738,25 +1737,39 @@ async function descargarBase64(base64, nombre) {
       ? base64.split(",")[1]
       : base64;
 
-    // 🔍 Detectar si es app real (APK)
-    const esApp = window.Capacitor && window.Capacitor.isNativePlatform();
+    const esApp = window.Capacitor?.isNativePlatform?.();
 
-   if (esApp && window.Capacitor?.Plugins?.Filesystem) {
+    if (esApp && window.Capacitor?.Plugins?.Filesystem) {
 
-  const { Filesystem, Directory } = window.Capacitor.Plugins;
+      const { Filesystem, Directory } = window.Capacitor.Plugins;
+      const FileOpener = window.Capacitor.Plugins.FileOpener;
 
-  await Filesystem.writeFile({
-    path: nombre || "archivo.pdf",
-    data: base64Limpio,
-    directory: Directory.Documents,
-    recursive: true
-  });
+      const nombreArchivo = nombre || "archivo.pdf";
 
-  mostrarBurbuja("✅ Archivo guardado en Documentos");
-}
- else {
+      // 1️⃣ Guardar en carpeta privada de la app
+      await Filesystem.writeFile({
+        path: nombreArchivo,
+        data: base64Limpio,
+        directory: Directory.Data
+      });
 
-      // 🌐 NAVEGADOR
+      // 2️⃣ Obtener URI real
+      const fileUri = await Filesystem.getUri({
+        path: nombreArchivo,
+        directory: Directory.Data
+      });
+
+      // 3️⃣ Abrir archivo automáticamente
+      await FileOpener.open({
+        filePath: fileUri.uri,
+        contentType: "application/pdf"
+      });
+
+      mostrarBurbuja("📄 Archivo abierto");
+
+    } else {
+
+      // 👉 Navegador normal
       const byteCharacters = atob(base64Limpio);
       const byteNumbers = new Array(byteCharacters.length);
 
@@ -1783,10 +1796,11 @@ async function descargarBase64(base64, nombre) {
     }
 
   } catch (error) {
-    console.error("Error real:", error);
-    mostrarBurbuja("❌ No se pudo guardar el archivo", "error");
+    console.error(error);
+    mostrarBurbuja("❌ No se pudo abrir el archivo");
   }
 }
+
 
 
 
