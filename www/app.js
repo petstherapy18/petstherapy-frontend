@@ -870,42 +870,60 @@ document.getElementById("btnQuitarFoto").addEventListener("click", async () => {
 document.addEventListener("DOMContentLoaded", () => {
   const btnEliminar = document.getElementById("btnEliminarPaciente");
 
-  if (btnEliminar) {
-    btnEliminar.addEventListener("click", async () => {
-      const nombreInput = document.getElementById("nombrePerfil");
-      const idPaciente = nombreInput?.dataset.pacienteId;
-      const nombrePaciente = nombreInput?.value || "Paciente";
+  if (!btnEliminar) return;
 
-      if (!idPaciente) {
-        mostrarBurbuja("No se pudo identificar el paciente 💔", "error");
-        return;
-      }
+  btnEliminar.addEventListener("click", async () => {
+    const nombreInput = document.getElementById("nombrePerfil");
+    const idPaciente = nombreInput?.dataset.pacienteId;
+    const nombrePaciente = nombreInput?.value || "Paciente";
 
-      if (!confirm(`¿Seguro que deseas eliminar a ${nombrePaciente}?`)) return;
+    if (!idPaciente) {
+      mostrarBurbuja("No se pudo identificar el paciente 💔", "error");
+      return;
+    }
 
-      try {
-        const res = await fetch(
-          `https://petstherapy-backend.onrender.com/api/pacientes/${idPaciente}`,
-          { method: "DELETE",
-            headers: {
-      "Authorization": `Bearer ${token}`}
-           }
-        );
+    if (!confirm(`¿Seguro que deseas eliminar a ${nombrePaciente}?`)) return;
 
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message);
+    // 🔑 OBTENER TOKEN AQUÍ (ESTE ERA EL PROBLEMA)
+    const token =
+      localStorage.getItem("token") ||
+      sessionStorage.getItem("token");
 
-        mostrarBurbuja(`Paciente eliminado 💔`, "exito");
-        mostrarPantalla("pantallaPacientes");
-        cargarPacientes();
+    if (!token) {
+      mostrarBurbuja("Sesión expirada", "error");
+      return;
+    }
 
-      } catch (error) {
-        console.error(error);
-        mostrarBurbuja("Error al eliminar 🕸️", "error");
-      }
-    });
-  }
+    try {
+      const res = await fetch(
+        `https://petstherapy-backend.onrender.com/api/pacientes/${idPaciente}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        }
+      );
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Error al eliminar");
+
+      mostrarBurbuja(`Paciente eliminado 💔`, "exito");
+
+      // limpiar paciente activo
+      window.pacienteActivo = null;
+
+      // volver a la lista
+      mostrarPantalla("pantallaPacientes");
+      cargarPacientes();
+
+    } catch (error) {
+      console.error("Error eliminando paciente:", error);
+      mostrarBurbuja("Error al eliminar 🕸️", "error");
+    }
+  });
 });
+
 
 
 
