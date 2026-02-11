@@ -1,4 +1,3 @@
-import { Filesystem, Directory } from '@capacitor/filesystem';
 
 
 
@@ -1740,23 +1739,25 @@ async function descargarBase64(base64, nombre) {
       ? base64.split(",")[1]
       : base64;
 
-    // ⚡ Detectar si es app Android (Capacitor)
-    const esApp = Capacitor.isNativePlatform();
+    // ✅ Detectar si está corriendo dentro de Capacitor (APK)
+    const esApp = window.Capacitor?.isNativePlatform?.();
 
     if (esApp) {
 
-      // Guardar archivo en Documentos
+      // 🔥 Import dinámico correcto para Capacitor 5+
+      const { Filesystem, Directory } = await import('@capacitor/filesystem');
+
       await Filesystem.writeFile({
-        path: nombre || "archivo",
+        path: nombre || "archivo.pdf",
         data: base64Limpio,
-        directory: Directory.Documents
+        directory: Directory.Data // ⚠ Más seguro que Documents
       });
 
-      mostrarBurbuja("✅ Archivo guardado en Documentos");
+      mostrarBurbuja("✅ Archivo guardado correctamente");
 
     } else {
 
-      // 👉 Navegador normal (lo que ya tenías)
+      // 🌐 Modo navegador normal
       const byteCharacters = atob(base64Limpio);
       const byteNumbers = new Array(byteCharacters.length);
 
@@ -1783,10 +1784,12 @@ async function descargarBase64(base64, nombre) {
     }
 
   } catch (error) {
-    console.error(error);
+    console.error("Error guardando archivo:", error);
     mostrarBurbuja("❌ No se pudo guardar el archivo", "error");
   }
 }
+
+
 
 
 

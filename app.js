@@ -1734,28 +1734,31 @@ async function descargarBase64(base64, nombre) {
   }
 
   try {
-
     const base64Limpio = base64.includes(",")
       ? base64.split(",")[1]
       : base64;
 
-    // ⚡ Detectar si es app Android (Capacitor)
-    const esApp = Capacitor.isNativePlatform();
+    // 🔍 Detectar si es app real (APK)
+    const esApp = window.Capacitor && window.Capacitor.isNativePlatform();
 
-    if (esApp) {
+    if (esApp && window.Capacitor.Plugins?.Filesystem) {
 
-      // Guardar archivo en Documentos
+      const Filesystem = window.Capacitor.Plugins.Filesystem;
+      const Directory = window.Capacitor.Plugins.FilesystemDirectory 
+        || window.Capacitor.Plugins.Directory 
+        || window.Capacitor.Plugins.Filesystem?.Directory;
+
       await Filesystem.writeFile({
-        path: nombre || "archivo",
+        path: nombre || "archivo.pdf",
         data: base64Limpio,
-        directory: Directory.Documents
+        directory: "DATA" // ⚠️ string directo evita errores de enum
       });
 
-      mostrarBurbuja("✅ Archivo guardado en Documentos");
+      mostrarBurbuja("✅ Archivo guardado en la app");
 
     } else {
 
-      // 👉 Navegador normal (lo que ya tenías)
+      // 🌐 NAVEGADOR
       const byteCharacters = atob(base64Limpio);
       const byteNumbers = new Array(byteCharacters.length);
 
@@ -1782,10 +1785,13 @@ async function descargarBase64(base64, nombre) {
     }
 
   } catch (error) {
-    console.error(error);
+    console.error("Error real:", error);
     mostrarBurbuja("❌ No se pudo guardar el archivo", "error");
   }
 }
+
+
+
 
 
 
