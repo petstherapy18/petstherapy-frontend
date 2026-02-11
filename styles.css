@@ -249,7 +249,7 @@ button {
 
 /* Contenedor general */
 .pt-container {
-  max-width: 400px;
+  
   margin: auto;
   padding: 20px;
   text-align: center;
@@ -388,7 +388,7 @@ button {
 #pantallaPacientes .container {
   text-align: center;
   width: 90%;
-  max-width: 400px;
+  
   margin-top: 40px;
 }
 
@@ -425,7 +425,7 @@ button {
 #pantallaNuevoPaciente select {
 
   display: block;
-  max-width: 220px;
+  
   padding: 12px;
   margin: 10px 0;
   border: 2px solid #ff66c4;
@@ -1042,7 +1042,7 @@ button {
   border-radius: 20px;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
   width: 85%;
-  max-width: 350px;
+  
   text-align: center;
 }
 
@@ -1288,7 +1288,7 @@ textarea::placeholder {
 
 #pantallaExamenesSubidos .container{
 
-max-width: 300px
+
 
 }
 
@@ -1329,7 +1329,7 @@ max-width: 300px
 #pantallaVerVacuna input,
 #pantallaVerVacuna textarea {
   width: 100%;
-  max-width: 320px;
+  
   padding: 12px;
   margin: 10px 0;
   border: 2px solid #ff66c4;
@@ -1340,7 +1340,7 @@ max-width: 300px
 
 #pantallaVerVacuna .input-box {
   width: 100%;
-  max-width: 320px;
+  
 }
 
 #pantallaVerVacuna textarea {
@@ -1350,11 +1350,7 @@ max-width: 300px
 
 
 
-#pantallaVacunas .container{
 
-max-width: 300px
-
-}
 
 /* Contenedor que no crece más allá del espacio asignado */
 .contenedor-listaVacunas {
@@ -1465,7 +1461,7 @@ input[type="text"], input[type="date"] {
 #pantallaVerDesparasitacion textarea, #pantallaVerDesparasitacion input{
 
 display: block;
-  max-width: 220px;
+  
   padding: 12px;
   margin: 10px 0;
   border: 2px solid #ff66c4;
@@ -1509,7 +1505,7 @@ display: block;
 #pantallaVerAntipulgas textarea, #pantallaVerAntipulgas input{
 
 display: block;
-  max-width: 220px;
+  
   padding: 12px;
   margin: 10px 0;
   border: 2px solid #ff66c4;
@@ -1556,7 +1552,7 @@ display: block;
 #pantallaVerTratamiento textarea, #pantallaVerTratamiento input{
 
 display: block;
-  max-width: 220px;
+  
   padding: 12px;
   margin: 10px 0;
   border: 2px solid #ff66c4;
@@ -1604,7 +1600,7 @@ display: block;
 #pantallaVerConsulta textarea, #pantallaVerConsulta input{
 
 display: block;
-  max-width: 220px;
+  
   padding: 12px;
   margin: 10px 0;
   border: 2px solid #ff66c4;
@@ -1631,7 +1627,7 @@ resize: none;
 
 #pantallaConsultas .container {
   width: 100%;
-  max-width: 220px;
+  
   margin: 0 auto;
   align-items: center;
 }
@@ -1755,7 +1751,7 @@ resize: none;
 #pantallaVerRecordatorio textarea, #pantallaVerRecordatorio input, #pantallaVerRecordatorio select{
 
 display: block;
-  max-width: 220px;
+  
   padding: 12px;
   margin: 10px 0;
   border: 2px solid #ff66c4;
@@ -1775,7 +1771,7 @@ display: block;
 #pantallaVerExamen textarea,
 #pantallaVerExamen input {
   display: block;
-  max-width: 220px;
+  
   padding: 12px;
   margin: 10px 0;
   border-radius: 6px;
@@ -1799,7 +1795,7 @@ display: block;
 
 #pantallaRecordatorios .container {
   width: 100%;
-  max-width: 220px;
+  
   margin: 0 auto;
   align-items: center;
 }
@@ -1811,7 +1807,7 @@ display: block;
 
 #pantallaVerRecordatorio .container {
   width: 100%;
-  max-width: 220px;
+ 
   margin: 0 auto;
   align-items: center;
 }
@@ -1824,7 +1820,7 @@ display: block;
 
 #pantallaVerConsulta .container {
   width: 100%;
-  max-width: 280px;
+  
   margin: 0 auto;
   align-items: center;
 }
@@ -1853,7 +1849,7 @@ display: block;
 #pantallaPropietario .container,
 #pantallaPropietario .form-propietario {
   width: 100%;
-  max-width: 250px;
+  
   margin: 0 auto;
   align-items: center;
 }
@@ -1922,7 +1918,7 @@ display: block;
 
 .container {
   width: 100%;
-  max-width: 380px;
+  max-width: 300px;
   margin: 0 auto;
   padding: 20px;
   display: flex;
