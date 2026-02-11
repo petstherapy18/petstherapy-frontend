@@ -393,16 +393,9 @@ button {
 }
 
 #pantallaNuevoPaciente .container{
-  text-align: center;
-}
 
-#pantallaNuevoPaciente label {
-  display: block;
-  text-align: left;
-  width: 100%;
-  margin-top: 10px;
-  font-weight: bold;
-  color: #ff66c4;
+text-align: left;
+
 }
 
 
@@ -421,10 +414,9 @@ button {
 
 
 #pantallaNuevoPaciente textarea, 
-#pantallaNuevoPaciente input,
-#pantallaNuevoPaciente select {
+#pantallaNuevoPaciente input{
 
-  display: block;
+display: block;
   max-width: 220px;
   padding: 12px;
   margin: 10px 0;
@@ -434,9 +426,8 @@ button {
   background-color: #fff;
   color: #ff66c4;
   width: 220px;
-
+  
 }
-
 
 /* Título */
 
@@ -1326,28 +1317,11 @@ max-width: 300px
   word-break: break-word; /* corta nombres largos */
 }
 
-#pantallaVerVacuna input,
-#pantallaVerVacuna textarea {
-  width: 100%;
-  max-width: 320px;
-  padding: 12px;
-  margin: 10px 0;
-  border: 2px solid #ff66c4;
-  border-radius: 6px;
-  font-size: 16px;
-  box-sizing: border-box;
-}
+#pantallaVerVacuna .container{
 
-#pantallaVerVacuna .input-box {
-  width: 100%;
-  max-width: 320px;
-}
+max-width: 320px;
 
-#pantallaVerVacuna textarea {
-  resize: none;
-  min-height: 80px;
 }
-
 
 
 #pantallaVacunas .container{
@@ -1922,7 +1896,7 @@ display: block;
 
 .container {
   width: 100%;
-  max-width: 380px;
+  max-width: 420px;
   margin: 0 auto;
   padding: 20px;
   display: flex;
