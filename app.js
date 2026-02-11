@@ -1753,6 +1753,9 @@ async function descargarBase64(base64, nombre) {
         directory: Directory.Data
       });
 
+      mostrarBurbuja("Guardado: " + nombreArchivo);
+
+
       // 2️⃣ Obtener URI real
       const fileUri = await Filesystem.getUri({
         path: nombreArchivo,
@@ -1760,10 +1763,15 @@ async function descargarBase64(base64, nombre) {
       });
 
       // 3️⃣ Abrir archivo automáticamente
-      await FileOpener.open({
-        filePath: fileUri.uri,
-        contentType: "application/pdf"
-      });
+      // Detectar tipo MIME real desde el base64
+const mimeMatch = base64.match(/data:(.*?);base64/);
+const mimeType = mimeMatch ? mimeMatch[1] : "application/octet-stream";
+
+await FileOpener.open({
+  filePath: fileUri.uri,
+  contentType: mimeType
+});
+
 
       mostrarBurbuja("📄 Archivo abierto");
 
