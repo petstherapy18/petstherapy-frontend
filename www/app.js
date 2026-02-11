@@ -1741,22 +1741,20 @@ async function descargarBase64(base64, nombre) {
     // 🔍 Detectar si es app real (APK)
     const esApp = window.Capacitor && window.Capacitor.isNativePlatform();
 
-    if (esApp && window.Capacitor.Plugins?.Filesystem) {
+   if (esApp && window.Capacitor?.Plugins?.Filesystem) {
 
-      const Filesystem = window.Capacitor.Plugins.Filesystem;
-      const Directory = window.Capacitor.Plugins.FilesystemDirectory 
-        || window.Capacitor.Plugins.Directory 
-        || window.Capacitor.Plugins.Filesystem?.Directory;
+  const { Filesystem, Directory } = window.Capacitor.Plugins;
 
-      await Filesystem.writeFile({
-        path: nombre || "archivo.pdf",
-        data: base64Limpio,
-        directory: "DATA" // ⚠️ string directo evita errores de enum
-      });
+  await Filesystem.writeFile({
+    path: nombre || "archivo.pdf",
+    data: base64Limpio,
+    directory: Directory.Documents,
+    recursive: true
+  });
 
-      mostrarBurbuja("✅ Archivo guardado en la app");
-
-    } else {
+  mostrarBurbuja("✅ Archivo guardado en Documentos");
+}
+ else {
 
       // 🌐 NAVEGADOR
       const byteCharacters = atob(base64Limpio);
