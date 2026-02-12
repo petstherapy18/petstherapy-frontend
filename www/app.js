@@ -1733,39 +1733,32 @@ async function descargarBase64(base64, nombre) {
   }
 
   try {
-    // 🔥 Limpiar prefijo data:...base64,
     const base64Limpio = base64.includes(",") ? base64.split(",")[1] : base64;
-
-    // 🔍 Detectar si estamos en APK
     const esApp = window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
 
     if (esApp) {
-      // ⚡ CAPACITOR: guardar y abrir en APK
-      const { Filesystem } = window.Capacitor.Plugins;
-      const { FileOpener } = window.Capacitor.Plugins;
+      const { Filesystem, FileOpener } = window.Capacitor.Plugins;
 
-      // Guardar archivo en directorio temporal
       const ruta = nombre || "archivo.pdf";
+
+      // Guardar en cache
       await Filesystem.writeFile({
         path: ruta,
         data: base64Limpio,
-        directory: Filesystem.Directory.Cache // mejor usar Cache para abrir luego
+        directory: Filesystem.Directory.Cache
       });
 
-      // Abrir archivo con app nativa
+      // Abrir con app nativa
       await FileOpener.open({
         filePath: ruta,
-        contentType: "application/pdf", // ⚠️ Cambiar si no es PDF
+        contentType: "application/pdf"
       });
 
       mostrarBurbuja("✅ Archivo abierto en la app");
     } else {
-      // 👉 NAVEGADOR: descargar normalmente
+      // Navegador
       const byteCharacters = atob(base64Limpio);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
+      const byteNumbers = Array.from(byteCharacters, c => c.charCodeAt(0));
       const byteArray = new Uint8Array(byteNumbers);
 
       const mimeMatch = base64.match(/data:(.*?);base64/);
@@ -1783,12 +1776,12 @@ async function descargarBase64(base64, nombre) {
 
       setTimeout(() => URL.revokeObjectURL(url), 2000);
     }
-
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     mostrarBurbuja("❌ No se pudo abrir/descargar el archivo", "error");
   }
 }
+
 
 
 
