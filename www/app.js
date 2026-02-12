@@ -1594,6 +1594,9 @@ function verExamen(idExamen) {
       btn.textContent = a.nombre;
       btn.onclick = () => descargarBase64(a.base64, a.nombre);
       cont.appendChild(btn);
+      console.log("Archivo:", a.nombre);
+      console.log("Base64 (primera parte):", a.base64?.substring(0, 50)); // solo los primeros 50 caracteres
+
     });
   }
 
