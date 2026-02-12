@@ -1736,7 +1736,7 @@ async function descargarBase64(base64, nombre) {
   }
 
   try {
-    // Limpiar el prefijo data:...base64
+    // Limpiar el prefijo data:...base64 si existe
     const base64Limpio = base64.includes(",") ? base64.split(",")[1] : base64;
 
     // Detectar si estamos en la app nativa
@@ -1757,7 +1757,7 @@ async function descargarBase64(base64, nombre) {
         directory: Filesystem.Directory.Cache
       });
 
-      // Obtener URI real
+      // Obtener URI seguro para abrir
       const fileUri = await Filesystem.getUri({
         directory: Filesystem.Directory.Cache,
         path: ruta
@@ -1768,13 +1768,17 @@ async function descargarBase64(base64, nombre) {
       const mimeMatch = base64.match(/data:(.*?);base64/);
       if (mimeMatch) contentType = mimeMatch[1];
 
-      // Abrir con app nativa
+      // Abrir archivo nativo de forma segura
+      let filePath = fileUri.uri;
+      if (filePath.startsWith("file://")) filePath = filePath.replace("file://", ""); // quitar file:// si causa problemas
+
       await FileOpener.open({
-        filePath: fileUri.uri,
-        contentType: contentType
+        filePath,
+        contentType
       });
 
       mostrarBurbuja(`✅ Archivo abierto: ${nombre}`);
+
     } else {
       // NAVEGADOR
       const byteCharacters = atob(base64Limpio);
@@ -1795,6 +1799,7 @@ async function descargarBase64(base64, nombre) {
       a.click();
       document.body.removeChild(a);
 
+      // Limpiar URL temporal después de 2s
       setTimeout(() => URL.revokeObjectURL(url), 2000);
 
       mostrarBurbuja(`✅ Archivo descargado: ${nombre}`);
@@ -1805,6 +1810,7 @@ async function descargarBase64(base64, nombre) {
     mostrarBurbuja("❌ No se pudo abrir/descargar el archivo", "error");
   }
 }
+
 
 
 
