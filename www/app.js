@@ -1728,57 +1728,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function descargarBase64(base64, nombre) {
   if (!base64) {
-    mostrarBurbuja("❌ Archivo inválido");
+    mostrarBurbuja("❌ Archivo inválido", "error");
     return;
   }
 
   try {
+    // 🔥 Limpiar prefijo data:...base64,
+    const base64Limpio = base64.includes(",") ? base64.split(",")[1] : base64;
 
-    const base64Limpio = base64.includes(",")
-      ? base64.split(",")[1]
-      : base64;
+    // 🔍 Detectar si estamos en APK
+    const esApp = window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
 
-    const esApp = window.Capacitor?.isNativePlatform?.();
+    if (esApp) {
+      // ⚡ CAPACITOR: guardar y abrir en APK
+      const { Filesystem } = window.Capacitor.Plugins;
+      const { FileOpener } = window.Capacitor.Plugins;
 
-    if (esApp && window.Capacitor?.Plugins?.Filesystem) {
-
-      const { Filesystem, Directory, Browser } = window.Capacitor.Plugins;
-
-      const nombreArchivo = nombre || "archivo.pdf";
-
-      // 1️⃣ Guardar archivo en carpeta privada
+      // Guardar archivo en directorio temporal
+      const ruta = nombre || "archivo.pdf";
       await Filesystem.writeFile({
-        path: nombreArchivo,
+        path: ruta,
         data: base64Limpio,
-        directory: Directory.Cache
+        directory: Filesystem.Directory.Cache // mejor usar Cache para abrir luego
       });
 
-      // 2️⃣ Obtener URI real
-      const fileUri = await Filesystem.getUri({
-        path: nombreArchivo,
-        directory: Directory.Cache
+      // Abrir archivo con app nativa
+      await FileOpener.open({
+        filePath: ruta,
+        contentType: "application/pdf", // ⚠️ Cambiar si no es PDF
       });
 
-      // 3️⃣ Abrir usando Browser (más estable que FileOpener)
-      await Browser.open({
-        url: fileUri.uri
-      });
-
-      mostrarBurbuja("📄 Archivo abierto");
-
+      mostrarBurbuja("✅ Archivo abierto en la app");
     } else {
-
-      // 👉 Navegador normal
+      // 👉 NAVEGADOR: descargar normalmente
       const byteCharacters = atob(base64Limpio);
       const byteNumbers = new Array(byteCharacters.length);
-
       for (let i = 0; i < byteCharacters.length; i++) {
         byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
-
       const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: "application/pdf" });
 
+      const mimeMatch = base64.match(/data:(.*?);base64/);
+      const mimeType = mimeMatch ? mimeMatch[1] : "application/octet-stream";
+
+      const blob = new Blob([byteArray], { type: mimeType });
       const url = URL.createObjectURL(blob);
 
       const a = document.createElement("a");
@@ -1793,9 +1786,11 @@ async function descargarBase64(base64, nombre) {
 
   } catch (error) {
     console.error(error);
-    mostrarBurbuja("❌ No se pudo abrir el archivo");
+    mostrarBurbuja("❌ No se pudo abrir/descargar el archivo", "error");
   }
 }
+
+
 
 
 
