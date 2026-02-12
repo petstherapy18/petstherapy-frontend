@@ -1733,6 +1733,7 @@ async function descargarBase64(base64, nombre) {
   }
 
   try {
+
     const base64Limpio = base64.includes(",")
       ? base64.split(",")[1]
       : base64;
@@ -1741,37 +1742,27 @@ async function descargarBase64(base64, nombre) {
 
     if (esApp && window.Capacitor?.Plugins?.Filesystem) {
 
-      const { Filesystem, Directory } = window.Capacitor.Plugins;
-      const FileOpener = window.Capacitor.Plugins.FileOpener;
+      const { Filesystem, Directory, Browser } = window.Capacitor.Plugins;
 
       const nombreArchivo = nombre || "archivo.pdf";
 
-      // 1️⃣ Guardar en carpeta privada de la app
+      // 1️⃣ Guardar archivo en carpeta privada
       await Filesystem.writeFile({
         path: nombreArchivo,
         data: base64Limpio,
-        directory: Directory.Data
+        directory: Directory.Cache
       });
-
-      mostrarBurbuja("Guardado: " + nombreArchivo);
-
 
       // 2️⃣ Obtener URI real
       const fileUri = await Filesystem.getUri({
         path: nombreArchivo,
-        directory: Directory.Data
+        directory: Directory.Cache
       });
 
-      // 3️⃣ Abrir archivo automáticamente
-      // Detectar tipo MIME real desde el base64
-const mimeMatch = base64.match(/data:(.*?);base64/);
-const mimeType = mimeMatch ? mimeMatch[1] : "application/octet-stream";
-
-await FileOpener.open({
-  filePath: fileUri.uri,
-  contentType: mimeType
-});
-
+      // 3️⃣ Abrir usando Browser (más estable que FileOpener)
+      await Browser.open({
+        url: fileUri.uri
+      });
 
       mostrarBurbuja("📄 Archivo abierto");
 
@@ -1786,16 +1777,13 @@ await FileOpener.open({
       }
 
       const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: "application/pdf" });
 
-      const mimeMatch = base64.match(/data:(.*?);base64/);
-      const mimeType = mimeMatch ? mimeMatch[1] : "application/octet-stream";
-
-      const blob = new Blob([byteArray], { type: mimeType });
       const url = URL.createObjectURL(blob);
 
       const a = document.createElement("a");
       a.href = url;
-      a.download = nombre || "archivo";
+      a.download = nombre || "archivo.pdf";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -1808,6 +1796,7 @@ await FileOpener.open({
     mostrarBurbuja("❌ No se pudo abrir el archivo");
   }
 }
+
 
 
 
