@@ -1733,8 +1733,14 @@ async function descargarBase64(base64, nombre) {
   }
 
   try {
+    // Limpiar el prefijo data:...base64
     const base64Limpio = base64.includes(",") ? base64.split(",")[1] : base64;
-    const esApp = window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+
+    // Detectar si estamos en la app nativa
+    const esApp = window.Capacitor &&
+                  window.Capacitor.Plugins &&
+                  typeof window.Capacitor.isNativePlatform === "function" &&
+                  window.Capacitor.isNativePlatform();
 
     if (esApp) {
       const { Filesystem, FileOpener } = window.Capacitor.Plugins;
@@ -1748,21 +1754,33 @@ async function descargarBase64(base64, nombre) {
         directory: Filesystem.Directory.Cache
       });
 
-      // Abrir con app nativa
-      await FileOpener.open({
-        filePath: ruta,
-        contentType: "application/pdf"
+      // Obtener URI real
+      const fileUri = await Filesystem.getUri({
+        directory: Filesystem.Directory.Cache,
+        path: ruta
       });
 
-      mostrarBurbuja("✅ Archivo abierto en la app");
+      // Detectar tipo de archivo
+      let contentType = "application/pdf"; // por defecto
+      const mimeMatch = base64.match(/data:(.*?);base64/);
+      if (mimeMatch) contentType = mimeMatch[1];
+
+      // Abrir con app nativa
+      await FileOpener.open({
+        filePath: fileUri.uri,
+        contentType: contentType
+      });
+
+      mostrarBurbuja(`✅ Archivo abierto: ${nombre}`);
     } else {
-      // Navegador
+      // NAVEGADOR
       const byteCharacters = atob(base64Limpio);
       const byteNumbers = Array.from(byteCharacters, c => c.charCodeAt(0));
       const byteArray = new Uint8Array(byteNumbers);
 
+      let mimeType = "application/octet-stream";
       const mimeMatch = base64.match(/data:(.*?);base64/);
-      const mimeType = mimeMatch ? mimeMatch[1] : "application/octet-stream";
+      if (mimeMatch) mimeType = mimeMatch[1];
 
       const blob = new Blob([byteArray], { type: mimeType });
       const url = URL.createObjectURL(blob);
@@ -1775,12 +1793,17 @@ async function descargarBase64(base64, nombre) {
       document.body.removeChild(a);
 
       setTimeout(() => URL.revokeObjectURL(url), 2000);
+
+      mostrarBurbuja(`✅ Archivo descargado: ${nombre}`);
     }
+
   } catch (err) {
-    console.error(err);
+    console.error("Error descargando/abriendo archivo:", err);
     mostrarBurbuja("❌ No se pudo abrir/descargar el archivo", "error");
   }
 }
+
+
 
 
 
