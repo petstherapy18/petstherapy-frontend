@@ -1749,33 +1749,33 @@ async function descargarBase64(base64, nombre) {
       window.Capacitor.isNativePlatform();
 
     if (esApp) {
-      const { Filesystem, FileOpener } = window.Capacitor.Plugins;
+      const { Filesystem } = window.Capacitor.Plugins;
+      const { FileViewer } = window.Capacitor.Plugins;
 
-      const fileName = nombre || `archivo_${Date.now()}.pdf`;
+      await Filesystem.requestPermissions();
 
-      // ⚠️ IMPORTANTE: indicar encoding BASE64
+      const fileName = nombre || `archivo_${Date.now()}`;
+
       await Filesystem.writeFile({
         path: fileName,
         data: base64Limpio,
-        directory: Filesystem.Directory.Cache,
+        directory: Filesystem.Directory.Documents,
         encoding: Filesystem.Encoding.BASE64
       });
 
       const fileUri = await Filesystem.getUri({
-        directory: Filesystem.Directory.Cache,
+        directory: Filesystem.Directory.Documents,
         path: fileName
       });
 
-      // ⚠️ NO quitar file://
-      await FileOpener.open({
-        filePath: fileUri.uri,
-        contentType: mimeType
+      await FileViewer.openDocumentFromLocalPath({
+        path: fileUri.uri,
+        mimeType: mimeType
       });
 
-      mostrarBurbuja(`✅ Archivo abierto`);
-
+      mostrarBurbuja("✅ Archivo abierto correctamente");
     } else {
-      // --- NAVEGADOR ---
+      // navegador
       const byteCharacters = atob(base64Limpio);
       const byteNumbers = Array.from(byteCharacters, c =>
         c.charCodeAt(0)
@@ -1793,14 +1793,16 @@ async function descargarBase64(base64, nombre) {
       document.body.removeChild(a);
 
       setTimeout(() => URL.revokeObjectURL(url), 2000);
-
-      mostrarBurbuja("✅ Archivo descargado");
     }
   } catch (err) {
-    console.error("ERROR REAL:", err);
+    console.error("ERROR REAL ANDROID:", err);
+    alert(JSON.stringify(err));
     mostrarBurbuja("❌ No se pudo abrir el archivo");
   }
 }
+
+
+
 
 
 
