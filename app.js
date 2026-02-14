@@ -1731,85 +1731,77 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function descargarBase64(base64, nombre) {
   if (!base64) {
-    mostrarBurbuja("❌ Archivo inválido", "error");
+    mostrarBurbuja("❌ Archivo inválido");
     return;
   }
 
   try {
-    // Limpiar el prefijo data:...base64 si existe
-    const base64Limpio = base64.includes(",") ? base64.split(",")[1] : base64;
+    const base64Limpio = base64.includes(",")
+      ? base64.split(",")[1]
+      : base64;
 
-    // Detectar si estamos en la app nativa
-    const esApp = window.Capacitor &&
-                  window.Capacitor.Plugins &&
-                  typeof window.Capacitor.isNativePlatform === "function" &&
-                  window.Capacitor.isNativePlatform();
+    const mimeMatch = base64.match(/data:(.*?);base64/);
+    const mimeType = mimeMatch ? mimeMatch[1] : "application/octet-stream";
+
+    const esApp =
+      window.Capacitor &&
+      typeof window.Capacitor.isNativePlatform === "function" &&
+      window.Capacitor.isNativePlatform();
 
     if (esApp) {
       const { Filesystem, FileOpener } = window.Capacitor.Plugins;
 
-      const ruta = nombre || "archivo.pdf";
+      const fileName = nombre || `archivo_${Date.now()}.pdf`;
 
-      // Guardar en cache
+      // ⚠️ IMPORTANTE: indicar encoding BASE64
       await Filesystem.writeFile({
-        path: ruta,
+        path: fileName,
         data: base64Limpio,
-        directory: Filesystem.Directory.Cache
+        directory: Filesystem.Directory.Cache,
+        encoding: Filesystem.Encoding.BASE64
       });
 
-      // Obtener URI seguro para abrir
       const fileUri = await Filesystem.getUri({
         directory: Filesystem.Directory.Cache,
-        path: ruta
+        path: fileName
       });
 
-      // Detectar tipo de archivo
-      let contentType = "application/pdf"; // por defecto
-      const mimeMatch = base64.match(/data:(.*?);base64/);
-      if (mimeMatch) contentType = mimeMatch[1];
-
-      // Abrir archivo nativo de forma segura
-      let filePath = fileUri.uri;
-      if (filePath.startsWith("file://")) filePath = filePath.replace("file://", ""); // quitar file:// si causa problemas
-
+      // ⚠️ NO quitar file://
       await FileOpener.open({
-        filePath,
-        contentType
+        filePath: fileUri.uri,
+        contentType: mimeType
       });
 
-      mostrarBurbuja(`✅ Archivo abierto: ${nombre}`);
+      mostrarBurbuja(`✅ Archivo abierto`);
 
     } else {
-      // NAVEGADOR
+      // --- NAVEGADOR ---
       const byteCharacters = atob(base64Limpio);
-      const byteNumbers = Array.from(byteCharacters, c => c.charCodeAt(0));
+      const byteNumbers = Array.from(byteCharacters, c =>
+        c.charCodeAt(0)
+      );
       const byteArray = new Uint8Array(byteNumbers);
-
-      let mimeType = "application/octet-stream";
-      const mimeMatch = base64.match(/data:(.*?);base64/);
-      if (mimeMatch) mimeType = mimeMatch[1];
 
       const blob = new Blob([byteArray], { type: mimeType });
       const url = URL.createObjectURL(blob);
 
       const a = document.createElement("a");
       a.href = url;
-      a.download = nombre || "archivo.pdf";
+      a.download = nombre || "archivo";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
 
-      // Limpiar URL temporal después de 2s
       setTimeout(() => URL.revokeObjectURL(url), 2000);
 
-      mostrarBurbuja(`✅ Archivo descargado: ${nombre}`);
+      mostrarBurbuja("✅ Archivo descargado");
     }
-
   } catch (err) {
-    console.error("Error descargando/abriendo archivo:", err);
-    mostrarBurbuja("❌ No se pudo abrir/descargar el archivo", "error");
+    console.error("ERROR REAL:", err);
+    mostrarBurbuja("❌ No se pudo abrir el archivo");
   }
 }
+
 
 
 
