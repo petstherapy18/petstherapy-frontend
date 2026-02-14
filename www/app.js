@@ -1736,7 +1736,7 @@ async function descargarBase64(base64, nombre) {
       || window.CapacitorFilesystem;
 
     if (!Filesystem) {
-      alert("Filesystem no está disponible");
+      alert("Filesystem no disponible");
       return;
     }
 
@@ -1746,29 +1746,30 @@ async function descargarBase64(base64, nombre) {
 
     const fileName = nombre || `archivo_${Date.now()}.pdf`;
 
-    await Filesystem.requestPermissions();
+    // 🚫 QUITAMOS requestPermissions()
 
     await Filesystem.writeFile({
-      path: fileName,
-      data: base64Limpio,
-      directory: Filesystem.Directory.Documents,
-      encoding: Filesystem.Encoding.BASE64
-    });
+  path: fileName,
+  data: base64Limpio,
+  directory: 'DOCUMENTS',
+  encoding: 'base64'
+});
+
 
     const fileUri = await Filesystem.getUri({
       directory: Filesystem.Directory.Documents,
       path: fileName
     });
 
-    // 👇 Abrimos sin FileViewer
     window.open(fileUri.uri, "_blank");
 
-    mostrarBurbuja("✅ Archivo guardado");
+    mostrarBurbuja("✅ Archivo guardado y abierto");
 
   } catch (err) {
-    alert("Error real:\n" + JSON.stringify(err));
+    alert("Error REAL:\n" + JSON.stringify(err));
   }
 }
+
 
 
 
