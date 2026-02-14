@@ -1730,76 +1730,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 async function descargarBase64(base64, nombre) {
-  if (!base64) {
-    mostrarBurbuja("❌ Archivo inválido");
-    return;
-  }
-
   try {
+
+    const Filesystem = window.Capacitor?.Plugins?.Filesystem 
+      || window.CapacitorFilesystem;
+
+    if (!Filesystem) {
+      alert("Filesystem no está disponible");
+      return;
+    }
+
     const base64Limpio = base64.includes(",")
       ? base64.split(",")[1]
       : base64;
 
-    const mimeMatch = base64.match(/data:(.*?);base64/);
-    const mimeType = mimeMatch ? mimeMatch[1] : "application/octet-stream";
+    const fileName = nombre || `archivo_${Date.now()}.pdf`;
 
-    const esApp =
-      window.Capacitor &&
-      typeof window.Capacitor.isNativePlatform === "function" &&
-      window.Capacitor.isNativePlatform();
+    await Filesystem.requestPermissions();
 
-    if (esApp) {
-      const { Filesystem } = window.Capacitor.Plugins;
-      const { FileViewer } = window.Capacitor.Plugins;
+    await Filesystem.writeFile({
+      path: fileName,
+      data: base64Limpio,
+      directory: Filesystem.Directory.Documents,
+      encoding: Filesystem.Encoding.BASE64
+    });
 
-      await Filesystem.requestPermissions();
+    const fileUri = await Filesystem.getUri({
+      directory: Filesystem.Directory.Documents,
+      path: fileName
+    });
 
-      const fileName = nombre || `archivo_${Date.now()}`;
+    // 👇 Abrimos sin FileViewer
+    window.open(fileUri.uri, "_blank");
 
-      await Filesystem.writeFile({
-        path: fileName,
-        data: base64Limpio,
-        directory: Filesystem.Directory.Documents,
-        encoding: Filesystem.Encoding.BASE64
-      });
+    mostrarBurbuja("✅ Archivo guardado");
 
-      const fileUri = await Filesystem.getUri({
-        directory: Filesystem.Directory.Documents,
-        path: fileName
-      });
-
-      await FileViewer.openDocumentFromLocalPath({
-        path: fileUri.uri,
-        mimeType: mimeType
-      });
-
-      mostrarBurbuja("✅ Archivo abierto correctamente");
-    } else {
-      // navegador
-      const byteCharacters = atob(base64Limpio);
-      const byteNumbers = Array.from(byteCharacters, c =>
-        c.charCodeAt(0)
-      );
-      const byteArray = new Uint8Array(byteNumbers);
-
-      const blob = new Blob([byteArray], { type: mimeType });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = nombre || "archivo";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-
-      setTimeout(() => URL.revokeObjectURL(url), 2000);
-    }
   } catch (err) {
-    console.error("ERROR REAL ANDROID:", err);
-    alert(JSON.stringify(err));
-    mostrarBurbuja("❌ No se pudo abrir el archivo");
+    alert("Error real:\n" + JSON.stringify(err));
   }
 }
+
+
 
 
 
