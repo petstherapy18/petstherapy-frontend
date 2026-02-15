@@ -1732,11 +1732,10 @@ document.addEventListener("DOMContentLoaded", () => {
 async function descargarBase64(base64, nombre) {
   try {
 
-    const Filesystem = window.Capacitor?.Plugins?.Filesystem;
-    const Capacitor = window.Capacitor;
+    const Filesystem = window.CapacitorFilesystem;
 
     if (!Filesystem) {
-      alert("Filesystem no disponible");
+      alert("Filesystem no existe en global");
       return;
     }
 
@@ -1746,20 +1745,16 @@ async function descargarBase64(base64, nombre) {
 
     const fileName = nombre || `archivo_${Date.now()}.pdf`;
 
-    // 👇 usamos Directory.Data del enum REAL
-    const Directory = Filesystem.Directory;
-    const Encoding = Filesystem.Encoding;
-
     await Filesystem.writeFile({
       path: fileName,
       data: base64Limpio,
-      directory: Directory.Data,
-      encoding: Encoding.Base64
+      directory: 'DATA',
+      encoding: 'base64'
     });
 
     const fileUri = await Filesystem.getUri({
-      directory: Directory.Data,
-      path: fileName
+      path: fileName,
+      directory: 'DATA'
     });
 
     window.open(fileUri.uri, "_blank");
@@ -1770,6 +1765,7 @@ async function descargarBase64(base64, nombre) {
     alert("Error REAL:\n" + JSON.stringify(err));
   }
 }
+
 
 
 
