@@ -1751,7 +1751,7 @@ async function descargarBase64(base64, nombre) {
     await Filesystem.writeFile({
   path: fileName,
   data: base64Limpio,
-  directory: 'DOCUMENTS',
+  directory: 'DATA',
   encoding: 'base64'
 });
 
