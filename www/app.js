@@ -1592,7 +1592,7 @@ function verExamen(idExamen) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.textContent = a.nombre;
-      btn.onclick = () => descargarBase64(a.base64, a.nombre);
+      btn.onclick = () => abrirBase64(a.base64, a.nombre);
       cont.appendChild(btn);
       console.log("Archivo:", a.nombre);
       console.log("Base64 (primera parte):", a.base64?.substring(0, 50)); // solo los primeros 50 caracteres
@@ -1729,82 +1729,89 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-async function descargarBase64(base64, nombre) {
+async function abrirBase64(base64, nombre) {
+
+  // 🔎 Verificar plugins disponibles
+  if (!window.Capacitor || !window.Capacitor.Plugins) {
+    mostrarBurbuja("❌ Capacitor no está disponible");
+    return;
+  }
+
+  const pluginsDisponibles = Object.keys(window.Capacitor.Plugins);
+  mostrarBurbuja("Plugins: " + pluginsDisponibles.join(", "));
+
+  if (!pluginsDisponibles.includes("Filesystem")) {
+    mostrarBurbuja("❌ Filesystem no registrado");
+    return;
+  }
+
+  if (!pluginsDisponibles.includes("CapacitorCommunityFileOpener")) {
+    mostrarBurbuja("❌ FileOpener no registrado");
+    return;
+  }
+
   if (!base64) {
-    mostrarBurbuja("❌ Archivo inválido", "error");
+    mostrarBurbuja("❌ Archivo inválido");
     return;
   }
 
   try {
-    // Limpiar el prefijo data:...base64
-    const base64Limpio = base64.includes(",") ? base64.split(",")[1] : base64;
 
-    // Detectar si estamos en la app nativa
-    const esApp = window.Capacitor &&
-                  window.Capacitor.Plugins &&
-                  typeof window.Capacitor.isNativePlatform === "function" &&
-                  window.Capacitor.isNativePlatform();
+    const base64Limpio = base64.includes(",")
+      ? base64.split(",")[1]
+      : base64;
 
-    if (esApp) {
-      const { Filesystem, FileOpener } = window.Capacitor.Plugins;
+    mostrarBurbuja("📦 Guardando...");
 
-      const ruta = nombre || "archivo.pdf";
+    const savedFile = await window.Capacitor.Plugins.Filesystem.writeFile({
+      path: nombre,
+      data: base64Limpio,
+      directory: "CACHE"
+    });
 
-      // Guardar en cache
-      await Filesystem.writeFile({
-        path: ruta,
-        data: base64Limpio,
-        directory: Filesystem.Directory.Cache
-      });
-
-      // Obtener URI real
-      const fileUri = await Filesystem.getUri({
-        directory: Filesystem.Directory.Cache,
-        path: ruta
-      });
-
-      // Detectar tipo de archivo
-      let contentType = "application/pdf"; // por defecto
-      const mimeMatch = base64.match(/data:(.*?);base64/);
-      if (mimeMatch) contentType = mimeMatch[1];
-
-      // Abrir con app nativa
-      await FileOpener.open({
-        filePath: fileUri.uri,
-        contentType: contentType
-      });
-
-      mostrarBurbuja(`✅ Archivo abierto: ${nombre}`);
-    } else {
-      // NAVEGADOR
-      const byteCharacters = atob(base64Limpio);
-      const byteNumbers = Array.from(byteCharacters, c => c.charCodeAt(0));
-      const byteArray = new Uint8Array(byteNumbers);
-
-      let mimeType = "application/octet-stream";
-      const mimeMatch = base64.match(/data:(.*?);base64/);
-      if (mimeMatch) mimeType = mimeMatch[1];
-
-      const blob = new Blob([byteArray], { type: mimeType });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = nombre || "archivo.pdf";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-
-      setTimeout(() => URL.revokeObjectURL(url), 2000);
-
-      mostrarBurbuja(`✅ Archivo descargado: ${nombre}`);
+    if (!savedFile || !savedFile.uri) {
+      mostrarBurbuja("❌ No se obtuvo URI");
+      return;
     }
 
-  } catch (err) {
-    console.error("Error descargando/abriendo archivo:", err);
-    mostrarBurbuja("❌ No se pudo abrir/descargar el archivo", "error");
+    mostrarBurbuja("📂 Abriendo...");
+
+    let mimeType = "application/pdf";
+
+    if (nombre.toLowerCase().endsWith(".jpg") || nombre.toLowerCase().endsWith(".jpeg"))
+      mimeType = "image/jpeg";
+
+    if (nombre.toLowerCase().endsWith(".png"))
+      mimeType = "image/png";
+
+    await window.Capacitor.Plugins.FileOpener.open({
+      filePath: savedFile.uri,
+      contentType: mimeType
+    });
+
+  } catch (error) {
+    mostrarBurbuja("❌ Error real: " + (error?.message || JSON.stringify(error)));
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
