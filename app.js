@@ -1,4 +1,6 @@
 
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { FileOpener } from '@capacitor-community/file-opener';
 
 
 
@@ -1730,26 +1732,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 async function abrirBase64(base64, nombre) {
-
-  // 🔎 Verificar plugins disponibles
-  if (!window.Capacitor || !window.Capacitor.Plugins) {
-    mostrarBurbuja("❌ Capacitor no está disponible");
-    return;
-  }
-
-  const pluginsDisponibles = Object.keys(window.Capacitor.Plugins);
-  mostrarBurbuja("Plugins: " + pluginsDisponibles.join(", "));
-
-  if (!pluginsDisponibles.includes("Filesystem")) {
-    mostrarBurbuja("❌ Filesystem no registrado");
-    return;
-  }
-
-  if (!pluginsDisponibles.includes("CapacitorCommunityFileOpener")) {
-    mostrarBurbuja("❌ FileOpener no registrado");
-    return;
-  }
-
   if (!base64) {
     mostrarBurbuja("❌ Archivo inválido");
     return;
@@ -1761,20 +1743,11 @@ async function abrirBase64(base64, nombre) {
       ? base64.split(",")[1]
       : base64;
 
-    mostrarBurbuja("📦 Guardando...");
-
-    const savedFile = await window.Capacitor.Plugins.Filesystem.writeFile({
+    const savedFile = await Filesystem.writeFile({
       path: nombre,
       data: base64Limpio,
-      directory: "CACHE"
+      directory: Directory.Cache
     });
-
-    if (!savedFile || !savedFile.uri) {
-      mostrarBurbuja("❌ No se obtuvo URI");
-      return;
-    }
-
-    mostrarBurbuja("📂 Abriendo...");
 
     let mimeType = "application/pdf";
 
@@ -1784,7 +1757,7 @@ async function abrirBase64(base64, nombre) {
     if (nombre.toLowerCase().endsWith(".png"))
       mimeType = "image/png";
 
-    await window.Capacitor.Plugins.FileOpener.open({
+    await FileOpener.open({
       filePath: savedFile.uri,
       contentType: mimeType
     });
@@ -1793,6 +1766,7 @@ async function abrirBase64(base64, nombre) {
     mostrarBurbuja("❌ Error real: " + (error?.message || JSON.stringify(error)));
   }
 }
+
 
 
 
@@ -4049,4 +4023,9 @@ if (ordenSelect) {
 
     renderizarPacientes(lista);
   });
+}
+
+
+if (window.FileOpenerTest) {
+  mostrarBurbuja("FileOpener cargado como módulo");
 }
