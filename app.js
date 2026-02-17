@@ -1,6 +1,4 @@
 
-import { Filesystem, Directory } from '@capacitor/filesystem';
-import { FileOpener } from '@capacitor-community/file-opener';
 
 
 
@@ -1738,32 +1736,20 @@ async function abrirBase64(base64, nombre) {
   }
 
   try {
+    // Llamada nativa directa
+    if (Capacitor.isNative) {
+      // Capacitor 8: llama el método público de MainActivity
+      const bridge = window.Capacitor.Plugins.JavaScriptBridge;
+      bridge.execute("MainActivity", "abrirArchivo", [base64, nombre]);
+    } else {
+      // fallback web
+      descargarArchivo(base64, nombre);
+    }
 
-    const base64Limpio = base64.includes(",")
-      ? base64.split(",")[1]
-      : base64;
+    mostrarBurbuja("📂 Archivo abierto ✅");
 
-    const savedFile = await Filesystem.writeFile({
-      path: nombre,
-      data: base64Limpio,
-      directory: Directory.Cache
-    });
-
-    let mimeType = "application/pdf";
-
-    if (nombre.toLowerCase().endsWith(".jpg") || nombre.toLowerCase().endsWith(".jpeg"))
-      mimeType = "image/jpeg";
-
-    if (nombre.toLowerCase().endsWith(".png"))
-      mimeType = "image/png";
-
-    await FileOpener.open({
-      filePath: savedFile.uri,
-      contentType: mimeType
-    });
-
-  } catch (error) {
-    mostrarBurbuja("❌ Error real: " + (error?.message || JSON.stringify(error)));
+  } catch (err) {
+    mostrarBurbuja("❌ Error al abrir archivo: " + (err?.message || JSON.stringify(err)));
   }
 }
 

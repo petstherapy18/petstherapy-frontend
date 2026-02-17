@@ -19,6 +19,14 @@ import android.os.Build;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.ryltsov.alex.plugins.file.opener.FileOpenerPlugin;
+
+// NUEVAS IMPORTACIONES
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Base64;
+import java.io.File;
+import java.io.FileOutputStream;
 
 public class MainActivity extends BridgeActivity {
 
@@ -26,12 +34,12 @@ public class MainActivity extends BridgeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        registerPlugin(FileOpenerPlugin.class);
+
         getWindow().getDecorView().setBackgroundColor(
                 android.graphics.Color.parseColor("#ffbce5"));
 
-
-
-        // 🔔 PERMISO NOTIFICACIONES (Android 13+)
+        // Permisos notificaciones
         if (Build.VERSION.SDK_INT >= 33) {
             if (ContextCompat.checkSelfPermission(
                     this,
@@ -47,35 +55,45 @@ public class MainActivity extends BridgeActivity {
         }
 
         FirebaseMessaging.getInstance().getToken()
-                .addOnSuccessListener(token -> {
-                    enviarTokenAlBackend(token);
-                });
+                .addOnSuccessListener(token -> enviarTokenAlBackend(token));
 
-
-        // 🔒 BLOQUEAR BOTÓN ATRÁS DEL SISTEMA (FORMA CORRECTA)
+        // Bloquear botón atrás
         getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
             @Override
-            public void handleOnBackPressed() {
-                // NO hacer nada aquí
-                // El control queda en JavaScript (Capacitor)
-            }
+            public void handleOnBackPressed() {}
         });
-
-
-
-
-
     }
 
+    // 🌸 Método nativo público que puedes llamar desde JS
+    public void abrirArchivo(String base64, String nombre) {
+        try {
+            File archivo = new File(getCacheDir(), nombre);
+            byte[] datos = Base64.decode(base64.split(",")[1], Base64.DEFAULT);
+            FileOutputStream fos = new FileOutputStream(archivo);
+            fos.write(datos);
+            fos.close();
 
+            String mimeType = "application/pdf";
+            if (nombre.toLowerCase().endsWith(".jpg") || nombre.toLowerCase().endsWith(".jpeg"))
+                mimeType = "image/jpeg";
+            if (nombre.toLowerCase().endsWith(".png"))
+                mimeType = "image/png";
 
+            Uri uri = Uri.fromFile(archivo);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(uri, mimeType);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void enviarTokenAlBackend(String token) {
         new Thread(() -> {
             try {
-
-            URL url = new URL("https://petstherapy-backend.onrender.com/api/usuarios/guardar-token");
+                URL url = new URL("https://petstherapy-backend.onrender.com/api/usuarios/guardar-token");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json");
@@ -90,7 +108,7 @@ public class MainActivity extends BridgeActivity {
                 os.flush();
                 os.close();
 
-                conn.getResponseCode(); // ejecuta request
+                conn.getResponseCode();
             } catch (Exception e) {
                 e.printStackTrace();
             }
