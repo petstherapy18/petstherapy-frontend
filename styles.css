@@ -1911,3 +1911,52 @@ display: block;
   margin: 0;
   padding: 0;
 }
+
+
+
+
+
+
+
+
+/* ============================= */
+/* 🌸 ANCHO GLOBAL UNIFICADO 🌸 */
+/* ============================= */
+
+/* Todas las pantallas */
+.pantalla {
+  width: 100%;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Cuando está activa */
+.pantalla.activa {
+  display: flex;
+}
+
+/* Contenedor único para TODO */
+.pantalla .container,
+.pt-container,
+#pantallaConsultas .container,
+#pantallaVacunas .container,
+#pantallaVerVacuna .container,
+#pantallaExamenesSubidos .container,
+#pantallaVerExamen .container,
+#pantallaRecordatorios .container {
+  width: 100%;
+  max-width: 360px;   /* 🔥 ESTE ES EL ANCHO OFICIAL */
+  margin: 0 auto;
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+/* Todos los inputs iguales */
+input,
+select,
+textarea,
+button {
+  width: 100%;
+  box-sizing: border-box;
+}

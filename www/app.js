@@ -1736,22 +1736,49 @@ async function abrirBase64(base64, nombre) {
   }
 
   try {
-    // Llamada nativa directa
-    if (Capacitor.isNative) {
-      // Capacitor 8: llama el método público de MainActivity
-      const bridge = window.Capacitor.Plugins.JavaScriptBridge;
-      bridge.execute("MainActivity", "abrirArchivo", [base64, nombre]);
-    } else {
-      // fallback web
-      descargarArchivo(base64, nombre);
+    const base64Limpio = base64.includes(",")
+      ? base64.split(",")[1]
+      : base64;
+
+    mostrarBurbuja("📦 Guardando archivo...");
+
+    // 1️⃣ Guardar en CACHE
+    const resultado = await window.Capacitor.Plugins.Filesystem.writeFile({
+      path: nombre,
+      data: base64Limpio,
+      directory: "CACHE"
+    });
+
+    if (!resultado || !resultado.uri) {
+      mostrarBurbuja("❌ No se pudo guardar el archivo");
+      return;
     }
 
-    mostrarBurbuja("📂 Archivo abierto ✅");
+    // 2️⃣ Detectar tipo MIME
+    let mimeType = "application/pdf";
+    if (nombre.toLowerCase().endsWith(".jpg") || nombre.toLowerCase().endsWith(".jpeg")) {
+      mimeType = "image/jpeg";
+    }
+    if (nombre.toLowerCase().endsWith(".png")) {
+      mimeType = "image/png";
+    }
+
+    mostrarBurbuja("📂 Abriendo archivo...");
+
+    // 3️⃣ Abrir con FileOpener REAL
+    await window.Capacitor.Plugins.FileOpener.open({
+      filePath: resultado.uri,
+      contentType: mimeType
+    });
+
+    mostrarBurbuja("✅ Archivo abierto correctamente");
 
   } catch (err) {
-    mostrarBurbuja("❌ Error al abrir archivo: " + (err?.message || JSON.stringify(err)));
+    console.error(err);
+    mostrarBurbuja("❌ Error al abrir archivo: " + (err?.message || err));
   }
 }
+
 
 
 
