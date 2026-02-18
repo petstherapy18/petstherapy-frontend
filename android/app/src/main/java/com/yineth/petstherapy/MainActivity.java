@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.util.Base64;
 import java.io.File;
 import java.io.FileOutputStream;
+import androidx.core.content.FileProvider;
 
 public class MainActivity extends BridgeActivity {
 
@@ -66,29 +67,37 @@ public class MainActivity extends BridgeActivity {
 
     // 🌸 Método nativo público que puedes llamar desde JS
     public void abrirArchivo(String base64, String nombre) {
-        try {
-            File archivo = new File(getCacheDir(), nombre);
-            byte[] datos = Base64.decode(base64.split(",")[1], Base64.DEFAULT);
-            FileOutputStream fos = new FileOutputStream(archivo);
-            fos.write(datos);
-            fos.close();
+        runOnUiThread(() -> { // 🔹 esto asegura que el intent se ejecute en el hilo principal
+            try {
+                File archivo = new File(getCacheDir(), nombre);
+                byte[] datos = Base64.decode(base64.split(",")[1], Base64.DEFAULT);
+                FileOutputStream fos = new FileOutputStream(archivo);
+                fos.write(datos);
+                fos.close();
 
-            String mimeType = "application/pdf";
-            if (nombre.toLowerCase().endsWith(".jpg") || nombre.toLowerCase().endsWith(".jpeg"))
-                mimeType = "image/jpeg";
-            if (nombre.toLowerCase().endsWith(".png"))
-                mimeType = "image/png";
+                String mimeType = "application/pdf";
+                if (nombre.toLowerCase().endsWith(".jpg") || nombre.toLowerCase().endsWith(".jpeg"))
+                    mimeType = "image/jpeg";
+                if (nombre.toLowerCase().endsWith(".png"))
+                    mimeType = "image/png";
 
-            Uri uri = Uri.fromFile(archivo);
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(uri, mimeType);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+                Uri uri = FileProvider.getUriForFile(
+                        this,
+                        getPackageName() + ".fileprovider",
+                        archivo
+                );
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(uri, mimeType);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(intent);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
+
 
     private void enviarTokenAlBackend(String token) {
         new Thread(() -> {
