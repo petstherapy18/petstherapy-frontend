@@ -1919,48 +1919,6 @@ display: block;
 
 
 
-/* ============================= */
-/* 🌸 ANCHO GLOBAL UNIFICADO 🌸 */
-/* ============================= */
-
-/* Todas las pantallas */
-.pantalla {
-  width: 100%;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Cuando está activa */
-.pantalla.activa {
-  display: flex;
-}
-
-/* Contenedor único para TODO */
-.pantalla .container,
-.pt-container,
-#pantallaConsultas .container,
-#pantallaVacunas .container,
-#pantallaVerVacuna .container,
-#pantallaExamenesSubidos .container,
-#pantallaVerExamen .container,
-#pantallaRecordatorios .container {
-  width: 100%;
-  max-width: 360px;   /* 🔥 ESTE ES EL ANCHO OFICIAL */
-  margin: 0 auto;
-  padding: 0 15px;
-  box-sizing: border-box;
-}
-
-/* Todos los inputs iguales */
-input,
-select,
-textarea,
-button {
-  width: 100%;
-  box-sizing: border-box;
-}
-
 
 
 
@@ -1969,19 +1927,19 @@ button {
 /* 🌸 CONTENEDOR GLOBAL REAL 🌸 */
 /* ============================= */
 
-.app-wrapper {
-  width: 100%;
-  max-width: 300px !important; /* 🔥 ancho oficial de la app */
-  min-width: 300px !important;
-  margin: 0 auto;
-  min-height: 100vh;
-  box-sizing: border-box;
-}
+
 
 /* Quitar anchos fijos que estén dañando */
 .container,
 .pt-container {
   
-  max-width: 300px !important;
-  min-width: 300px !important;
+  width: 320px !important;
+  max-width: 320px !important;
+  min-width: 320px !important;
+}
+
+.input-box {
+
+width: 220px !important;
+
 }
