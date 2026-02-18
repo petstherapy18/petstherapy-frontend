@@ -1960,3 +1960,26 @@ button {
   width: 100%;
   box-sizing: border-box;
 }
+
+
+
+
+
+/* ============================= */
+/* 🌸 CONTENEDOR GLOBAL REAL 🌸 */
+/* ============================= */
+
+.app-wrapper {
+  width: 100%;
+  max-width: 300px;   /* 🔥 ancho oficial de la app */
+  margin: 0 auto;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* Quitar anchos fijos que estén dañando */
+.container,
+.pt-container {
+  width: 100% !important;
+  max-width: 100% !important;
+}
