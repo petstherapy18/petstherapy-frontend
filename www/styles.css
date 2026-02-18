@@ -1911,35 +1911,3 @@ display: block;
   margin: 0;
   padding: 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-/* ============================= */
-/* 🌸 CONTENEDOR GLOBAL REAL 🌸 */
-/* ============================= */
-
-
-
-/* Quitar anchos fijos que estén dañando */
-.container,
-.pt-container {
-  
-  width: 320px !important;
-  max-width: 320px !important;
-  min-width: 320px !important;
-}
-
-.input-box {
-
-width: 220px !important;
-
-}
