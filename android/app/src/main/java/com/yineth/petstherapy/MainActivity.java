@@ -29,6 +29,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import androidx.core.content.FileProvider;
 
+import com.ryltsov.alex.plugins.file.opener.FileOpenerPlugin;
+
 public class MainActivity extends BridgeActivity {
 
     @Override
