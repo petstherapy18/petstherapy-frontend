@@ -1971,7 +1971,8 @@ button {
 
 .app-wrapper {
   width: 100%;
-  max-width: 300px;   /* 🔥 ancho oficial de la app */
+  max-width: 300px !important; /* 🔥 ancho oficial de la app */
+  min-width: 300px !important;
   margin: 0 auto;
   min-height: 100vh;
   box-sizing: border-box;
@@ -1980,6 +1981,7 @@ button {
 /* Quitar anchos fijos que estén dañando */
 .container,
 .pt-container {
-  width: 100% !important;
-  max-width: 100% !important;
+  
+  max-width: 300px !important;
+  min-width: 300px !important;
 }
